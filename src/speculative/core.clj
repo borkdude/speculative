@@ -3,7 +3,7 @@
             [clojure.spec.test.alpha :as stest]))
 
 (s/fdef clojure.core/map
-  :args (s/cat :fn fn? :rest any?)
+  :args (s/cat :f fn? :colls (s/? sequential?))
   :ret sequential?)
 
 (stest/instrument `clojure.core/map)
