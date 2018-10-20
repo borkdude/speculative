@@ -20,6 +20,10 @@
   :args (s/cat :f ifn? :maps (s/+ (s/nilable map?)))
   :ret (s/nilable map?))
 
+(s/fdef clojure.core/fnil
+  :args (s/cat :f ifn? :xs (s/+ any?))
+  :ret ifn?)
+
 ;; This doesn't work all that well because it seems like
 ;; we use generative testing to verify that a higher order fn
 ;; satisfies the spec

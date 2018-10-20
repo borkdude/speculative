@@ -58,6 +58,17 @@
                      (filter 1)))
   (stest/unstrument `clojure.core/filter))
 
+(deftest fnil-test
+  (stest/instrument `clojure.core/fnil)
+  (is (fnil identity 'lol))
+  (is
+   (thrown-with-msg? #?(:clj clojure.lang.ExceptionInfo
+                        :cljs js/Error)
+                     #?(:clj #"Call to #'clojure.core/fnil did not conform to spec"
+                        :cljs #"Call to #'cljs.core/fnil did not conform to spec")
+                     (fnil 1 1)))
+  (stest/unstrument `clojure.core/fnil))
+
 
 
 ;;;; Scratch
