@@ -6,7 +6,7 @@
   :args (s/cat :f fn? :colls (s/? sequential?))
   :ret sequential?)
 
-(stest/instrument `clojure.core/map)
+
 
 
 
@@ -24,6 +24,6 @@
 (s/fdef clojure.core/reduce
   :args (s/cat :f fn? :val any? :coll sequential?))
 
-(stest/instrument `clojure.core/reduce)
-
-
+(comment
+  (stest/instrument `clojure.core/map)
+  (stest/instrument `clojure.core/reduce))
