@@ -5,7 +5,7 @@
 (s/def ::seq-or-transducer seq?)
 
 (s/fdef clojure.core/map
-  :args (s/cat :f ifn? :colls (s/? (s/nilable seqable?)))
+  :args (s/cat :f ifn? :colls (s/* (s/nilable seqable?)))
   :ret ::seq-or-transducer)
 
 (s/fdef clojure.core/merge
