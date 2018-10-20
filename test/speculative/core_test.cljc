@@ -17,18 +17,18 @@
                      (map 1))
    (stest/unstrument `clojure.core/map)))
 
-
-(t/deftest merge-test
+(deftest merge-test
   (stest/instrument `clojure.core/merge)
-  (t/is (merge {}))
-  (t/is (merge {} nil))
-  (t/is (nil? (merge nil)))
-  (t/is
-    (thrown-with-msg? clojure.lang.ExceptionInfo
-      #"Call to #'clojure.core/merge did not conform to spec"
-      (merge 1)))
+  (is (merge {}))
+  (is (merge {} nil))
+  (is (nil? (merge nil)))
+  (is
+   (thrown-with-msg? #?(:clj clojure.lang.ExceptionInfo
+                        :cljs js/Error)
+                     #?(:clj #"Call to #'clojure.core/merge did not conform to spec"
+                        :cljs #"Call to #'cljs.core/merge did not conform to spec")
+                     (merge 1)))
   (stest/unstrument `clojure.core/merge))
-
 
 ;;;; Scratch
 
