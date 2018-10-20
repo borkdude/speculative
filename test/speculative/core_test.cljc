@@ -75,6 +75,22 @@
     (is (= "") (str nil))
     (is (= "lolfoo" (str "lol" "foo")))))
 
+(deftest reduce-test
+  (tu/with-instrumentation `clojure.core/reduce
+    (is (reduce + [1 2]))
+    (is (reduce + 0 [1 2]))
+    (is
+      (thrown-with-msg? #?(:clj  clojure.lang.ExceptionInfo
+                           :cljs js/Error)
+        #?(:clj  #"Call to #'clojure.core/reduce did not conform to spec"
+           :cljs #"Call to #'cljs.core/reduce did not conform to spec")
+        (reduce 1 [1 2])))
+    (is
+      (thrown-with-msg? #?(:clj  clojure.lang.ExceptionInfo
+                           :cljs js/Error)
+        #?(:clj  #"Call to #'clojure.core/reduce did not conform to spec"
+           :cljs #"Call to #'cljs.core/reduce did not conform to spec")
+        (reduce + 0 1)))))
 
 ;;;; Scratch
 

@@ -43,8 +43,22 @@
 #_(s/fdef clojure.core/reduce
   :args (s/cat :f ::reducing-fn :val any? :coll sequential?))
 
+#?(:clj
+   (defn- reduceable? [x]
+     (or (instance? clojure.lang.IReduce x)
+         (instance? clojure.lang.IReduceInit x))))
+
+#?(:clj
+   (defn- iterable? [x]
+     (instance? java.lang.Iterable x)))
+
+(s/def ::reduceable-coll (s/nilable (s/or :reduceable reduceable?
+                                          :iterable   iterable?
+                                          :seqable    seqable?)))
+
 (s/fdef clojure.core/reduce
-  :args (s/cat :f fn? :val any? :coll sequential?))
+  :args (s/or :binary  (s/cat :f fn? :coll ::reduceable-coll)
+              :trinary (s/cat :f fn? :val any? :coll ::reduceable-coll)))
 
 (comment
   (stest/instrument `clojure.core/map)
