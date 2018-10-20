@@ -10,10 +10,12 @@
   (is (= '(2 3 4) (map inc [1 2 3])))
   (is (= '(1 2) (map (fn [[k v]] v) {:a 1 :b 2})))
   (is
-   (thrown-with-msg? clojure.lang.ExceptionInfo
-                     #"Call to #'clojure.core/map did not conform to spec"
-                     (map 1)))
-  (stest/unstrument `clojure.core/map))
+   (thrown-with-msg? #?(:clj clojure.lang.ExceptionInfo
+                        :cljs js/Error)
+                     #?(:clj #"Call to #'clojure.core/map did not conform to spec"
+                        :cljs #"Call to #'cljs.core/map did not conform to spec")
+                     (map 1))
+   (stest/unstrument `clojure.core/map)))
 
 ;;;; Scratch
 
