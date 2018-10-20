@@ -6,9 +6,9 @@
   :args (s/cat :f ifn? :colls (s/? (s/nilable seqable?)))
   :ret seq?)
 
-
-
-
+(s/fdef clojure.core/merge
+  :args (s/coll-of (s/nilable map?))
+  :ret (s/nilable map?))
 
 ;; This doesn't work all that well because it seems like
 ;; we use generative testing to verify that a higher order fn
