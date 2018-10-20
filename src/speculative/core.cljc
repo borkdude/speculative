@@ -28,6 +28,10 @@
   :args (s/+ any?)
   :ret boolean?)
 
+(s/fdef clojure.core/str
+  :args (s/* (s/nilable any?))
+  :ret string?)
+
 ;; This doesn't work all that well because it seems like
 ;; we use generative testing to verify that a higher order fn
 ;; satisfies the spec

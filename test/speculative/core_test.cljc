@@ -75,6 +75,12 @@
   (is (= 1))
   (stest/unstrument `clojure.core/=))
 
+(deftest str-test
+  (stest/instrument `clojure.core/str)
+  (is (= "") (str nil))
+  (is (= "lolfoo" (str "lol" "foo")))
+  (stest/unstrument `clojure.core/str))
+
 
 ;;;; Scratch
 
