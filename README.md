@@ -79,6 +79,10 @@ user=>
 
     clj -A:test:cljstests
     
+### Self-Hosted ClojureScript
+   
+    plk -A:test:plktests
+    
 ## Contributing
 
 In the hope that the code in this project would be useful for `clojure.core`, any contributer to this repo needs to have a 

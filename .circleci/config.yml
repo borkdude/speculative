@@ -7,7 +7,7 @@ jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: circleci/clojure:lein-2.7.1
+      - image: circleci/clojure:lein-2.8.1-node
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -24,6 +24,19 @@ jobs:
     steps:
       - checkout
 
+      - run:
+          command: |
+            curl -O https://download.clojure.org/install/linux-install-1.9.0.397.sh
+            chmod +x linux-install-1.9.0.397.sh
+            sudo ./linux-install-1.9.0.397.sh
+            sudo apt-get install javascriptcoregtk-4.0 libzip4
+            curl -O http://planck-repl.org/releases/2.18.0-debian-9.0/planck
+            curl -O http://planck-repl.org/releases/2.18.0-debian-9.0/plk
+            chmod +x planck
+            chmod +x plk
+            sudo mv planck /usr/bin
+            sudo mv plk /usr/bin
+
       # Download and cache dependencies
       - restore_cache:
           keys:
@@ -31,7 +44,7 @@ jobs:
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
 
-      - run: lein deps
+      - run: clojure -R:test:runner:cljstests -Spath
 
       - save_cache:
           paths:
@@ -39,6 +52,8 @@ jobs:
           key: v1-dependencies-{{ checksum "project.clj" }}
 
       # run tests!
-      - run: lein test
+      - run: clojure -A:test:runner
+      - run: clojure -A:test:cljstests
+      - run: plk -A:test:plktests
 
       - run: .circleci/maybe-deploy.sh
