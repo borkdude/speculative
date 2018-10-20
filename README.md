@@ -8,10 +8,10 @@ speculative is a collection of specs for the functions in `clojure.core`. While 
 
 The project started based on two tweets. First @mfikes tweeted
 
-<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">I still hold the view that Clojure’s core fns should have specs. <br><br>Ex: While<br> (merge-with + [0 3] {0 7 1 2} {0 3 2 32})<br>produces a reasonable result, it is not even a map. A spec would reject 2nd arg.<br><br>What if I conclude dot products are possible via<br> (merge-with + [0 3] [1 2])<br>?</p>&mdash; Mike Fikes (@mfikes) <a href="https://twitter.com/mfikes/status/1053304266239197184?ref_src=twsrc%5Etfw">October 19, 2018</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
+<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">I still hold the view that Clojure’s core fns should have specs. <br><br>Ex: While<br> (merge-with + [0 3] {0 7 1 2} {0 3 2 32})<br>produces a reasonable result, it is not even a map. A spec would reject 2nd arg.<br><br>What if I conclude dot products are possible via<br> (merge-with + [0 3] [1 2])<br>?</p>&mdash; Mike Fikes (@mfikes) <a href="https://twitter.com/mfikes/status/1053304266239197184?ref_src=twsrc%5Etfw">October 19, 2018</a></blockquote> 
 
 Then @borkdude tweeted a couple of days later:
-<blockquote class="twitter-tweet" data-conversation="none" data-lang="en"><p lang="en" dir="ltr">Or maybe have a development version with guards and a production version without guards (I think Stu said something like this)</p>&mdash; (λ. borkdude) (@borkdude) <a href="https://twitter.com/borkdude/status/1053404362062606336?ref_src=twsrc%5Etfw">October 19, 2018</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
+<blockquote class="twitter-tweet" data-conversation="none" data-lang="en"><p lang="en" dir="ltr">Or maybe have a development version with guards and a production version without guards (I think Stu said something like this)</p>&mdash; (λ. borkdude) (@borkdude) <a href="https://twitter.com/borkdude/status/1053404362062606336?ref_src=twsrc%5Etfw">October 19, 2018</a></blockquote>
 
 ## Rationale
 
