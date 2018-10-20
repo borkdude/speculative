@@ -2,7 +2,8 @@
   (:require
    [clojure.spec.test.alpha :as stest]
    [clojure.test :as t :refer [deftest is]]
-   [speculative.core :as speculative] :reload))
+   [speculative.core :as speculative] :reload
+   [clojure.spec.alpha :as s]))
 
 (deftest map-test
   (stest/instrument `clojure.core/map)
@@ -69,6 +70,10 @@
                      (fnil 1 1)))
   (stest/unstrument `clojure.core/fnil))
 
+(deftest =-test
+  (stest/instrument `clojure.core/=)
+  (is (= 1))
+  (stest/unstrument `clojure.core/=))
 
 
 ;;;; Scratch

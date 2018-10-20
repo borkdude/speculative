@@ -24,6 +24,10 @@
   :args (s/cat :f ifn? :xs (s/+ any?))
   :ret ifn?)
 
+(s/fdef clojure.core/=
+  :args (s/+ any?)
+  :ret boolean?)
+
 ;; This doesn't work all that well because it seems like
 ;; we use generative testing to verify that a higher order fn
 ;; satisfies the spec
