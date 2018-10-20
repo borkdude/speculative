@@ -30,6 +30,36 @@
                      (merge 1)))
   (stest/unstrument `clojure.core/merge))
 
+
+(deftest merge-with-test
+  (stest/instrument `clojure.core/merge-with)
+  (is (merge-with + {}))
+  (is (merge-with + {} nil))
+  (is (nil? (merge-with + nil)))
+  (is
+   (thrown-with-msg? #?(:clj clojure.lang.ExceptionInfo
+                        :cljs js/Error)
+                     #?(:clj #"Call to #'clojure.core/merge-with did not conform to spec"
+                        :cljs #"Call to #'cljs.core/merge-with did not conform to spec")
+                     (merge-with 1 {})))
+  (stest/unstrument `clojure.core/merge-with))
+
+
+(deftest filter-test
+  (stest/instrument `clojure.core/filter)
+  (is (filter pos?))
+  (is (filter pos? nil))
+  (is (= '()  (filter identity nil)))
+  (is
+   (thrown-with-msg? #?(:clj clojure.lang.ExceptionInfo
+                        :cljs js/Error)
+                     #?(:clj #"Call to #'clojure.core/filter did not conform to spec"
+                        :cljs #"Call to #'cljs.core/filter did not conform to spec")
+                     (filter 1)))
+  (stest/unstrument `clojure.core/filter))
+
+
+
 ;;;; Scratch
 
 (comment
