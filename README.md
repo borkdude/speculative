@@ -60,6 +60,16 @@ user=>
 
 ```
 
+## Tests
+
+### Clojure
+
+     clj -A:test:runner
+     
+### ClojureScript
+
+    plk -A:test -e "(require '[clojure.test :as t])" -e "(require '[speculative.core-test])" -e "(t/run-tests 'speculative.core-test)"
+
 ## License
 
 Copyright © 2018 Erik Assum
