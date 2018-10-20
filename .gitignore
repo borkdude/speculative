@@ -66,3 +66,4 @@ flycheck_*.el
 
 
 # End of https://www.gitignore.io/api/emacs,clojure
+/cljs-test-runner-out
