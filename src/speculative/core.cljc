@@ -16,6 +16,10 @@
   :args (s/cat :pred ifn? :coll (s/? (s/nilable seqable?)))
   :ret ::seq-or-transducer)
 
+(s/fdef clojure.core/merge-with
+  :args (s/cat :f ifn? :maps (s/+ (s/nilable map?)))
+  :ret (s/nilable map?))
+
 ;; This doesn't work all that well because it seems like
 ;; we use generative testing to verify that a higher order fn
 ;; satisfies the spec
