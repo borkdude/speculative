@@ -69,6 +69,11 @@ user=>
 ### ClojureScript
 
     clj -A:test:cljstests
+    
+## Contributing
+
+In the hope that the code in this project would be useful for `clojure.core`, any contributer to this repo needs to have a 
+[Contributor Agreement](https://clojure.org/community/contributing) for Clojure so that any code in speculative can be used in either Clojure or Clojurescript.
 
 ## License
 
