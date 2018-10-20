@@ -8,3 +8,22 @@
 
 (stest/instrument `clojure.core/map)
 
+
+
+;; This doesn't work all that well because it seems like
+;; we use generative testing to verify that a higher order fn
+;; satisfies the spec
+
+(s/def ::reducing-fn (s/fspec :args (s/cat :accumulator any? :elem any?)))
+
+;; (s/valid? ::reducing-fn (fn [x y]) ;; takes forever
+
+#_(s/fdef clojure.core/reduce
+  :args (s/cat :f ::reducing-fn :val any? :coll sequential?))
+
+(s/fdef clojure.core/reduce
+  :args (s/cat :f fn? :val any? :coll sequential?))
+
+(stest/instrument `clojure.core/reduce)
+
+
