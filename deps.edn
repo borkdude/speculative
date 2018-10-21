@@ -15,4 +15,6 @@
   :cljstests
   {:extra-deps {olical/cljs-test-runner {:mvn/version "3.0.0"}}
    :main-opts ["-m" "cljs-test-runner.main"]}
+  :plktests
+  {:main-opts ["-m" "speculative.plk-test-runner"]}
   }}
