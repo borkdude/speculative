@@ -2,7 +2,10 @@
   (:require [clojure.spec.alpha :as s]
             [clojure.spec.test.alpha :as stest]))
 
-(s/def ::seq-or-transducer seq?)
+(s/def ::transducer fn?)
+
+(s/def ::seq-or-transducer
+  (s/or :seq seq? :transducer ::transducer))
 
 (s/fdef clojure.core/map
   :args (s/cat :f ifn? :colls (s/* (s/nilable seqable?)))
