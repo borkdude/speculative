@@ -1,9 +1,9 @@
 (ns speculative.core-test
   (:require
-   [clojure.spec.test.alpha :as stest]
-   [clojure.test :as t :refer [deftest is]]
-   [speculative.core :as speculative] :reload
    [clojure.spec.alpha :as s]
+   [clojure.spec.test.alpha :as stest]
+   [clojure.test :as t :refer [deftest is testing]]
+   [speculative.core :as speculative] :reload
    [speculative.test-utils :as tu]))
 
 (deftest map-test
@@ -11,6 +11,12 @@
     (is (map inc))
     (is (= '(2 3 4) (map inc [1 2 3])))
     (is (= '(1 2) (map (fn [[k v]] v) {:a 1 :b 2})))
+    (testing "multiple collections"
+      (is (= '(5 7 9)
+           (map (fn [a b] (+ a b))
+                [1 2 3] [4 5 6]))))
+    (testing "nil collection"
+      (is (= '() (map identity nil))))
     (is
      (thrown-with-msg? #?(:clj clojure.lang.ExceptionInfo
                           :cljs js/Error)
