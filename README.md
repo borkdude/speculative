@@ -26,13 +26,13 @@ Error printing return value (IllegalArgumentException) at clojure.lang.RT.seqFro
 Don't know how to create ISeq from: clojure.lang.Symbol
 (user=>
 ```
-
+user
 With speculative, we get 
 
-```clojure
-user=> (map 'lol 'lol)
+```
+user=> (map 1 'lol)
 Evaluation error - invalid arguments to clojure.core/map at (NO_SOURCE_FILE:4).
-lol - failed: fn? at: [:f]
+1 - failed: ifn? at: [:f]
 user=>
 ```
 
@@ -45,7 +45,6 @@ deps.edn
 ```
 speculative {:mvn/version "RELEASE"}
 ```
-
 
 lein
 
@@ -62,9 +61,9 @@ user=> (require '[clojure.spec.test.alpha :as stest])
 nil
 user=> (stest/instrument `clojure.core/map)
 [clojure.core/map]
-user=> (map 'lol 'lol)
+user=> (map 1 'lol)
 Evaluation error - invalid arguments to clojure.core/map at (NO_SOURCE_FILE:4).
-lol - failed: fn? at: [:f]
+1 - failed: ifn? at: [:f]
 user=>
 
 ```
