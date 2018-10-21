@@ -15,7 +15,7 @@
   {:main-opts ["-m" "cljs.main"
                "-re" "nashorn" "-m" "speculative.cljs-test-runner"]}
   :plktests
-  {:main-opts ["-m" "speculative.plk-test-runner"]}
+  {:main-opts ["-m" "speculative.cljs-test-runner"]}
   :coal-mine-clj
   {:extra-deps {github-mfikes/coal-mine 
                 {:git/url "https://github.com/mfikes/coal-mine"
