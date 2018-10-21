@@ -11,6 +11,22 @@
   (with-instrumentation `=
     (is (= 1))))
 
+(deftest division-test
+  (with-instrumentation `/
+    (is (= 1 (/ 1)))
+    #?(:cljs (is (= ##Inf (/ 0)))
+       :clj (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                                  #"Call to #'clojure.core// did not conform to spec"
+                                  (/ 0))))
+    #?(:clj (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                                  #"Call to #'clojure.core// did not conform to spec"
+                                  (/ 'a))))
+
+    #?(:cljs (is (= ##Inf (/ 1 0 )))
+       :clj (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                                  #"Call to #'clojure.core// did not conform to spec"
+                                  (apply / [1 0]))))))
+
 (deftest count-test
   (with-instrumentation `count
     (is (count nil))
@@ -36,7 +52,7 @@
 (deftest first-test
   (with-instrumentation `first
     (is (nil? (first nil)))
-    (is 1 (first '(1 2 3)))
+    (is (= 1 (first '(1 2 3))))
     (throws `first (first 1))))
 
 (deftest fnil-test
