@@ -61,8 +61,7 @@
                                           :seqable    seqable?)))
 
 (s/fdef clojure.core/reduce
-  :args (s/or :binary  (s/cat :f fn? :coll ::reduceable-coll)
-              :trinary (s/cat :f fn? :val any? :coll ::reduceable-coll)))
+  :args (s/cat :f fn? :val (s/? any?) :coll ::reduceable-coll))
 
 (comment
   (stest/instrument)
