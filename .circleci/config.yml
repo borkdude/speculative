@@ -44,6 +44,7 @@ jobs:
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
 
+      - run: lein deps
       - run: clojure -R:test:runner:cljstests -Spath
 
       - save_cache:
