@@ -32,7 +32,7 @@
   :ret boolean?)
 
 (s/fdef clojure.core/str
-  :args (s/* (s/nilable any?))
+  :args (s/* any?)
   :ret string?)
 
 ;; This doesn't work all that well because it seems like
@@ -64,5 +64,5 @@
               :trinary (s/cat :f fn? :val any? :coll ::reduceable-coll)))
 
 (comment
-  (stest/instrument `clojure.core/map)
-  (stest/instrument `clojure.core/reduce))
+  (stest/instrument)
+  )
