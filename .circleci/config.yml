@@ -45,7 +45,6 @@ jobs:
           - v1-dependencies-
 
       - run: lein deps
-      - run: clojure -R:test:runner:cljstests -Spath
 
       - save_cache:
           paths:
