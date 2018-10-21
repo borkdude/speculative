@@ -29,7 +29,7 @@
 
 
 (s/fdef clojure.core/merge-with
-  :args (s/cat :f ifn? :maps (s/+ (s/nilable map?)))
+  :args (s/cat :f ifn? :maps (s/* (s/nilable map?)))
   :ret (s/nilable map?))
 
 (s/fdef clojure.core/str
