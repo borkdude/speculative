@@ -65,7 +65,7 @@
   :ret ::seq-or-transducer)
 
 (s/fdef clojure.core/merge
-  :args (s/coll-of (s/nilable map?))
+  :args (s/cat :maps (s/* (s/nilable map?)))
   :ret (s/nilable map?))
 
 (s/fdef clojure.core/merge-with

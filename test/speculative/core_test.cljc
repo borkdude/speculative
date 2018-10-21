@@ -148,6 +148,7 @@
 (deftest merge-test
   (with-instrumentation `merge
     (is (merge {}))
+    (is (nil? (merge)))
     (is (merge {} nil))
     (is (nil? (merge nil)))
     (throws `merge (merge 1))))
