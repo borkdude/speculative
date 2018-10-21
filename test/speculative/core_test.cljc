@@ -145,20 +145,28 @@
       (is (= '() (map identity nil))))
     (throws `map (map 1))))
 
-(deftest merge-test
-  (with-instrumentation `merge
-    (is (merge {}))
-    (is (nil? (merge)))
-    (is (merge {} nil))
-    (is (nil? (merge nil)))
-    (throws `merge (merge 1))))
-
-(deftest merge-with-test
-  (with-instrumentation `merge-with
-    (is (merge-with + {}))
-    (is (merge-with + {} nil))
-    (is (nil? (merge-with + nil)))
-    (throws `merge-with (merge-with 1))))
+#?(:clj
+   (deftest merge-test
+     (with-instrumentation `merge
+       (is (merge {}))
+       (is (nil? (merge)))
+       (is (merge {} nil))
+       (is (nil? (merge nil)))
+       (throws `merge (merge 1))))
+   :cljs
+   ;; waiting for https://dev.clojure.org/jira/browse/CLJS-2942
+   nil)
+#?(:clj
+   (deftest merge-with-test
+     (with-instrumentation `merge-with
+       (is (merge-with + {}))
+       (is (nil? (merge-with +)))
+       (is (merge-with + {} nil))
+       (is (nil? (merge-with + nil)))
+       (throws `merge-with (merge-with 1))))
+   :cljs
+   ;; waiting for https://dev.clojure.org/jira/browse/CLJS-2942
+   nil)
 
 (deftest not-any-test
   (with-instrumentation `not-any?
