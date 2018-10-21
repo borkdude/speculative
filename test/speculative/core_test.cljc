@@ -5,11 +5,7 @@
    [clojure.test :as t :refer [deftest is testing]]
    [speculative.core :as speculative] :reload
    [speculative.test-utils :refer [with-instrumentation
-                                   throws]])
-  ;; Planck requires the line below
-  #?(:cljs
-     (:require-macros
-      [net.cgrand.macrovich :as macros])))
+                                   throws]]))
 
 (deftest =-test
   (with-instrumentation `=
