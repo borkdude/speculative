@@ -2,10 +2,22 @@
   (:require [clojure.spec.alpha :as s]
             [clojure.spec.test.alpha :as stest]))
 
+(s/fdef clojure.core/=
+  :args (s/+ any?)
+  :ret boolean?)
+
 (s/def ::transducer fn?)
 
 (s/def ::seq-or-transducer
   (s/or :seq seq? :transducer ::transducer))
+
+(s/fdef clojure.core/filter
+  :args (s/cat :pred ifn? :coll (s/? (s/nilable seqable?)))
+  :ret ::seq-or-transducer)
+
+(s/fdef clojure.core/fnil
+  :args (s/cat :f ifn? :xs (s/+ any?))
+  :ret ifn?)
 
 (s/fdef clojure.core/map
   :args (s/cat :f ifn? :colls (s/* (s/nilable seqable?)))
@@ -15,21 +27,10 @@
   :args (s/coll-of (s/nilable map?))
   :ret (s/nilable map?))
 
-(s/fdef clojure.core/filter
-  :args (s/cat :pred ifn? :coll (s/? (s/nilable seqable?)))
-  :ret ::seq-or-transducer)
 
 (s/fdef clojure.core/merge-with
   :args (s/cat :f ifn? :maps (s/+ (s/nilable map?)))
   :ret (s/nilable map?))
-
-(s/fdef clojure.core/fnil
-  :args (s/cat :f ifn? :xs (s/+ any?))
-  :ret ifn?)
-
-(s/fdef clojure.core/=
-  :args (s/+ any?)
-  :ret boolean?)
 
 (s/fdef clojure.core/str
   :args (s/* (s/nilable any?))
