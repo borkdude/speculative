@@ -6,7 +6,9 @@
 (defn exit
   "Exit with the given status."
   [status]
-  (.exit js/process status))
+  (if (exists? js/process)
+    (.exit js/process status)
+    (js/PLANCK_EXIT_WITH_VALUE status)))
 
 (defmethod cljs.test/report [:cljs.test/default :end-run-tests] [m]
   (when-not (cljs.test/successful? m)
