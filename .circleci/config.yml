@@ -45,7 +45,6 @@ jobs:
           - v1-dependencies-
 
       - run: lein deps
-      - run: clojure -R:test:runner:cljstests -Spath
 
       - save_cache:
           paths:
@@ -53,7 +52,7 @@ jobs:
           key: v1-dependencies-{{ checksum "project.clj" }}
 
       # run tests!
-      - run: clojure -A:test:runner
+      - run: clojure -A:test:cljtests
       - run: clojure -A:test:cljstests
       - run: plk -A:test:plktests
 
