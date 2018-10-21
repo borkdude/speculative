@@ -15,7 +15,7 @@ when,34247
 or,31252
 apply,30907
 assoc,29215
-count,28660
+# count,28660
 and,26442
 not,24785
 nil?,21570
