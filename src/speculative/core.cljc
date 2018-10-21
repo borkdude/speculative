@@ -13,6 +13,10 @@
 (s/def ::seq-or-transducer
   (s/or :seq seq? :transducer ::transducer))
 
+(s/fdef clojure.core/count
+  :args (s/cat :coll (s/or :counted counted? :seqable seqable?))
+  :ret number?)
+
 (s/fdef clojure.core/every?
   :args (s/cat :pred ::predicate :coll (s/nilable seqable?))
   :ret boolean?)

@@ -29,6 +29,15 @@
   (tu/with-instrumentation `=
     (is (= 1))))
 
+(deftest count-test
+  (tu/with-instrumentation `count
+    (is (count nil))
+    (is (count [1]))
+    (is (count {:a 1}))
+    (is (count (into-array [1 2])))
+    (is (count "abc"))
+    (throws `count (apply count [1]))))
+
 (deftest every?-test
   (tu/with-instrumentation `every?
     (is (every? pos? nil))
