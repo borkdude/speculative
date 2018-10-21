@@ -84,7 +84,7 @@ vector?,4408
 zero?,4286
 re-find,4255
 take,4113
-remove,3987
+# remove,3987
 <=,3978
 pr-str,3825
 repeat,3764
