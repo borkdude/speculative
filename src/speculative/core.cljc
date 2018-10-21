@@ -19,6 +19,10 @@
   :args (s/cat :f ifn? :xs (s/+ any?))
   :ret ifn?)
 
+(s/fdef clojure.core/juxt
+  :args (s/+ ifn?)
+  :ret fn?)
+
 (s/fdef clojure.core/map
   :args (s/cat :f ifn? :colls (s/* (s/nilable seqable?)))
   :ret ::seq-or-transducer)
