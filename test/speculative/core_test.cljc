@@ -29,12 +29,24 @@
   (tu/with-instrumentation `=
     (is (= 1))))
 
+(deftest every?-test
+  (tu/with-instrumentation `every?
+    (is (every? pos? nil))
+    (is (= true  (every? identity nil)))
+    (throws `every? (every? 1 []))))
+
 (deftest filter-test
   (tu/with-instrumentation `filter
     (is (filter pos?))
     (is (filter pos? nil))
     (is (= '()  (filter identity nil)))
     (throws `filter (filter 1))))
+
+(deftest first-test
+  (tu/with-instrumentation `first
+    (is (nil? (first nil)))
+    (is 1 (first '(1 2 3)))
+    (throws `first (first 1))))
 
 (deftest fnil-test
   (tu/with-instrumentation `fnil
@@ -73,12 +85,31 @@
     (is (nil? (merge-with + nil)))
     (throws `merge-with (merge-with 1))))
 
+(deftest not-any-test
+  (tu/with-instrumentation `not-any?
+    (is (not-any? pos? nil))
+    (is (= true  (not-any? identity nil)))
+    (throws `not-any? (not-any? 1 []))))
+
 (deftest reduce-test
   (tu/with-instrumentation `reduce
     (is (reduce + [1 2]))
     (is (reduce + 0 [1 2]))
     (throws `reduce (reduce 1 [1 2]))
     (throws `reduce (reduce + 0 1))))
+
+(deftest remove-test
+  (tu/with-instrumentation `remove
+    (is (remove pos?))
+    (is (remove pos? nil))
+    (is (= '()  (remove identity nil)))
+    (throws `remove (remove 1))))
+
+(deftest some-test
+  (tu/with-instrumentation `some
+    (is (not (some pos? nil)))
+    (is (nil? (some identity nil)))
+    (throws `some (some 1 []))))
 
 (deftest str-test
   (tu/with-instrumentation `str

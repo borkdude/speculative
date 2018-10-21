@@ -8,12 +8,22 @@
 
 (s/def ::transducer fn?)
 
+(s/def ::predicate ifn?)
+
 (s/def ::seq-or-transducer
   (s/or :seq seq? :transducer ::transducer))
 
+(s/fdef clojure.core/every?
+  :args (s/cat :pred ::predicate :coll (s/nilable seqable?))
+  :ret boolean?)
+
 (s/fdef clojure.core/filter
-  :args (s/cat :pred ifn? :coll (s/? (s/nilable seqable?)))
+  :args (s/cat :pred ::predicate :coll (s/? (s/nilable seqable?)))
   :ret ::seq-or-transducer)
+
+(s/fdef clojure.core/first
+  :args (s/cat :coll (s/nilable seqable?))
+  :ret any?)
 
 (s/fdef clojure.core/fnil
   :args (s/cat :f ifn? :xs (s/+ any?))
@@ -31,14 +41,17 @@
   :args (s/coll-of (s/nilable map?))
   :ret (s/nilable map?))
 
-
 (s/fdef clojure.core/merge-with
   :args (s/cat :f ifn? :maps (s/* (s/nilable map?)))
   :ret (s/nilable map?))
 
-(s/fdef clojure.core/str
-  :args (s/* any?)
-  :ret string?)
+(s/fdef clojure.core/not-any?
+  :args (s/cat :pred ::predicate :coll (s/nilable seqable?))
+  :ret boolean?)
+
+(s/fdef clojure.core/not-every?
+  :args (s/cat :pred ::predicate :coll (s/nilable seqable?))
+  :ret boolean?)
 
 ;; This doesn't work all that well because it seems like
 ;; we use generative testing to verify that a higher order fn
@@ -66,6 +79,22 @@
 
 (s/fdef clojure.core/reduce
   :args (s/cat :f fn? :val (s/? any?) :coll ::reduceable-coll))
+
+(s/fdef clojure.core/remove
+  :args (s/cat :pred ::predicate :coll (s/? (s/nilable seqable?)))
+  :ret ::seq-or-transducer)
+
+(s/fdef clojure.core/some
+  :args (s/cat :pred ::predicate :coll (s/nilable seqable?))
+  :ret (s/or :found some? :not-found nil))
+
+(s/fdef clojure.core/some?
+  :args (s/cat :x any?)
+  :ret boolean?)
+
+(s/fdef clojure.core/str
+  :args (s/* any?)
+  :ret string?)
 
 (comment
   (stest/instrument)

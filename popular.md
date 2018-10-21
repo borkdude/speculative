@@ -10,7 +10,7 @@ symbol,count
 # str,65937
 # map,52295
 ->,46439
-first,37981
+# first,37981
 when,34247
 or,31252
 apply,30907
@@ -74,8 +74,8 @@ dissoc,5720
 comp,5305
 not=,5286
 float,5175
-some,5053
-every?,4722
+# some,5053
+# every?,4722
 constantly,4707
 last,4524
 declare,4513
@@ -161,5 +161,5 @@ take-while,1100
 sorted-map,1091
 transient,1087
 replace,1083
-juxt,1080
+# juxt,1080
 ```
