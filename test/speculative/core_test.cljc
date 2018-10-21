@@ -13,8 +13,8 @@
     (is (= '(1 2) (map (fn [[k v]] v) {:a 1 :b 2})))
     (testing "multiple collections"
       (is (= '(5 7 9)
-           (map (fn [a b] (+ a b))
-                [1 2 3] [4 5 6]))))
+             (map (fn [a b] (+ a b))
+                  [1 2 3] [4 5 6]))))
     (testing "nil collection"
       (is (= '() (map identity nil))))
     (is
