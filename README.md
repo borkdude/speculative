@@ -72,7 +72,7 @@ user=>
 
 ### Clojure
 
-     clj -A:test:runner
+     clj -A:test:cljtests
      
 ### ClojureScript
 
