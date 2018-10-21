@@ -1,9 +1,9 @@
 (ns speculative.test-utils
   (:require
    [clojure.string :as str]
-   [clojure.spec.alpha :as s]
    [clojure.test :as t :refer [deftest is testing]]
-   [clojure.spec.test.alpha :as stest]
+   [clojure.spec.alpha]
+   [clojure.spec.test.alpha]
    #?(:clj [net.cgrand.macrovich :as macros]))
   #?(:cljs
      (:require-macros
@@ -14,20 +14,21 @@
 (macros/deftime
 
   (defmacro with-instrumentation [symbol & body]
-    `(do (stest/instrument ~symbol)
+    `(do (clojure.spec.test.alpha/instrument ~symbol)
          (try ~@body
               (finally
-                (stest/unstrument ~symbol)))))
+                (clojure.spec.test.alpha/unstrument ~symbol)))))
 
   (defmacro throws [symbol & body]
     `(let [msg#
-           (macros/case :clj (try ~@body
-                                  (catch clojure.lang.ExceptionInfo e#
-                                    (str e#)))
-                        :cljs (try ~@body
-                                   (catch js/Error e#
-                                     (str e#))))]
-       (clojure.test/is (str/includes?
+           (net.cgrand.macrovich/case
+               :clj (try ~@body
+                         (catch clojure.lang.ExceptionInfo e#
+                           (str e#)))
+               :cljs (try ~@body
+                          (catch js/Error e#
+                            (str e#))))]
+       (clojure.test/is (clojure.string/includes?
                          msg#
                          (str "Call to " (resolve ~symbol)
                               " did not conform to spec")))))
