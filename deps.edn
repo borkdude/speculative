@@ -13,7 +13,7 @@
                "-d" "test"]}
   :cljstests
   {:main-opts ["-m" "cljs.main"
-               "-re" "node" "-m" "speculative.cljs-test-runner"]}
+               "-re" "nashorn" "-m" "speculative.cljs-test-runner"]}
   :plktests
   {:main-opts ["-m" "speculative.cljs-test-runner"]}
   }}
