@@ -13,7 +13,7 @@ symbol,count
 # first,37981
 when,34247
 or,31252
-apply,30907
+# apply,30907
 assoc,29215
 # count,28660
 and,26442
