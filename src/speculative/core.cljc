@@ -96,7 +96,7 @@
                                           :seqable    seqable?)))
 
 (s/fdef clojure.core/reduce
-  :args (s/cat :f fn? :val (s/? any?) :coll ::reduceable-coll))
+  :args (s/cat :f ifn? :val (s/? any?) :coll ::reduceable-coll))
 
 (s/fdef clojure.core/remove
   :args (s/cat :pred ::predicate :coll (s/? (s/nilable seqable?)))
