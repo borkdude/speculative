@@ -27,6 +27,16 @@
                                   #"Call to #'clojure.core// did not conform to spec"
                                   (apply / [1 0]))))))
 
+#?(:clj
+   (deftest apply-test
+     (with-instrumentation `apply
+       (is (apply + 1 2 3 [4 5 6]))
+       (is (apply + nil))
+       (throws `apply (apply + 1 2 3 4))))
+   :cljs nil
+   ;; waiting for https://dev.clojure.org/jira/browse/CLJS-2942
+   )
+
 (deftest count-test
   (with-instrumentation `count
     (is (count nil))

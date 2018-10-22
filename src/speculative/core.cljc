@@ -6,6 +6,10 @@
   :args (s/+ any?)
   :ret boolean?)
 
+(s/fdef clojure.core/=
+  :args (s/+ any?)
+  :ret boolean?)
+
 (def non-zero? (complement zero?))
 
 #?(:clj (s/fdef clojure.core//
@@ -20,20 +24,25 @@
            :args (s/cat :numbers (s/+ number?))
            :ret number?))
 
-(s/def ::transducer fn?)
-
-(s/def ::predicate ifn?)
-
-(s/def ::seq-or-transducer
-  (s/or :seq seq? :transducer ::transducer))
+(s/fdef clojure.core/apply
+  :args (s/cat :f ifn?
+               :intervening (s/* any?)
+               :args (s/nilable seqable?)))
 
 (s/fdef clojure.core/count
   :args (s/cat :coll (s/or :counted counted? :seqable seqable?))
   :ret number?)
 
+(s/def ::predicate ifn?)
+
 (s/fdef clojure.core/every?
   :args (s/cat :pred ::predicate :coll (s/nilable seqable?))
   :ret boolean?)
+
+(s/def ::transducer fn?)
+
+(s/def ::seq-or-transducer
+  (s/or :seq seq? :transducer ::transducer))
 
 (s/fdef clojure.core/filter
   :args (s/cat :pred ::predicate :coll (s/? (s/nilable seqable?)))
