@@ -49,7 +49,7 @@ rest,8766
 vec,8601
 partial,8595
 concat,8334
-reset!,8122
+# reset!,8122
 set,8071
 /,8033
 int,7811

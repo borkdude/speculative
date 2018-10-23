@@ -122,6 +122,11 @@
     (is (= '()  (remove identity nil)))
     (throws `remove (remove 1))))
 
+(deftest reset!-test
+  (with-instrumentation `reset!
+    (is (reset! (atom nil) 1))
+    (throws `reset! (reset! 1 (atom nil)))))
+
 (deftest some-test
   (with-instrumentation `some
     (is (not (some pos? nil)))
