@@ -111,6 +111,14 @@
   :args (s/cat :pred ::predicate :coll (s/? (s/nilable seqable?)))
   :ret ::seq-or-transducer)
 
+(s/def ::atom
+  (fn [a]
+    #?(:clj (instance? clojure.lang.IAtom a)
+       :cljs (satisfies? IAtom a))))
+
+(s/fdef clojure.core/reset!
+  :args (s/cat :atom ::atom :v any?))
+
 (s/fdef clojure.core/some
   :args (s/cat :pred ::predicate :coll (s/nilable seqable?))
   :ret (s/or :found some? :not-found nil))
@@ -122,11 +130,6 @@
 (s/fdef clojure.core/str
   :args (s/* any?)
   :ret string?)
-
-(s/def ::atom
-  (fn [a]
-    #?(:clj (instance? clojure.lang.IAtom a)
-       :cljs (satisfies? IAtom a))))
 
 (s/fdef clojure.core/swap!
   :args (s/cat :atom ::atom :f ifn? :args (s/* any?)))
