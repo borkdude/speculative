@@ -6,10 +6,6 @@
   :args (s/+ any?)
   :ret boolean?)
 
-(s/fdef clojure.core/=
-  :args (s/+ any?)
-  :ret boolean?)
-
 (def non-zero? (complement zero?))
 
 #?(:clj (s/fdef clojure.core//
@@ -49,8 +45,7 @@
   :ret ::seq-or-transducer)
 
 (s/fdef clojure.core/first
-  :args (s/cat :coll (s/nilable seqable?))
-  :ret any?)
+  :args (s/cat :coll (s/nilable seqable?)))
 
 (s/fdef clojure.core/fnil
   :args (s/cat :f ifn? :xs (s/+ any?))
@@ -79,17 +74,6 @@
 (s/fdef clojure.core/not-every?
   :args (s/cat :pred ::predicate :coll (s/nilable seqable?))
   :ret boolean?)
-
-;; This doesn't work all that well because it seems like
-;; we use generative testing to verify that a higher order fn
-;; satisfies the spec
-
-(s/def ::reducing-fn (s/fspec :args (s/cat :accumulator any? :elem any?)))
-
-;; (s/valid? ::reducing-fn (fn [x y]) ;; takes forever
-
-#_(s/fdef clojure.core/reduce
-  :args (s/cat :f ::reducing-fn :val any? :coll sequential?))
 
 #?(:clj
    (defn- reduceable? [x]
