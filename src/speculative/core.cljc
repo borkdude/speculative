@@ -28,7 +28,7 @@
 (s/fdef clojure.core/assoc
   :args (s/or :map (s/cat :map (s/nilable map?) :key any? :val any? :kvs (s/* (s/cat :ks any? :vs any?)))
               :vector (s/cat :map vector? :key nat-int? :val any? :kvs (s/* (s/cat :ks nat-int? :vs any?))))
-  :ret map?)
+  :ret associative?)
 
 (s/fdef clojure.core/count
   :args (s/cat :coll (s/or :counted counted? :seqable seqable?))
