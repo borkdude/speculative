@@ -133,6 +133,13 @@
     (is (= "" (str nil)))
     (is (= "lolfoo" (str "lol" "foo")))))
 
+(deftest swap!-test
+  (with-instrumentation `swap!
+    (throws `swap! (swap! 1 identity))
+    (throws `swap! (swap! (atom nil) 1))
+    (is (nil? (swap! (atom nil) identity)))
+    (is (nil? (swap! (atom nil) (fn [x y]) 1)))))
+
 ;;;; Scratch
 
 (comment
