@@ -123,6 +123,14 @@
   :args (s/* any?)
   :ret string?)
 
+(s/def ::atom
+  (fn [a]
+    #?(:clj (instance? clojure.lang.IAtom a)
+       :cljs (satisfies? IAtom a))))
+
+(s/fdef clojure.core/swap!
+  :args (s/cat :atom ::atom :f ifn? :args (s/* any?)))
+
 (comment
   (stest/instrument)
   )
