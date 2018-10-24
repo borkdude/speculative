@@ -186,6 +186,7 @@
     (is (range 1))
     (is (range 1 10))
     (is (range 10 0 -1))
+    (is (range 1.1 2.2 3.3))
     (throws `range (range 'lol))
     (throws `range (range 0 1 2 3))))
 
