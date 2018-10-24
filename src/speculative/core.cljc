@@ -81,9 +81,10 @@
   :ret boolean?)
 
 (s/fdef clojure.core/range
-  :args (s/nilable
-         (s/and (s/coll-of int?)
-                #(<= (count %) 3)))
+  :args (s/or :arity-0 nil?
+              :arity-1 (s/cat :end int?)
+              :arity-2 (s/cat :start int? :end? int?)
+              :arity-3 (s/cat :start int? :end int? :step int?))
   :ret seq?)
 
 #?(:clj
