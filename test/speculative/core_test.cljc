@@ -189,6 +189,12 @@
     (throws `range (range 'lol))
     (throws `range (range 0 1 2 3))))
 
+(deftest partial-test
+  (with-instrumentation `partial
+    (is (partial identity))
+    (is (partial + 1 2 3))
+    (throws `partial (partial 1))))
+
 (deftest reduce-test
   (with-instrumentation `reduce
     (is (reduce + [1 2]))

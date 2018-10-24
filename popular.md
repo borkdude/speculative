@@ -47,7 +47,7 @@ format,9508
 rest,8766
 <,8618
 vec,8601
-partial,8595
+# partial,8595
 concat,8334
 # reset!,8122
 set,8071

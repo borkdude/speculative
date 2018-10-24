@@ -87,6 +87,10 @@
               :arity-3 (s/cat :start int? :end int? :step int?))
   :ret seq?)
 
+(s/fdef clojure.core/partial
+  :args (s/cat :f ifn? :args (s/* any?))
+  :ret fn?)
+
 #?(:clj
    (defn- reduceable? [x]
      (or (instance? clojure.lang.IReduce x)
