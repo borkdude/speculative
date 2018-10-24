@@ -17,16 +17,15 @@ Then @borkdude tweeted a couple of days later:
 
 With the new error-messages that are coming with Clojure 1.10, adding specs to the `clojure.core` functions give much better error messages.
 
-Withoug specs on `clojure.core/map` the error looks like:
+Without specs on `clojure.core/map` the error looks like:
 
 ```clojure
 Clojure 1.10.0-RC1
 user=> (map 'lol 'lol)
 Error printing return value (IllegalArgumentException) at clojure.lang.RT.seqFrom (RT.java:551).
 Don't know how to create ISeq from: clojure.lang.Symbol
-(user=>
+user=>
 ```
-user
 With speculative, we get 
 
 ```
