@@ -80,6 +80,12 @@
   :args (s/cat :pred ::predicate :coll (s/nilable seqable?))
   :ret boolean?)
 
+(s/fdef clojure.core/range
+  :args (s/nilable
+         (s/and (s/coll-of int?)
+                #(<= (count %) 3)))
+  :ret seq?)
+
 #?(:clj
    (defn- reduceable? [x]
      (or (instance? clojure.lang.IReduce x)

@@ -174,6 +174,21 @@
     (is (= true  (not-any? identity nil)))
     (throws `not-any? (not-any? 1 []))))
 
+(deftest not-every-test
+  (with-instrumentation `not-every?
+    (is (false? (not-every? pos? nil)))
+    (is (not-every? pos? [-1 1]))
+    (throws `not-every? (not-every? 1 []))))
+
+(deftest range-test
+  (with-instrumentation `range
+    (is (range))
+    (is (range 1))
+    (is (range 1 10))
+    (is (range 10 0 -1))
+    (throws `range (range 'lol))
+    (throws `range (range 0 1 2 3))))
+
 (deftest reduce-test
   (with-instrumentation `reduce
     (is (reduce + [1 2]))
