@@ -40,7 +40,7 @@
   :args (s/cat :pred ::predicate :coll (s/nilable seqable?))
   :ret boolean?)
 
-(s/def ::transducer fn?)
+(s/def ::transducer ifn?)
 
 (s/def ::seq-or-transducer
   (s/or :seq seq? :transducer ::transducer))
@@ -58,7 +58,7 @@
 
 (s/fdef clojure.core/juxt
   :args (s/+ ifn?)
-  :ret fn?)
+  :ret ifn?)
 
 (s/fdef clojure.core/map
   :args (s/cat :f ifn? :colls (s/* (s/nilable seqable?)))
@@ -89,7 +89,7 @@
 
 (s/fdef clojure.core/partial
   :args (s/cat :f ifn? :args (s/* any?))
-  :ret fn?)
+  :ret ifn?)
 
 #?(:clj
    (defn- reduceable? [x]
