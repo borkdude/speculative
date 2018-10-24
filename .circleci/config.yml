@@ -23,12 +23,22 @@ jobs:
 
     steps:
       - checkout
-
       - run:
+          name: Install Clojure
           command: |
             curl -O https://download.clojure.org/install/linux-install-1.9.0.397.sh
             chmod +x linux-install-1.9.0.397.sh
             sudo ./linux-install-1.9.0.397.sh
+      - run:
+          name: Clojure CA Check
+          command: |
+            git_url='"https://github.com/slipset/clj-ca-checker"'
+            sha='"a0ea916eb606c048227f03f2c7d02ef851075f00"'
+            clojure -Sdeps "{:deps {clj-ca-checker {:git/url $git_url :sha $sha}}}" \
+              -m clj-ca-checker.clj-ca-checker "$CIRCLE_PR_USERNAME"
+      - run:
+          name: Install Planck
+          command: |
             sudo apt-get install javascriptcoregtk-4.0 libzip4
             curl -O http://planck-repl.org/releases/2.18.0-debian-9.0/planck
             curl -O http://planck-repl.org/releases/2.18.0-debian-9.0/plk
