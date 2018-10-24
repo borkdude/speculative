@@ -1,9 +1,10 @@
 (ns speculative.core-test
   (:require
    [clojure.spec.alpha :as s]
-   [clojure.spec.test.alpha :as stest]
    [clojure.test :as t :refer [deftest is testing]]
    [speculative.core :as speculative] :reload
+   #?(:clj [orchestra.spec.test :as stest]
+      :cljs [orchestra-cljs.spec.test :as stest])
    [speculative.test-utils :refer [with-instrumentation
                                    throws]]))
 

@@ -4,7 +4,8 @@
  {:test {:extra-paths ["test"]
          :extra-deps {org.clojure/clojurescript {:mvn/version "RELEASE"}
                       org.clojure/test.check {:mvn/version "RELEASE"}
-                      net.cgrand/macrovich {:mvn/version "0.2.1"}}}
+                      net.cgrand/macrovich {:mvn/version "0.2.1"}
+                      orchestra {:mvn/version "2018.09.10-1"}}}
   :cljtests
   {:extra-deps {com.cognitect/test-runner
                 {:git/url "https://github.com/cognitect-labs/test-runner"

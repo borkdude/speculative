@@ -3,7 +3,9 @@
    [clojure.string :as str]
    [clojure.test :as t :refer [deftest is testing]]
    [clojure.spec.alpha]
-   [clojure.spec.test.alpha]
+   #?(:clj [orchestra.spec.test :as stest]
+      :cljs [orchestra-cljs.spec.test :as stest])
+   #_[clojure.spec.test.alpha]
    #?(:clj [net.cgrand.macrovich :as macros]))
   #?(:cljs
      (:require-macros
@@ -14,10 +16,10 @@
 (macros/deftime
 
   (defmacro with-instrumentation [symbol & body]
-    `(do (clojure.spec.test.alpha/instrument ~symbol)
+    `(do (orchestra-cljs.spec.test/instrument ~symbol)
          (try ~@body
               (finally
-                (clojure.spec.test.alpha/unstrument ~symbol)))))
+                (orchestra-cljs.spec.test/unstrument ~symbol)))))
 
   (defmacro throws [symbol & body]
     `(let [msg#

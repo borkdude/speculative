@@ -1,6 +1,5 @@
 (ns speculative.core
-  (:require [clojure.spec.alpha :as s]
-            [clojure.spec.test.alpha :as stest]))
+  (:require [clojure.spec.alpha :as s]))
 
 (s/fdef clojure.core/=
   :args (s/+ any?)
@@ -85,7 +84,7 @@
               :arity-1 (s/cat :end number?)
               :arity-2 (s/cat :start number? :end? number?)
               :arity-3 (s/cat :start number? :end number? :step number?))
-  :ret seq?)
+  :ret int? #_seq?)
 
 (s/fdef clojure.core/partial
   :args (s/cat :f ifn? :args (s/* any?))
@@ -135,6 +134,5 @@
   :args (s/cat :atom ::atom :f ifn? :args (s/* any?)))
 
 (comment
-  (stest/instrument)
-  (stest/unstrument)
+  
   )
