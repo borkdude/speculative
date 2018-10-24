@@ -82,9 +82,9 @@
 
 (s/fdef clojure.core/range
   :args (s/or :arity-0 nil?
-              :arity-1 (s/cat :end int?)
-              :arity-2 (s/cat :start int? :end? int?)
-              :arity-3 (s/cat :start int? :end int? :step int?))
+              :arity-1 (s/cat :end number?)
+              :arity-2 (s/cat :start number? :end? number?)
+              :arity-3 (s/cat :start number? :end number? :step number?))
   :ret seq?)
 
 (s/fdef clojure.core/partial
