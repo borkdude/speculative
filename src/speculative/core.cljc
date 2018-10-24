@@ -42,12 +42,13 @@
 
 (s/def ::transducer ifn?)
 
-(s/def ::seq-or-transducer
-  (s/or :seq seq? :transducer ::transducer))
+(s/def ::seqable-or-transducer
+  (s/or :seqable seqable?
+        :transducer ::transducer))
 
 (s/fdef clojure.core/filter
   :args (s/cat :pred ::predicate :coll (s/? (s/nilable seqable?)))
-  :ret ::seq-or-transducer)
+  :ret ::seqable-or-transducer)
 
 (s/fdef clojure.core/first
   :args (s/cat :coll (s/nilable seqable?)))
@@ -62,7 +63,7 @@
 
 (s/fdef clojure.core/map
   :args (s/cat :f ifn? :colls (s/* (s/nilable seqable?)))
-  :ret ::seq-or-transducer)
+  :ret ::seqable-or-transducer)
 
 (s/fdef clojure.core/merge
   :args (s/cat :maps (s/* (s/nilable map?)))
@@ -85,7 +86,7 @@
               :arity-1 (s/cat :end number?)
               :arity-2 (s/cat :start number? :end? number?)
               :arity-3 (s/cat :start number? :end number? :step number?))
-  :ret seq?)
+  :ret seqable?)
 
 (s/fdef clojure.core/partial
   :args (s/cat :f ifn? :args (s/* any?))
@@ -100,16 +101,18 @@
    (defn- iterable? [x]
      (instance? java.lang.Iterable x)))
 
-(s/def ::reduceable-coll (s/nilable (s/or :reduceable reduceable?
-                                          :iterable   iterable?
-                                          :seqable    seqable?)))
+(s/def ::reduceable-coll
+  (s/nilable (s/or :reduceable reduceable?
+                   :iterable   iterable?
+                   :seqable    seqable?)))
 
 (s/fdef clojure.core/reduce
   :args (s/cat :f ifn? :val (s/? any?) :coll ::reduceable-coll))
 
 (s/fdef clojure.core/remove
-  :args (s/cat :pred ::predicate :coll (s/? (s/nilable seqable?)))
-  :ret ::seq-or-transducer)
+  :args (s/cat :pred ::predicate
+               :coll (s/? (s/nilable seqable?)))
+  :ret ::seqable-or-transducer)
 
 (s/def ::atom
   (fn [a]
