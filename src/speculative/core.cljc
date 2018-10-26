@@ -6,10 +6,9 @@
   :args (s/+ any?)
   :ret boolean?)
 
-(def non-zero? (complement zero?))
-
 (s/fdef clojure.core//
-  :args (s/cat :numbers (s/+ number?))
+  :args (s/cat :numerator number?
+               :denominators (s/* number?))
   :ret number?)
 
 (s/fdef clojure.core/apply
@@ -39,8 +38,11 @@
         :transducer ::transducer))
 
 (s/fdef clojure.core/filter
-  :args (s/cat :pred ::predicate :coll (s/? (s/nilable seqable?)))
-  :ret ::seqable-or-transducer)
+  :args (s/alt :transducer (s/cat :xf ifn?)
+               :seqable (s/cat :f ifn? :coll (s/nilable seqable?)))
+  :ret ::seqable-or-transducer
+  :fn (fn [{:keys [args ret]}]
+        (= (key args) (key ret))))
 
 (s/fdef clojure.core/first
   :args (s/cat :coll (s/nilable seqable?)))
@@ -60,8 +62,12 @@
   :ret ifn?)
 
 (s/fdef clojure.core/map
-  :args (s/cat :f ifn? :colls (s/* (s/nilable seqable?)))
-  :ret ::seqable-or-transducer)
+  :args (s/alt :transducer (s/cat :xf ifn?)
+               :seqable (s/cat :f ifn? :colls
+                               (s/+ (s/nilable seqable?))))
+  :ret ::seqable-or-transducer
+  :fn (fn [{:keys [args ret]}]
+        (= (key args) (key ret))))
 
 (s/fdef clojure.core/merge
   :args (s/cat :maps (s/* (s/nilable associative?)))
@@ -80,10 +86,10 @@
   :ret boolean?)
 
 (s/fdef clojure.core/range
-  :args (s/or :arity-0 nil?
-              :arity-1 (s/cat :end number?)
-              :arity-2 (s/cat :start number? :end? number?)
-              :arity-3 (s/cat :start number? :end number? :step number?))
+  :args (s/alt :infinite (s/cat)
+               :finite (s/cat :start (s/? number?)
+                              :end number?
+                              :step (s/? number?)))
   :ret seqable?)
 
 (s/fdef clojure.core/partial

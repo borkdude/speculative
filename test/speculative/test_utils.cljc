@@ -31,6 +31,4 @@
        (clojure.test/is (clojure.string/includes?
                          msg#
                          (str "Call to " (resolve ~symbol)
-                              " did not conform to spec")))))
-
-  )
+                              " did not conform to spec"))))))
