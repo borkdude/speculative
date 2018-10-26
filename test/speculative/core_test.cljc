@@ -5,7 +5,20 @@
    [clojure.test :as t :refer [deftest is testing]]
    [speculative.core :as speculative] :reload
    [speculative.test-utils :refer [with-instrumentation
-                                   throws]]))
+                                   throws
+                                   check]]))
+
+(deftest test-utils-test
+  (testing "Sanity check for test infrastructure"
+    (defn foo [n]
+      "ret")
+    (s/fdef foo
+      :args (s/cat :n number?)
+      :ret number?)
+    (with-instrumentation `foo
+      (is (throws `foo
+                  "Specification-based check failed"
+                  (check `foo [1]))))))
 
 (deftest =-test
   (with-instrumentation `=
@@ -42,9 +55,10 @@
 #?(:clj
    (deftest assoc-test
      (with-instrumentation `assoc
-       (is (assoc nil 'lol 'lol))
-       (is (assoc {} 'lol 'lol 'bar 'lol))
-       (is (assoc [] 0 'lol))
+       (is (check `assoc [nil 'lol 'lol]))
+       (is (check `assoc [{} 'lol 'lol 'bar 'lol]))
+       (is (check `assoc [[] 0 'lol]))
+       ;; error compiling
        (throws `assoc (assoc 'lol 'lol 'lol))
        (throws `assoc (assoc {} 'lol))
        (throws `assoc (assoc [] 'lol 'lol))
@@ -98,11 +112,11 @@
 
 (deftest count-test
   (with-instrumentation `count
-    (is (count nil))
-    (is (count [1]))
-    (is (count {:a 1}))
-    (is (count (into-array [1 2])))
-    (is (count "abc"))
+    (is (check `count [nil]))
+    (is (check `count [[1]]))
+    (is (check `count [{:a 1}]))
+    (is (check `count [(into-array [1 2])]))
+    (is (check `count ["abc"]))
     (throws `count (apply count [1]))))
 
 (deftest every?-test
@@ -236,11 +250,12 @@
 (deftest swap!-test
   (with-instrumentation `swap!
     (throws `swap! (swap! 1 identity))
-    (throws `swap! (swap! (atom nil) 1))
+    (throws `swap! (swap! (atom nil) 1) (+ 1 2 3))
     (is (nil? (swap! (atom nil) identity)))
     (is (nil? (swap! (atom nil) (fn [x y]) 1)))))
 
 ;;;; Scratch
 
 (comment
-  (t/run-tests))
+  (t/run-tests)
+  )
