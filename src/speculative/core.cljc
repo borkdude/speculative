@@ -66,12 +66,12 @@
   :ret ::seqable-or-transducer)
 
 (s/fdef clojure.core/merge
-  :args (s/cat :maps (s/* (s/nilable map?)))
-  :ret (s/nilable map?))
+  :args (s/cat :maps (s/* (s/nilable associative?)))
+  :ret (s/nilable associative?))
 
 (s/fdef clojure.core/merge-with
-  :args (s/cat :f ifn? :maps (s/* (s/nilable map?)))
-  :ret (s/nilable map?))
+  :args (s/cat :f ifn? :maps (s/* (s/nilable associative?)))
+  :ret (s/nilable associative?))
 
 (s/fdef clojure.core/not-any?
   :args (s/cat :pred ::predicate :coll (s/nilable seqable?))
