@@ -23,7 +23,7 @@
 
 (s/fdef clojure.core/count
   :args (s/cat :coll (s/or :counted counted? :seqable seqable?))
-  :ret number?)
+  :ret int?)
 
 (s/def ::predicate ifn?)
 
