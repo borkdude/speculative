@@ -58,7 +58,6 @@
        (is (check `assoc [nil 'lol 'lol]))
        (is (check `assoc [{} 'lol 'lol 'bar 'lol]))
        (is (check `assoc [[] 0 'lol]))
-       ;; error compiling
        (throws `assoc (assoc 'lol 'lol 'lol))
        (throws `assoc (assoc {} 'lol))))
    :cljs nil
