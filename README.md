@@ -71,15 +71,15 @@ user=>
 
 ### Clojure
 
-     clj -A:test:cljtests
+     clj -A:test:clj-tests
      
 ### ClojureScript
 
-    clj -A:test:cljstests
+    clj -A:test:cljs-tests
     
 ### Self-Hosted ClojureScript
    
-    plk -A:test:plktests
+    plk -A:test:plk-tests
     
 ## Contributing
 

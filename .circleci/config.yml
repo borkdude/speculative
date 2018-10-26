@@ -62,8 +62,8 @@ jobs:
           key: v1-dependencies-{{ checksum "project.clj" }}
 
       # run tests!
-      - run: clojure -A:test:cljtests
-      - run: clojure -A:test:cljstests
-      - run: plk -A:test:plktests
+      - run: clojure -A:test:clj-tests
+      - run: clojure -A:test:cljs-tests
+      - run: plk -A:test:plk-tests
 
       - run: .circleci/maybe-deploy.sh
