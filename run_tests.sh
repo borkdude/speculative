@@ -1,5 +1,5 @@
 #!/bin/sh
 
-clj -A:test:cljtests
-clj -A:test:cljstests
-plk -A:test:plktests
+clj -A:test:clj-tests
+clj -A:test:cljs-tests
+plk -A:test:plk-tests

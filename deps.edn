@@ -5,16 +5,19 @@
          :extra-deps {org.clojure/clojurescript {:mvn/version "RELEASE"}
                       org.clojure/test.check {:mvn/version "RELEASE"}
                       net.cgrand/macrovich {:mvn/version "0.2.1"}}}
-  :cljtests
+  :clj-tests
   {:extra-deps {com.cognitect/test-runner
                 {:git/url "https://github.com/cognitect-labs/test-runner"
                  :sha "76568540e7f40268ad2b646110f237a60295fa3c"}}
    :main-opts ["-m" "cognitect.test-runner"
                "-d" "test"]}
-  :cljstests
-  {:main-opts ["-m" "cljs.main"
-               "-re" "nashorn" "-m" "speculative.cljs-test-runner"]}
-  :plktests
+  ;; :cljs-tests
+  ;; {:main-opts ["-m" "cljs.main"
+  ;;              "-re" "nashorn" "-m" "speculative.cljs-test-runner"]}
+  :cljs-tests
+  {:extra-deps {olical/cljs-test-runner {:mvn/version "3.1.0"}}
+   :main-opts ["-m" "cljs-test-runner.main"]}
+  :plk-tests
   {:main-opts ["-m" "speculative.cljs-test-runner"]}
   :coal-mine-clj
   {:extra-deps {github-mfikes/coal-mine 
@@ -34,5 +37,4 @@
                "-re" "node"
                "-e" "(require,'speculative.core,'clojure.spec.test.alpha)"
                "-e" "(clojure.spec.test.alpha/instrument)"
-               "-m" "coal-mine.test-runner"]}
-  }}
+               "-m" "coal-mine.test-runner"]}}}
