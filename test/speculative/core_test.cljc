@@ -17,7 +17,6 @@
       :ret number?)
     (with-instrumentation `foo
       (is (throws `foo
-                  "Specification-based check failed"
                   (check `foo [1]))))))
 
 (deftest =-test
