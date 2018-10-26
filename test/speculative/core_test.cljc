@@ -118,6 +118,11 @@
     (is (fnil identity 'lol))
     (throws `fnil (fnil 1 1))))
 
+(deftest get-test
+  (with-instrumentation `get
+    (is (= 'foo (get #{'foo} 'foo 'bar)))
+    (is (nil? (get 1 1)))))
+
 (deftest juxt-text
   (with-instrumentation `juxt
     (is (= [1 2] ((juxt :a :b) {:a 1 :b 2})))
