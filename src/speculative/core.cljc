@@ -8,17 +8,9 @@
 
 (def non-zero? (complement zero?))
 
-#?(:clj (s/fdef clojure.core//
-          :args (s/or :single-arity (s/cat :non-zero-number
-                                           (s/and number? non-zero?))
-                      :multi-arity (s/cat :number
-                                          number?
-                                          :non-zero-numbers
-                                          (s/+ (s/and number? non-zero?))))
-          :ret number?)
-   :cljs (s/fdef clojure.core//
-           :args (s/cat :numbers (s/+ number?))
-           :ret number?))
+(s/fdef clojure.core//
+  :args (s/cat :numbers (s/+ number?))
+  :ret number?)
 
 (s/fdef clojure.core/apply
   :args (s/cat :f ifn?
