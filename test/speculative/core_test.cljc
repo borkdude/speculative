@@ -16,8 +16,11 @@
       :args (s/cat :n number?)
       :ret number?)
     (with-instrumentation `foo
-      (is (throws `foo
-                  (check `foo [1]))))))
+      (is (thrown-with-msg?
+           #?(:clj clojure.lang.ExceptionInfo
+              :cljs ExceptionInfo)
+           #"Specification-based check failed"
+           (check `foo [1]))))))
 
 (deftest =-test
   (with-instrumentation `=
@@ -27,19 +30,18 @@
 
 (deftest division-test
   ;; Note: / is inlined when used with more than one argument
-  ;; apply is one way to work around this
+  ;; apply is one way to work around this.
   (with-instrumentation `/
-    (is (apply / [1]))
-    (is (apply / [1 2]))
-    (is (apply / [1 2 3]))
+    (is (check `/ [1]))
+    (is (check `/ [1 2]))
+    (is (check `/ [1 2 3]))
     (testing "Divide by zero, no spec error"
       #?(:cljs (is (= ##Inf (/ 0)))
          :clj (is (thrown-with-msg? java.lang.ArithmeticException
                                     #"Divide by zero"
                                     (/ 0)))))
     (throws `/ (apply / nil))
-    (throws `/ (apply / ['a]))
-    ))
+    (throws `/ (apply / ['a]))))
 
 #?(:clj
    (deftest apply-test
@@ -117,8 +119,8 @@
 
 (deftest every?-test
   (with-instrumentation `every?
-    (is (every? pos? nil))
-    (is (= true  (every? identity nil)))
+    (is (check `every? [pos? nil]))
+    (is (check `every? [identity nil]))
     (throws `every? (every? 1 []))))
 
 (deftest filter-test
