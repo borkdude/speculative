@@ -46,9 +46,7 @@
        (is (assoc {} 'lol 'lol 'bar 'lol))
        (is (assoc [] 0 'lol))
        (throws `assoc (assoc 'lol 'lol 'lol))
-       (throws `assoc (assoc {} 'lol))
-       (throws `assoc (assoc [] 'lol 'lol))
-       (throws `assoc (assoc {} 'lol 'lol 'lol 'lol 'lol))))
+       (throws `assoc (assoc {} 'lol))))
    :cljs nil
    ;; bug in planks implementation of spec
    ;;    ClojureScript 1.10.339
