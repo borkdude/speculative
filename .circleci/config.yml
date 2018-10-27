@@ -50,20 +50,18 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "project.clj" }}
+          - v1-dependencies-{{ checksum "deps.edn" }}
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
-
-      - run: lein deps
-
-      - save_cache:
-          paths:
-            - ~/.m2
-          key: v1-dependencies-{{ checksum "project.clj" }}
 
       # run tests!
       - run: clojure -A:test:clj-tests
       - run: clojure -A:test:cljs-tests
       - run: plk -A:test:plk-tests
+
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: v1-dependencies-{{ checksum "deps.edn" }} 
 
       - run: .circleci/maybe-deploy.sh
