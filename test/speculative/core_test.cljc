@@ -9,21 +9,6 @@
                              throws
                              check]]))
 
-(deftest test-utils-test
-  (testing "Sanity check for test infrastructure"
-    (defn foo [n]
-      "ret")
-    (s/fdef foo
-      :args (s/cat :n number?)
-      :ret number?)
-    (with-instrumentation `foo
-      (is (thrown-with-msg?
-           #?(:clj clojure.lang.ExceptionInfo
-              :cljs ExceptionInfo)
-           #"Specification-based check failed"
-           (check `foo [1]))))))
-
-
 (deftest =-test
   (with-instrumentation `=
     (throws `= (=))
