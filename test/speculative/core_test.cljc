@@ -5,6 +5,7 @@
    [clojure.test :as t :refer [deftest is testing]]
    [speculative.core :as speculative] :reload
    [speculative.test-utils :refer [with-instrumentation
+                                   with-unstrumentation
                                    throws
                                    check]]))
 
@@ -22,11 +23,15 @@
            #"Specification-based check failed"
            (check `foo [1]))))))
 
+
 (deftest =-test
   (with-instrumentation `=
-    (is (= 1))
-    (is (= 1 1))
-    (throws `= (=))))
+    (throws `= (=)))
+  ;; TODO: fix with-unstrumentation
+  ;; (stest/instrument `=)
+  (with-unstrumentation `=
+    (is (check `= [1]))
+    (is (check `= [1 1]))))
 
 (deftest division-test
   ;; Note: / is inlined when used with more than one argument

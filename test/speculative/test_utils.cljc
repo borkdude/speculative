@@ -9,17 +9,39 @@
      (:require-macros
       [net.cgrand.macrovich :as macros]
       [speculative.test-utils :refer [with-instrumentation
+                                      with-unstrumentation
                                       throws]])))
+
+(defn instrumented-vars []
+  (keys @@#'stest/instrumented-vars))
 
 (macros/deftime
 
   (defmacro with-instrumentation
     "Executes body while instrumenting symbol."
     [symbol & body]
-    `(do (clojure.spec.test.alpha/instrument ~symbol)
-         (try ~@body
-              (finally
-                (clojure.spec.test.alpha/unstrument ~symbol)))))
+    `(let [vars# (set (instrumented-vars))
+           var# (resolve ~symbol)
+           was-instrumented?# (boolean (vars# var#))]
+       (when-not was-instrumented?#
+         (clojure.spec.test.alpha/instrument ~symbol))
+       (try ~@body
+            (finally
+              (when-not was-instrumented?#
+                (clojure.spec.test.alpha/unstrument ~symbol))))))
+
+  (defmacro with-unstrumentation
+    "Executes body while unstrumenting symbol."
+    [symbol & body]
+    `(let [vars# (set (instrumented-vars))
+           var# (resolve ~symbol)
+           was-instrumented?# (boolean (vars# var#))]
+       (when was-instrumented?#
+         (clojure.spec.test.alpha/unstrument ~symbol))
+       (try ~@body
+            (finally
+              (when was-instrumented?#
+                (clojure.spec.test.alpha/instrument ~symbol))))))
 
   (defmacro throws
     "Asserts that body throws spec error concerning s/fdef for symbol."
@@ -37,16 +59,32 @@
                          (str "Call to " (resolve ~symbol)
                               " did not conform to spec"))))))
 
-(macros/usetime
+(def explain-check #'stest/explain-check)
 
- (defn check*
-   [f spec args]
-   (let [ret (#'stest/check-call f spec args)
-         ex? #?(:clj (instance? clojure.lang.ExceptionInfo ret)
-                :cljs (instance? cljs.core/ExceptionInfo ret))]
-     (if ex?
-       (throw ret)
-       ret))))
+(defn check-call
+  "From clojure.spec.test.alpha, adapted for speculative."
+  [f specs args]
+  (let [cargs (when (:args specs) (s/conform (:args specs) args))]
+    (if (with-unstrumentation `= (= cargs ::s/invalid))
+      (explain-check args (:args specs) args :args)
+      (let [ret (apply f args)
+            cret (when (:ret specs) (s/conform (:ret specs) ret))]
+        (if (with-unstrumentation `= (= cret ::s/invalid))
+          (explain-check args (:ret specs) ret :ret)
+          (if (and (:args specs) (:ret specs) (:fn specs))
+            (if (s/valid? (:fn specs) {:args cargs :ret cret})
+              true
+              (explain-check args (:fn specs) {:args cargs :ret cret} :fn))
+            true))))))
+
+(defn check*
+  [f spec args]
+  (let [ret (check-call f spec args)
+        ex? #?(:clj (instance? clojure.lang.ExceptionInfo ret)
+               :cljs (instance? cljs.core/ExceptionInfo ret))]
+    (if ex?
+      (throw ret)
+      ret)))
 
 (macros/deftime
 
