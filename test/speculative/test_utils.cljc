@@ -23,9 +23,9 @@
     `(let [vars# (set (instrumented-vars))
            var# (resolve ~symbol)
            was-instrumented?# (boolean (vars# var#))]
-       (when-not was-instrumented?#
-         (clojure.spec.test.alpha/instrument ~symbol))
-       (try ~@body
+       (try  (when-not was-instrumented?#
+               (clojure.spec.test.alpha/instrument ~symbol))
+             ~@body
             (finally
               (when-not was-instrumented?#
                 (clojure.spec.test.alpha/unstrument ~symbol))))))
@@ -36,9 +36,9 @@
     `(let [vars# (set (instrumented-vars))
            var# (resolve ~symbol)
            was-instrumented?# (boolean (vars# var#))]
-       (when was-instrumented?#
-         (clojure.spec.test.alpha/unstrument ~symbol))
-       (try ~@body
+       (try (when was-instrumented?#
+              (clojure.spec.test.alpha/unstrument ~symbol))
+            ~@body
             (finally
               (when was-instrumented?#
                 (clojure.spec.test.alpha/instrument ~symbol))))))
