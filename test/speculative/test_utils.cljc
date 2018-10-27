@@ -26,9 +26,9 @@
        (try  (when-not was-instrumented?#
                (clojure.spec.test.alpha/instrument ~symbol))
              ~@body
-            (finally
-              (when-not was-instrumented?#
-                (clojure.spec.test.alpha/unstrument ~symbol))))))
+             (finally
+               (when-not was-instrumented?#
+                 (clojure.spec.test.alpha/unstrument ~symbol))))))
 
   (defmacro with-unstrumentation
     "Executes body while unstrumenting symbol."
