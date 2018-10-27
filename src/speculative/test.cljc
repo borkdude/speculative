@@ -1,6 +1,7 @@
 (ns speculative.test
   "Useful macros and functions for clojure.spec.test.alpha. Relies on
-  spec.test internals. API may change at any time."
+  spec.test internals. API may change at any time. Requires dependency
+  on macrovich."
   (:require
    [clojure.string :as str]
    [clojure.test :as t :refer [deftest is testing]]
@@ -61,7 +62,7 @@
                          (str "Call to " (resolve ~symbol)
                               " did not conform to spec"))))))
 
-(def explain-check #'stest/explain-check)
+(def ^:private explain-check #'stest/explain-check)
 
 (defn check-call
   "From clojure.spec.test.alpha, adapted for speculative."
@@ -77,7 +78,7 @@
             (if (s/valid? (:fn specs) {:args cargs :ret cret})
               true
               (explain-check args (:fn specs) {:args cargs :ret cret} :fn))
-            true))))))
+            ret))))))
 
 (defn check*
   [f spec args]
@@ -92,8 +93,8 @@
 
   (defmacro check
     "Applies args to function resolved by symbol. Checks :args, :ret
-  and :fn specs for spec resolved by symbol. Returns true if check
-  succeeded."
+  and :fn specs for spec resolved by symbol. Returns return value if check
+  succeeded, else throws."
     [symbol args]
     (assert (vector? args))
     `(let [f# (resolve ~symbol)

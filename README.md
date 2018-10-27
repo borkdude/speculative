@@ -67,6 +67,57 @@ user=>
 
 ```
 
+## Test tools
+
+The namespace `speculative.test` provides macros and functions to be used with
+`clojure.spec.test.alpha`. These are used to verify that speculative specs work
+as intended, but may also come in handy in other projects. You have to bring in
+[macrovich](https://github.com/cgrand/macrovich) as an extra dependency if you
+want to use this namespace.
+
+``` clojure
+$ clj -Sdeps '{:deps {net.cgrand/macrovich {:mvn/version "0.2.1"}}}'
+Clojure 1.10.0-RC1
+
+user=> (require '[speculative.test :refer [check
+                                    with-instrumentation]])
+nil
+
+user=> (require '[clojure.spec.alpha :as s])
+nil
+
+user=> (s/fdef foo
+  :args (s/cat :n number?)
+  :ret number?)
+user/foo
+
+user=> (defn foo [n]
+  "ret")
+#'user/foo
+
+user=> (check `foo [1])
+Evaluation error - invalid arguments to null at clojure.spec.test.alpha/explain-check (alpha.clj:278).
+"ret" - failed: number? at: [:ret]
+
+user=> (s/fdef foo
+  :args (s/cat :n number?)
+  :ret string?)
+user/foo
+
+user=> (check `foo [1])
+"ret"
+
+user=> (with-instrumentation `foo
+  (foo "a"))
+Evaluation error - invalid arguments to user/foo at (NO_SOURCE_FILE:15).
+"a" - failed: number? at: [:n]
+
+user=> (foo "a")
+"ret"
+
+user=>
+```
+
 ## Tests
 
 ### Clojure

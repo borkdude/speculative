@@ -1,5 +1,6 @@
 (ns speculative.cljs-test-runner
   (:require
+   [speculative.test-test]
    [speculative.core-test]
    [cljs.test]))
 
@@ -15,4 +16,5 @@
     (exit 1)))
 
 (defn -main [& args]
-  (cljs.test/run-tests 'speculative.core-test))
+  (cljs.test/run-tests 'speculative.test-test
+                       'speculative.core-test))
