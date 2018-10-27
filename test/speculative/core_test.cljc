@@ -4,10 +4,10 @@
    [clojure.spec.test.alpha :as stest]
    [clojure.test :as t :refer [deftest is testing]]
    [speculative.core :as speculative] :reload
-   [speculative.test-utils :refer [with-instrumentation
-                                   with-unstrumentation
-                                   throws
-                                   check]]))
+   [speculative.test :refer [with-instrumentation
+                             with-unstrumentation
+                             throws
+                             check]]))
 
 (deftest test-utils-test
   (testing "Sanity check for test infrastructure"

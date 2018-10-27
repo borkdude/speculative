@@ -1,4 +1,6 @@
-(ns speculative.test-utils
+(ns speculative.test
+  "Useful macros and functions for clojure.spec.test.alpha. Relies on
+  spec.test internals. API may change at any time."
   (:require
    [clojure.string :as str]
    [clojure.test :as t :refer [deftest is testing]]
@@ -8,9 +10,9 @@
   #?(:cljs
      (:require-macros
       [net.cgrand.macrovich :as macros]
-      [speculative.test-utils :refer [with-instrumentation
-                                      with-unstrumentation
-                                      throws]])))
+      [speculative.test :refer [with-instrumentation
+                                with-unstrumentation
+                                throws]])))
 
 (defn instrumented-vars []
   (keys @@#'stest/instrumented-vars))
