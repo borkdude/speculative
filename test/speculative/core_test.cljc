@@ -26,10 +26,7 @@
 
 (deftest =-test
   (with-instrumentation `=
-    (throws `= (=)))
-  ;; TODO: fix with-unstrumentation
-  ;; (stest/instrument `=)
-  (with-unstrumentation `=
+    (throws `= (=))
     (is (check `= [1]))
     (is (check `= [1 1]))))
 
