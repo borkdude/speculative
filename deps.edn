@@ -8,6 +8,7 @@
   :repl
   {:main-opts
    ["-e" "(require,'[speculative.core])"
+    "-e" "(require,'[speculative.test-utils,:refer,[with-instrumentation,with-unstrumentation,check]])"
     "-e" "(require,'[clojure.spec.alpha,:as,s])"
     "-e" "(require,'[clojure.spec.test.alpha,:as,stest])"
     "-r"]}
