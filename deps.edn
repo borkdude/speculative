@@ -5,6 +5,12 @@
          :extra-deps {org.clojure/clojurescript {:mvn/version "RELEASE"}
                       org.clojure/test.check {:mvn/version "RELEASE"}
                       net.cgrand/macrovich {:mvn/version "0.2.1"}}}
+  :repl
+  {:main-opts
+   ["-e" "(require,'[speculative.core])"
+    "-e" "(require,'[clojure.spec.alpha,:as,s])"
+    "-e" "(require,'[clojure.spec.test.alpha,:as,stest])"
+    "-r"]}
   :clj-tests
   {:extra-deps {com.cognitect/test-runner
                 {:git/url "https://github.com/cognitect-labs/test-runner"
