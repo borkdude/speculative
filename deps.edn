@@ -1,9 +1,10 @@
 {:paths ["resources" "src"]
- :deps {org.clojure/clojure {:mvn/version "RELEASE"}}
+ :deps {org.clojure/clojure {:mvn/version "1.10.0-RC1"}}
  :aliases
  {:test {:extra-paths ["test"]
-         :extra-deps {org.clojure/clojurescript {:mvn/version "RELEASE"}
-                      org.clojure/test.check {:mvn/version "RELEASE"}
+         :extra-deps {org.clojure/clojurescript {:git/url "https://github.com/clojure/clojurescript"
+                                                 :sha "4fb83eff87cc456600a3fd21c111e99a41c61285"}
+                      org.clojure/test.check {:mvn/version "0.9.0"}
                       net.cgrand/macrovich {:mvn/version "0.2.1"}}}
   :repl
   {:main-opts
