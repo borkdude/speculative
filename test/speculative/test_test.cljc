@@ -47,8 +47,7 @@
     (testing "manual instrumentation is restored"
       (throws `foo (foo "not a number")))
 
-    #_(testing "undo manual instrumentation"
-      ;; why does this call in cljs not work
+    (testing "undo manual instrumentation"
       (stest/unstrument `foo)
       (is (= "ret" (foo "not a number"))))
 
@@ -56,7 +55,7 @@
       (with-instrumentation `foo
         (throws `foo (foo "not a number"))))
 
-    #_(testing "no instrumentation"
+    (testing "no instrumentation"
       (is (= "ret" (foo "not a number"))))))
 
 ;;;; Scratch

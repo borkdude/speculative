@@ -1,7 +1,6 @@
 (ns speculative.test
-  "Useful macros and functions for clojure.spec.test.alpha. Relies on
-  spec.test internals. API may change at any time. Requires dependency
-  on macrovich."
+  "Useful macros and functions for clojure.spec.test.alpha. API may
+  change at any time. Requires dependency on macrovich."
   (:require
    [clojure.string :as str]
    [clojure.test :as t :refer [deftest is testing]]
@@ -15,36 +14,46 @@
                                 with-unstrumentation
                                 throws]])))
 
-(defn instrumented-vars []
-  (keys @@#'stest/instrumented-vars))
+(defn throwable? [e]
+  (instance? #?(:clj Throwable
+                :cljs js/Error) e))
 
 (macros/deftime
+
+  ;; with-(i/u)nstrumentation avoids using finally because when I did, these
+  ;; macros didn't work properly in cljs
 
   (defmacro with-instrumentation
     "Executes body while instrumenting symbol."
     [symbol & body]
-    `(let [vars# (set (instrumented-vars))
-           var# (resolve ~symbol)
-           was-instrumented?# (boolean (vars# var#))]
-       (try  (when-not was-instrumented?#
-               (clojure.spec.test.alpha/instrument ~symbol))
-             ~@body
-             (finally
-               (when-not was-instrumented?#
-                 (clojure.spec.test.alpha/unstrument ~symbol))))))
+    `(let [was-instrumented?#
+           (boolean
+            (seq (clojure.spec.test.alpha/unstrument ~symbol)))]
+       (let [ret# (try (clojure.spec.test.alpha/instrument ~symbol)
+                       ~@body
+                       (catch #?(:clj Exception :cljs :default) e#
+                         e#))]
+         (when-not was-instrumented?#
+           (clojure.spec.test.alpha/unstrument ~symbol))
+         (if (throwable? ret#)
+           (throw ret#)
+           ret#))))
 
   (defmacro with-unstrumentation
     "Executes body while unstrumenting symbol."
     [symbol & body]
-    `(let [vars# (set (instrumented-vars))
-           var# (resolve ~symbol)
-           was-instrumented?# (boolean (vars# var#))]
-       (try (when was-instrumented?#
-              (clojure.spec.test.alpha/unstrument ~symbol))
-            ~@body
-            (finally
-              (when was-instrumented?#
-                (clojure.spec.test.alpha/instrument ~symbol))))))
+    `(let [was-instrumented?#
+           (boolean
+            (seq (clojure.spec.test.alpha/unstrument ~symbol)))]
+       (let [ret# (try (clojure.spec.test.alpha/unstrument ~symbol)
+                       ~@body
+                       (catch #?(:clj Exception :cljs :default) e#
+                         e#))]
+         (when was-instrumented?#
+           (clojure.spec.test.alpha/instrument ~symbol))
+         (if (throwable? ret#)
+           (throw ret#)
+           ret#))))
 
   (defmacro throws
     "Asserts that body throws spec error concerning s/fdef for symbol."
@@ -67,18 +76,19 @@
 (defn check-call
   "From clojure.spec.test.alpha, adapted for speculative."
   [f specs args]
-  (let [cargs (when (:args specs) (s/conform (:args specs) args))]
-    (if (with-unstrumentation `= (= cargs ::s/invalid))
-      (explain-check args (:args specs) args :args)
-      (let [ret (apply f args)
-            cret (when (:ret specs) (s/conform (:ret specs) ret))]
-        (if (with-unstrumentation `= (= cret ::s/invalid))
-          (explain-check args (:ret specs) ret :ret)
-          (if (and (:args specs) (:ret specs) (:fn specs))
-            (if (s/valid? (:fn specs) {:args cargs :ret cret})
-              true
-              (explain-check args (:fn specs) {:args cargs :ret cret} :fn))
-            ret))))))
+  (stest/with-instrument-disabled
+    (let [cargs (when (:args specs) (s/conform (:args specs) args))]
+      (if (= cargs ::s/invalid)
+        (explain-check args (:args specs) args :args)
+        (let [ret (apply f args)
+              cret (when (:ret specs) (s/conform (:ret specs) ret))]
+          (if (= cret ::s/invalid)
+            (explain-check args (:ret specs) ret :ret)
+            (if (and (:args specs) (:ret specs) (:fn specs))
+              (if (s/valid? (:fn specs) {:args cargs :ret cret})
+                true
+                (explain-check args (:fn specs) {:args cargs :ret cret} :fn))
+              ret)))))))
 
 (defn check*
   [f spec args]

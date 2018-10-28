@@ -188,7 +188,8 @@
 
 (deftest range-test
   (with-instrumentation `range
-    (is (range))
+    ;; https://dev.clojure.org/jira/browse/CLJS-2948
+    ;; (is (range))
     (is (range 1))
     (is (range 1 10))
     (is (range 10 0 -1))
