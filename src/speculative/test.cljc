@@ -20,8 +20,8 @@
 
 (macros/deftime
 
-  ;; with-(i/u)nstrumentation avoids using finally because when I did, these
-  ;; macros didn't work properly in cljs
+  ;; with-(i/u)nstrumentation avoids using finally as a workaround for
+  ;; https://dev.clojure.org/jira/browse/CLJS-2949
 
   (defmacro with-instrumentation
     "Executes body while instrumenting symbol."
