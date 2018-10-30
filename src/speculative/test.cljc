@@ -86,7 +86,7 @@
             (explain-check args (:ret specs) ret :ret)
             (if (and (:args specs) (:ret specs) (:fn specs))
               (if (s/valid? (:fn specs) {:args cargs :ret cret})
-                true
+                ret
                 (explain-check args (:fn specs) {:args cargs :ret cret} :fn))
               ret)))))))
 

@@ -128,7 +128,7 @@
 
 (s/fdef clojure.core/some
   :args (s/cat :pred ::predicate :coll (s/nilable seqable?))
-  :ret (s/or :found some? :not-found nil))
+  :ret (s/or :found some? :not-found nil?))
 
 (s/fdef clojure.core/some?
   :args (s/cat :x any?)

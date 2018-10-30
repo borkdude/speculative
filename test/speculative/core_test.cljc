@@ -17,11 +17,11 @@
 
 (deftest division-test
   ;; Note: / is inlined when used with more than one argument
-  ;; apply is one way to work around this.
-  (with-instrumentation `/
-    (is (check `/ [1]))
-    (is (check `/ [1 2]))
-    (is (check `/ [1 2 3]))
+  ;; With `check` it's not inlined.
+  (is (check `/ [1]))
+  (is (check `/ [1 2]))
+  (is (check `/ [1 2 3]))
+  (with-instrumentation `/ 
     (testing "Divide by zero, no spec error"
       #?(:cljs (is (= ##Inf (/ 0)))
          :clj (is (thrown-with-msg? java.lang.ArithmeticException
@@ -32,9 +32,9 @@
 
 #?(:clj
    (deftest apply-test
+     (is (= 21 (check `apply [+ 1 2 3 [4 5 6]])))
+     (is (= 0 (check `apply [+ nil])))
      (with-instrumentation `apply
-       (is (apply + 1 2 3 [4 5 6]))
-       (is (apply + nil))
        (throws `apply (apply + 1 2 3 4))))
    :cljs nil
    ;; waiting for https://dev.clojure.org/jira/browse/CLJS-2942
@@ -42,10 +42,10 @@
 
 #?(:clj
    (deftest assoc-test
+     (is (check `assoc [nil 'lol 'lol]))
+     (is (check `assoc [{} 'lol 'lol 'bar 'lol]))
+     (is (check `assoc [[] 0 'lol]))
      (with-instrumentation `assoc
-       (is (check `assoc [nil 'lol 'lol]))
-       (is (check `assoc [{} 'lol 'lol 'bar 'lol]))
-       (is (check `assoc [[] 0 'lol]))
        (throws `assoc (assoc 'lol 'lol 'lol))
        (throws `assoc (assoc {} 'lol))))
    :cljs nil
@@ -96,149 +96,152 @@
    )
 
 (deftest count-test
+  (is (check `count [nil]))
+  (is (check `count [[1]]))
+  (is (check `count [{:a 1}]))
+  (is (check `count [(into-array [1 2])]))
+  (is (check `count ["abc"]))
   (with-instrumentation `count
-    (is (check `count [nil]))
-    (is (check `count [[1]]))
-    (is (check `count [{:a 1}]))
-    (is (check `count [(into-array [1 2])]))
-    (is (check `count ["abc"]))
     (throws `count (apply count [1]))))
 
 (deftest every?-test
+  (is (check `every? [pos? nil]))
+  (is (check `every? [identity nil]))
   (with-instrumentation `every?
-    (is (check `every? [pos? nil]))
-    (is (check `every? [identity nil]))
     (throws `every? (every? 1 []))))
 
 (deftest filter-test
+  (is (check `filter [pos?]))
+  (is (check `filter [pos? nil]))
+  (is (= '()  (check `filter [identity nil])))
   (with-instrumentation `filter
-    (is (filter pos?))
-    (is (filter pos? nil))
-    (is (= '()  (filter identity nil)))
     (throws `filter (filter 1))))
 
 (deftest first-test
+  (is (nil? (check `first [nil])))
+  (is (= 1 (check `first ['(1 2 3)])))
   (with-instrumentation `first
-    (is (nil? (first nil)))
-    (is (= 1 (first '(1 2 3))))
     (throws `first (first 1))))
 
 (deftest fnil-test
+  (is (check `fnil [identity 'lol]))
   (with-instrumentation `fnil
-    (is (fnil identity 'lol))
     (throws `fnil (fnil 1 1))))
 
 (deftest get-test
+  (is (= 'foo (check `get [#{'foo} 'foo 'bar])))
+  (is (nil? (check `get [1 1])))
   (with-instrumentation `get
-    (is (= 'foo (get #{'foo} 'foo 'bar)))
-    (is (nil? (get 1 1)))))
+    (throws `get (get))))
 
 (deftest juxt-text
+  (is (= [1 2] ((check `juxt [:a :b]) {:a 1 :b 2})))
   (with-instrumentation `juxt
-    (is (= [1 2] ((juxt :a :b) {:a 1 :b 2})))
     (throws `juxt (juxt 1 2 3))))
 
 (deftest map-test
+  (is (check `map [inc]))
+  (is (= '(2 3 4) (check `map [inc [1 2 3]])))
+  (is (= '(1 2) (check `map [(fn [[k v]] v) {:a 1 :b 2}])))
+  (testing "multiple collections"
+    (is (= '(5 7 9)
+           (check `map [(fn [a b] (+ a b))
+                        [1 2 3] [4 5 6]]))))
+  (testing "nil collection"
+    (is (= '() (check `map [identity nil]))))
   (with-instrumentation `map
-    (is (map inc))
-    (is (= '(2 3 4) (map inc [1 2 3])))
-    (is (= '(1 2) (map (fn [[k v]] v) {:a 1 :b 2})))
-    (testing "multiple collections"
-      (is (= '(5 7 9)
-             (map (fn [a b] (+ a b))
-                  [1 2 3] [4 5 6]))))
-    (testing "nil collection"
-      (is (= '() (map identity nil))))
     (throws `map (map 1))))
 
 #?(:clj
    (deftest merge-test
+     (is (check `merge [{}]))
+     (is (nil? (check `merge [])))
+     (is (check `merge [{} nil]))
+     (is (nil? (check `merge [nil])))
      (with-instrumentation `merge
-       (is (merge {}))
-       (is (nil? (merge)))
-       (is (merge {} nil))
-       (is (nil? (merge nil)))
        (throws `merge (merge 1))))
    :cljs
    ;; waiting for https://dev.clojure.org/jira/browse/CLJS-2942
    nil)
 #?(:clj
    (deftest merge-with-test
+     (is (check `merge-with [+ {}]))
+     (is (nil? (check `merge-with [+])))
+     (is (check `merge-with [+ {} nil]))
+     (is (nil? (check `merge-with [+ nil])))
      (with-instrumentation `merge-with
-       (is (merge-with + {}))
-       (is (nil? (merge-with +)))
-       (is (merge-with + {} nil))
-       (is (nil? (merge-with + nil)))
        (throws `merge-with (merge-with 1))))
    :cljs
    ;; waiting for https://dev.clojure.org/jira/browse/CLJS-2942
    nil)
 
 (deftest not-any-test
+  (is (check `not-any? [pos? nil]))
+  (is (= true (check `not-any? [identity nil])))
   (with-instrumentation `not-any?
-    (is (not-any? pos? nil))
-    (is (= true  (not-any? identity nil)))
     (throws `not-any? (not-any? 1 []))))
 
 (deftest not-every-test
+  (is (false? (check `not-every? [pos? nil])))
+  (is (check `not-every? [pos? [-1 1]]))
   (with-instrumentation `not-every?
-    (is (false? (not-every? pos? nil)))
-    (is (not-every? pos? [-1 1]))
     (throws `not-every? (not-every? 1 []))))
 
 (deftest range-test
+  (is (check `range [1]))
+  (is (check `range [1 10]))
+  (is (check `range [10 0 -1]))
+  (is (check `range [1.1 2.2 3.3]))
   (with-instrumentation `range
     ;; https://dev.clojure.org/jira/browse/CLJS-2948
     ;; (is (range))
-    (is (range 1))
-    (is (range 1 10))
-    (is (range 10 0 -1))
-    (is (range 1.1 2.2 3.3))
     (throws `range (range 'lol))
     (throws `range (range 0 1 2 3))))
 
 (deftest partial-test
+  (is (check `partial [identity]))
+  (is (check `partial [+ 1 2 3]))
   (with-instrumentation `partial
-    (is (partial identity))
-    (is (partial + 1 2 3))
     (throws `partial (partial 1))))
 
 (deftest reduce-test
+  (is (check `reduce [+ [1 2]]))
+  (is (check `reduce [+ 0 [1 2]]))
   (with-instrumentation `reduce
-    (is (reduce + [1 2]))
-    (is (reduce + 0 [1 2]))
     (throws `reduce (reduce 1 [1 2]))
     (throws `reduce (reduce + 0 1))))
 
 (deftest remove-test
+  (is (check `remove [pos?]))
+  (is (check `remove [pos? nil]))
+  (is (= '() (check `remove [identity nil])))
   (with-instrumentation `remove
-    (is (remove pos?))
-    (is (remove pos? nil))
-    (is (= '()  (remove identity nil)))
     (throws `remove (remove 1))))
 
 (deftest reset!-test
+  (is (check `reset! [(atom nil) 1]))
   (with-instrumentation `reset!
-    (is (reset! (atom nil) 1))
     (throws `reset! (reset! 1 (atom nil)))))
 
 (deftest some-test
+  (is (not (check `some [pos? nil])))
+  (is (nil? (check `some [identity nil])))
   (with-instrumentation `some
-    (is (not (some pos? nil)))
-    (is (nil? (some identity nil)))
     (throws `some (some 1 []))))
 
 (deftest str-test
+  (is (= "" (check `str [nil])))
+  (is (= "lolfoo" (check `str ["lol" "foo"])))
   (with-instrumentation `str
-    (is (= "" (str nil)))
-    (is (= "lolfoo" (str "lol" "foo")))))
+    ;; there's really no way to make str crash, is there?
+    ))
 
 (deftest swap!-test
+  (is (nil? (check `swap! [(atom nil) identity])))
+  (is (nil? (check `swap! [(atom nil) (fn [x y]) 1])))
   (with-instrumentation `swap!
     (throws `swap! (swap! 1 identity))
-    (throws `swap! (swap! (atom nil) 1) (+ 1 2 3))
-    (is (nil? (swap! (atom nil) identity)))
-    (is (nil? (swap! (atom nil) (fn [x y]) 1)))))
+    (throws `swap! (swap! (atom nil) 1) (+ 1 2 3))))
 
 ;;;; Scratch
 
