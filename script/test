@@ -1,0 +1,23 @@
+#!/bin/sh
+
+set $exit_code=0
+
+echo "=== Running clj-tests"
+clojure -A:test:clj-tests
+if [ $? -eq 1 ]; then
+    exit_code=1
+fi
+
+echo "\n=== Running cljs-tests"
+clojure -A:test:cljs-test-runner
+if [ $? -eq 1 ]; then
+    exit_code=1
+fi
+
+echo "\n=== Running plk-tests"
+plk -A:test:plk-tests
+if [ $? -eq 1 ]; then
+    exit_code=1
+fi
+
+exit $exit_code

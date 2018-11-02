@@ -2,32 +2,38 @@
  :deps {org.clojure/clojure {:mvn/version "RELEASE"}}
  :aliases
  {:test {:extra-paths ["test"]
-         :extra-deps {org.clojure/clojurescript {:mvn/version "RELEASE"}
+         :extra-deps {org.clojure/clojurescript
+                      {:mvn/version "1.10.339"}
                       org.clojure/test.check {:mvn/version "RELEASE"}
                       net.cgrand/macrovich {:mvn/version "0.2.1"}}}
-  :repl
+  :repl-init
   {:main-opts
    ["-e" "(require,'[speculative.core])"
     "-e" "(require,'[speculative.test,:refer,[with-instrumentation,with-unstrumentation,check]])"
     "-e" "(require,'[clojure.spec.alpha,:as,s])"
     "-e" "(require,'[clojure.spec.test.alpha,:as,stest])"
     "-r"]}
-  :clj-tests
+  :clj-tests ;; we use a script, because then we can call shutdown-agents, which
+             ;; brings down the process faster after running generative tests
+  {:main-opts ["-m" "speculative.test-runner"]}
+  :clj-test-runner
   {:extra-deps {com.cognitect/test-runner
                 {:git/url "https://github.com/cognitect-labs/test-runner"
                  :sha "76568540e7f40268ad2b646110f237a60295fa3c"}}
    :main-opts ["-m" "cognitect.test-runner"
                "-d" "test"]}
-  ;; :cljs-tests
-  ;; {:main-opts ["-m" "cljs.main"
-  ;;              "-re" "nashorn" "-m" "speculative.cljs-test-runner"]}
+  :cljs-repl {:main-opts ["-m" "cljs.main" "-re" "node"]}
   :cljs-tests
+  {:main-opts ["-m" "cljs.main" "-re" "node" "-m" "speculative.test-runner"]}
+  ;; we use the test runner because vanilla cljs.main + node doesn't exit
+  ;; properly
+  :cljs-test-runner
   {:extra-deps {olical/cljs-test-runner {:mvn/version "3.1.0"}}
    :main-opts ["-m" "cljs-test-runner.main"]}
   :plk-tests
-  {:main-opts ["-m" "speculative.cljs-test-runner"]}
+  {:main-opts ["-m" "speculative.test-runner"]}
   :coal-mine-clj
-  {:extra-deps {github-mfikes/coal-mine 
+  {:extra-deps {github-mfikes/coal-mine
                 {:git/url "https://github.com/mfikes/coal-mine"
                  :sha "4b85fa78af4ec7be2e56803440ff78186f9b10c8"}}
    :jvm-opts ["-XX:CompressedClassSpaceSize=2g"]
@@ -35,7 +41,7 @@
                "-e" "(clojure.spec.test.alpha/instrument)"
                "-m" "coal-mine.test-runner"]}
   :coal-mine-cljs
-  {:extra-deps {github-mfikes/coal-mine 
+  {:extra-deps {github-mfikes/coal-mine
                 {:git/url "https://github.com/mfikes/coal-mine"
                  :sha "4b85fa78af4ec7be2e56803440ff78186f9b10c8"}}
    :jvm-opts ["-Xmx6g"]
