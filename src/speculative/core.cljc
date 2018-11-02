@@ -1,5 +1,7 @@
 (ns speculative.core
+  (:refer-clojure :exclude [map-entry?])
   (:require [clojure.spec.alpha :as s]
+            [clojure.spec.gen.alpha :as gen]
             [clojure.spec.test.alpha :as stest]))
 
 (s/fdef clojure.core/=
@@ -60,6 +62,16 @@
 (s/fdef clojure.core/juxt
   :args (s/+ ifn?)
   :ret ifn?)
+
+(defn map-entry? [v]
+  #?(:cljs (clojure.core/map-entry? v)
+     :clj #(instance? java.util.Map$Entry %)))
+
+(s/def ::map-entry
+  (s/with-gen map-entry?
+    (fn []
+      (gen/fmap first
+                (s/gen (s/and map? seq))))))
 
 (s/fdef clojure.core/map
   :args (s/alt :transducer (s/cat :xf ifn?)

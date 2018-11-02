@@ -3,6 +3,7 @@
    [clojure.spec.alpha :as s]
    [clojure.spec.test.alpha :as stest]
    [clojure.test :as t :refer [is deftest testing]]
+   [clojure.spec.gen.alpha :as gen]
    [speculative.core :as speculative] :reload
    [speculative.test :refer [with-instrumentation
                              with-unstrumentation
@@ -153,6 +154,11 @@
     (is (= '() (check `map [identity nil]))))
   (with-instrumentation `map
     (throws `map (map 1))))
+
+(deftest map-entry-test
+  (let [mes (gen/sample (s/gen ::speculative/map-entry))]
+    (is (seq mes))
+    (is (every? #(= 2 (count %)) mes))))
 
 #?(:clj
    (deftest merge-test

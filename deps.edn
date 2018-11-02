@@ -12,6 +12,7 @@
     "-e" "(require,'[speculative.test,:refer,[with-instrumentation,with-unstrumentation,check]])"
     "-e" "(require,'[clojure.spec.alpha,:as,s])"
     "-e" "(require,'[clojure.spec.test.alpha,:as,stest])"
+    "-e" "(require,'[clojure.spec.gen.alpha,:as,gen])"
     "-r"]}
   :clj-tests ;; we use a script, because then we can call shutdown-agents, which
              ;; brings down the process faster after running generative tests
@@ -22,7 +23,13 @@
                  :sha "76568540e7f40268ad2b646110f237a60295fa3c"}}
    :main-opts ["-m" "cognitect.test-runner"
                "-d" "test"]}
-  :cljs-repl {:main-opts ["-m" "cljs.main" "-re" "node"]}
+  :cljs-repl {:main-opts ["-m" "cljs.main" "-re" "node"
+                          "-e" "(require,'[speculative.core])"
+                          "-e" "(require,'[speculative.test,:refer,[with-instrumentation,with-unstrumentation,check]])"
+                          "-e" "(require,'[clojure.spec.alpha,:as,s])"
+                          "-e" "(require,'[clojure.spec.test.alpha,:as,stest])"
+                          "-e" "(require,'[clojure.spec.gen.alpha,:as,gen])"
+                          "-r"]}
   :cljs-tests
   {:main-opts ["-m" "cljs.main" "-re" "node" "-m" "speculative.test-runner"]}
   ;; we use the test runner because vanilla cljs.main + node doesn't exit
