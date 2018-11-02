@@ -55,9 +55,8 @@ jobs:
           - v1-dependencies-
 
       # run tests!
-      - run: clojure -A:test:clj-tests
-      - run: clojure -A:test:cljs-tests
-      - run: plk -A:test:plk-tests
+      - run: script/clean
+      - run: script/test
 
       - save_cache:
           paths:

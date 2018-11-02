@@ -2,18 +2,20 @@
   (:require
    [clojure.spec.alpha :as s]
    [clojure.spec.test.alpha :as stest]
-   [clojure.test :as t :refer [deftest is testing]]
+   [clojure.test :as t :refer [is deftest testing]]
    [speculative.core :as speculative] :reload
    [speculative.test :refer [with-instrumentation
                              with-unstrumentation
                              throws
-                             check]]))
+                             check]]
+   [speculative.test-utils :refer [gentest]]))
 
 (deftest =-test
+  (is (check `= [1]))
+  (is (check `= [1 1]))
+  (gentest `=)
   (with-instrumentation `=
-    (throws `= (=))
-    (is (check `= [1]))
-    (is (check `= [1 1]))))
+    (throws `= (=))))
 
 (deftest division-test
   ;; Note: / is inlined when used with more than one argument
@@ -232,6 +234,7 @@
 (deftest str-test
   (is (= "" (check `str [nil])))
   (is (= "lolfoo" (check `str ["lol" "foo"])))
+  (gentest `str)
   (with-instrumentation `str
     ;; there's really no way to make str crash, is there?
     ))
@@ -246,5 +249,5 @@
 ;;;; Scratch
 
 (comment
-  (t/run-tests)
+  (t/run-tests) 
   )

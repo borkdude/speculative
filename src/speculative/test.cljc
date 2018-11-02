@@ -12,7 +12,9 @@
       [net.cgrand.macrovich :as macros]
       [speculative.test :refer [with-instrumentation
                                 with-unstrumentation
-                                throws]])))
+                                throws
+                                check
+                                gentest]])))
 
 (defn throwable? [e]
   (instance? #?(:clj Throwable
@@ -111,6 +113,40 @@
            spec# (s/get-spec ~symbol)]
        (check* f# spec# ~args))))
 
+
+(defn test-check-kw
+  "Returns qualified keyword used for interfacing with
+  clojure.test.check"
+  [name]
+  (keyword #?(:clj "clojure.spec.test.check"
+              :cljs "clojure.test.check") name))
+
+(defn success?
+  "Returns true if all spec.test.check tests have pass? true."
+  [stc-result]
+  (and (seq stc-result)
+       (every? (fn [res]
+                 (let [check-ret (get res (test-check-kw "ret"))]
+                   (:pass? check-ret)))
+               stc-result)))
+
+(macros/deftime
+
+  (defmacro gentest
+    "spec.test/check with third arg for passing clojure.test.check options."
+    ([sym]
+     `(gentest ~sym nil nil))
+    ([sym opts tc-opts]
+     `(clojure.spec.test.alpha/with-instrument-disabled
+        (println "generatively testing" ~sym)
+        (let [opts# ~opts
+              tc-opts# ~tc-opts
+              opts# (update-in opts# [(test-check-kw "opts")]
+                               (fn [o#]
+                                 (merge o# tc-opts#)))
+              ret#
+              (clojure.spec.test.alpha/check ~sym opts#)]
+          ret#)))))
 
 ;;;; Scratch
 
