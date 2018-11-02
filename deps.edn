@@ -3,10 +3,10 @@
  :aliases
  {:test {:extra-paths ["test"]
          :extra-deps {org.clojure/clojurescript
-                      {:mvn/version "1.10.339"}
+                      {:mvn/version "1.10.439"}
                       org.clojure/test.check {:mvn/version "RELEASE"}
                       net.cgrand/macrovich {:mvn/version "0.2.1"}}}
-  :repl-init
+  :repl ;; works for clj and planck, use :cljs-repl for normal cljs
   {:main-opts
    ["-e" "(require,'[speculative.core])"
     "-e" "(require,'[speculative.test,:refer,[with-instrumentation,with-unstrumentation,check]])"
