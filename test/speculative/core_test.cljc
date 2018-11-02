@@ -24,7 +24,7 @@
   (is (check `/ [1]))
   (is (check `/ [1 2]))
   (is (check `/ [1 2 3]))
-  (with-instrumentation `/ 
+  (with-instrumentation `/
     (testing "Divide by zero, no spec error"
       #?(:cljs (is (= ##Inf (/ 0)))
          :clj (is (thrown-with-msg? java.lang.ArithmeticException
@@ -33,70 +33,19 @@
     (throws `/ (apply / nil))
     (throws `/ (apply / ['a]))))
 
-#?(:clj
-   (deftest apply-test
-     (is (= 21 (check `apply [+ 1 2 3 [4 5 6]])))
-     (is (= 0 (check `apply [+ nil])))
-     (with-instrumentation `apply
-       (throws `apply (apply + 1 2 3 4))))
-   :cljs nil
-   ;; waiting for https://dev.clojure.org/jira/browse/CLJS-2942
-   )
+(deftest apply-test
+  (is (= 21 (check `apply [+ 1 2 3 [4 5 6]])))
+  (is (= 0 (check `apply [+ nil])))
+  (with-instrumentation `apply
+    (throws `apply (apply + 1 2 3 4))))
 
-#?(:clj
-   (deftest assoc-test
-     (is (check `assoc [nil 'lol 'lol]))
-     (is (check `assoc [{} 'lol 'lol 'bar 'lol]))
-     (is (check `assoc [[] 0 'lol]))
-     (with-instrumentation `assoc
-       (throws `assoc (assoc 'lol 'lol 'lol))
-       (throws `assoc (assoc {} 'lol))))
-   :cljs nil
-   ;; bug in planks implementation of spec
-   ;;    ClojureScript 1.10.339
-   ;; cljs.user=> (ns speculative.core
-   ;;        #_=>   (:require [clojure.spec.alpha :as s]
-   ;;        #_=>             [clojure.spec.test.alpha :as stest]))
-   ;; nil
-   ;; speculative.core=> (s/fdef clojure.core/assoc
-   ;;               #_=>   :args (s/cat :map (s/nilable associative?) :key any? :val any? :kvs (s/* (s/cat :ks any? :vs any?)))
-   ;;                                                                                                                                        #_=              #_=>   :ret map?)
-   ;; cljs.core/assoc
-   ;; speculative.core=>   (stest/instrument)
-   ;;    speculative.core=>   (stest/instrument)
-   ;; Vector's key for assoc must be a number.
-   ;;   cljs.core/-assoc [cljs.core/IAssociative] (cljs/core.cljs:5546:14)
-   ;;   cljs.core/-assoc (cljs/core.cljs:630:24)
-   ;;   cljs.core/apply-to (cljs/core.cljs:3845:1)
-   ;;   cljs.spec.test.alpha/c (cljs/spec/test/alpha.cljs:120:34)
-   ;;   cljs.spec.test.alpha/d (cljs/spec/test/alpha.cljs:114:29)
-   ;;   cljs.core/-assoc [cljs.core/IAssociative] (cljs/core.cljs:6621:6)
-   ;;   cljs.core/-assoc (cljs/core.cljs:630:24)
-   ;;   cljs.core/apply-to (cljs/core.cljs:3845:1)
-   ;;   cljs.spec.test.alpha/c (cljs/spec/test/alpha.cljs:120:34)
-   ;;   cljs.spec.test.alpha/d (cljs/spec/test/alpha.cljs:114:29)
-   ;;   cljs/lang/applyTo (cljs/core.cljs:1961:7)
-   ;;   cljs.spec.test.alpha/f (cljs/spec/test/alpha.cljs:113:16)
-   ;;   cljs.spec.alpha/rep* (cljs/spec/alpha.cljs:953:10)
-   ;;   cljs.spec.alpha/deriv (cljs/spec/alpha.cljs:1090:22)
-   ;;   cljs.spec.alpha/deriv (cljs/spec/alpha.cljs:1087:50)
-   ;;   cljs.spec.alpha/re-conform (cljs/spec/alpha.cljs:1211:17)
-   ;;   cljs.spec.alpha/conform* [cljs.spec.alpha/Spec] (cljs/spec/alpha.cljs:1252:10)
-   ;;   cljs.spec.alpha/conform* (cljs/spec/alpha.cljs:39:1)
-   ;;   cljs.spec.alpha/conform (cljs/spec/alpha.cljs:153:4)
-   ;;   cljs.spec.test.alpha/f (cljs/spec/test/alpha.cljs:110:39)
-   ;;   planck.pprint.width-adjust/generate-sample (planck/pprint/width_adjust.cljs:5:218)
-   ;;   planck.pprint.width-adjust/bisect (planck/pprint/width_adjust.cljs:7:302)
-   ;;   planck.pprint.width-adjust/adjusted-with (planck/pprint/width_adjust.cljs:11:143)
-   ;;   planck.pprint.width-adjust/d (planck/pprint/width_adjust.cljs:12:301)
-   ;;   planck.repl/print-value (planck/repl.cljs:1940:12)
-   ;;   cljs.core/e (cljs/core.cljs:4240:17)
-   ;;   cljs.js/B (cljs/js.cljs:1133:24)
-   ;;   cljs.js/eval-str* (cljs/js.cljs:1047:6)
-   ;;   planck.repl/process-execute-source (planck/repl.cljs:2003:11)
-   ;;   planck.repl/execute-source (planck/repl.cljs:2056:18)
-   ;;   planck.repl/execute (planck/repl.cljs:2065:7)
-   )
+(deftest assoc-test
+  (is (check `assoc [nil 'lol 'lol]))
+  (is (check `assoc [{} 'lol 'lol 'bar 'lol]))
+  (is (check `assoc [[] 0 'lol]))
+  (with-instrumentation `assoc
+    (throws `assoc (assoc 'lol 'lol 'lol))
+    (throws `assoc (assoc {} 'lol))))
 
 (deftest count-test
   (is (check `count [nil]))
@@ -160,28 +109,21 @@
     (is (seq mes))
     (is (every? #(= 2 (count %)) mes))))
 
-#?(:clj
-   (deftest merge-test
-     (is (check `merge [{}]))
-     (is (nil? (check `merge [])))
-     (is (check `merge [{} nil]))
-     (is (nil? (check `merge [nil])))
-     (with-instrumentation `merge
-       (throws `merge (merge 1))))
-   :cljs
-   ;; waiting for https://dev.clojure.org/jira/browse/CLJS-2942
-   nil)
-#?(:clj
-   (deftest merge-with-test
-     (is (check `merge-with [+ {}]))
-     (is (nil? (check `merge-with [+])))
-     (is (check `merge-with [+ {} nil]))
-     (is (nil? (check `merge-with [+ nil])))
-     (with-instrumentation `merge-with
-       (throws `merge-with (merge-with 1))))
-   :cljs
-   ;; waiting for https://dev.clojure.org/jira/browse/CLJS-2942
-   nil)
+(deftest merge-test
+  (is (check `merge [{}]))
+  (is (nil? (check `merge [])))
+  (is (check `merge [{} nil]))
+  (is (nil? (check `merge [nil])))
+  (with-instrumentation `merge
+    (throws `merge (merge 1))))
+
+(deftest merge-with-test
+  (is (check `merge-with [+ {}]))
+  (is (nil? (check `merge-with [+])))
+  (is (check `merge-with [+ {} nil]))
+  (is (nil? (check `merge-with [+ nil])))
+  (with-instrumentation `merge-with
+    (throws `merge-with (merge-with 1))))
 
 (deftest not-any-test
   (is (check `not-any? [pos? nil]))
@@ -196,13 +138,12 @@
     (throws `not-every? (not-every? 1 []))))
 
 (deftest range-test
+  (is (check `range []))
   (is (check `range [1]))
   (is (check `range [1 10]))
   (is (check `range [10 0 -1]))
   (is (check `range [1.1 2.2 3.3]))
   (with-instrumentation `range
-    ;; https://dev.clojure.org/jira/browse/CLJS-2948
-    ;; (is (range))
     (throws `range (range 'lol))
     (throws `range (range 0 1 2 3))))
 
@@ -255,5 +196,5 @@
 ;;;; Scratch
 
 (comment
-  (t/run-tests) 
+  (t/run-tests)
   )
