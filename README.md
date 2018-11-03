@@ -79,7 +79,9 @@ $ clj -Sdeps '{:deps {net.cgrand/macrovich {:mvn/version "0.2.1"}}}'
 Clojure 1.10.0-RC1
 
 user=> (require '[speculative.test :refer [check
-                                    with-instrumentation]])
+                                    with-instrumentation
+                                    gentest
+                                    success?]])
 nil
 
 user=> (require '[clojure.spec.alpha :as s])
@@ -114,8 +116,19 @@ Evaluation error - invalid arguments to user/foo at (NO_SOURCE_FILE:15).
 user=> (foo "a")
 "ret"
 
+user=> (gentest `foo nil {:num-tests 1})
+generatively testing user/foo
+({:spec #object[clojure.spec.alpha$fspec_impl$reify__2524 0x72bd06ca "clojure.spec.alpha$fspec_impl$reify__2524@72bd06ca"], :clojure.spec.test.check/ret {:result true, :pass? true, :num-tests 1, :time-elapsed-ms 1, :seed 1541249961647}, :sym user/foo})
+
+user=> (success? *1)
+true
+
 user=>
 ```
+
+## Issues detected by usage of speculative
+
+[These issues](doc/issues.md) were detected by usage of speculative.
 
 ## Tests
 
@@ -135,6 +148,8 @@ user=>
 
 In the hope that the code in this project would be useful for `clojure.core`, any contributer to this repo needs to have a 
 [Contributor Agreement](https://clojure.org/community/contributing) for Clojure so that any code in speculative can be used in either Clojure or Clojurescript.
+
+Take a look at the [style guide](doc/style.md).
 
 ## License
 
