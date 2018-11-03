@@ -1,5 +1,5 @@
 (ns speculative.core
-  (:refer-clojure :exclude [map-entry?])
+  (:refer-clojure :exclude [map-entry? reduceable?])
   (:require [clojure.spec.alpha :as s]
             [clojure.spec.gen.alpha :as gen]
             [clojure.spec.test.alpha :as stest]
@@ -109,22 +109,22 @@
   :args (s/cat :f ifn? :args (s/* any?))
   :ret ifn?)
 
-#?(:clj
-   (defn- reduceable? [x]
-     (or (instance? clojure.lang.IReduce x)
-         (instance? clojure.lang.IReduceInit x))))
+(defn reducible? [x]
+  #?(:clj
+     (instance? clojure.lang.IReduceInit x)
+     :cljs (clojure.core/reduceable? x)))
 
 #?(:clj
    (defn- iterable? [x]
      (instance? java.lang.Iterable x)))
 
-(s/def ::reduceable-coll
-  (s/nilable (s/or :reduceable reduceable?
+(s/def ::reducible-coll
+  (s/nilable (s/or :reduceable reducible?
                    :iterable   iterable?
                    :seqable    seqable?)))
 
 (s/fdef clojure.core/reduce
-  :args (s/cat :f ifn? :val (s/? any?) :coll ::reduceable-coll))
+  :args (s/cat :f ifn? :val (s/? any?) :coll ::reducible-coll))
 
 (s/fdef clojure.core/remove
   :args (s/cat :pred ::predicate
