@@ -1,4 +1,4 @@
-{:paths ["resources" "src" "patch"]
+{:paths ["resources" "src"]
  :deps {org.clojure/clojure {:mvn/version "1.10.0-RC1"}
         mfikes/workarounds-1.10.439 {:git/url "https://github.com/mfikes/workarounds-1.10.439"
                                      :sha "a559201602fc6a21701479b83086d76bd5ed09eb"}}
