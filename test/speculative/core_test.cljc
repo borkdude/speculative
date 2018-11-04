@@ -9,7 +9,8 @@
                              with-unstrumentation
                              throws
                              check]]
-   [speculative.test-utils :refer [gentest]]))
+   [speculative.test-utils :refer [gentest]]
+   [workarounds-1-10-439.core]))
 
 (deftest =-test
   (is (check `= [1]))

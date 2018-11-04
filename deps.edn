@@ -1,5 +1,7 @@
-{:paths ["resources" "src"]
- :deps {org.clojure/clojure {:mvn/version "1.10.0-RC1"}}
+{:paths ["resources" "src" "patch"]
+ :deps {org.clojure/clojure {:mvn/version "1.10.0-RC1"}
+        mfikes/workarounds-1.10.439 {:git/url "https://github.com/mfikes/workarounds-1.10.439"
+                                     :sha "a559201602fc6a21701479b83086d76bd5ed09eb"}}
  :aliases
  {:test {:extra-paths ["test"]
          :extra-deps {org.clojure/clojurescript
@@ -15,7 +17,7 @@
     "-e" "(require,'[clojure.spec.gen.alpha,:as,gen])"
     "-r"]}
   :clj-tests ;; we use a script, because then we can call shutdown-agents, which
-             ;; brings down the process faster after running generative tests
+  ;; brings down the process faster after running generative tests
   {:main-opts ["-m" "speculative.test-runner"]}
   :clj-test-runner
   {:extra-deps {com.cognitect/test-runner

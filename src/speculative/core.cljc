@@ -2,7 +2,8 @@
   (:refer-clojure :exclude [map-entry?])
   (:require [clojure.spec.alpha :as s]
             [clojure.spec.gen.alpha :as gen]
-            [clojure.spec.test.alpha :as stest]))
+            [clojure.spec.test.alpha :as stest]
+            [workarounds-1-10-439.core]))
 
 (s/fdef clojure.core/=
   :args (s/+ any?)
