@@ -9,10 +9,17 @@
   "Exit with the given status."
   [status]
   #?(:cljs
-     (let [exit-fn (cond (exists? js/process)
-                         #(.exit js/process %)
-                         (planck-env?)
-                         js/PLANCK_EXIT_WITH_VALUE)]
+     (when-let
+         [exit-fn (cond
+                    ;; node
+                    (exists? js/process)
+                    #(.exit js/process %)
+                    ;; nashorn
+                    (exists? js/exit)
+                    js/exit
+                    ;; planck
+                    (planck-env?)
+                    js/PLANCK_EXIT_WITH_VALUE)]
        (exit-fn status))
      :clj (do
             (shutdown-agents)
@@ -22,7 +29,7 @@
    (do
      (defmethod cljs.test/report [:cljs.test/default :begin-test-var] [m]
        ;; for debugging:
-       ;;(println ":begin-test-var" (cljs.test/testing-vars-str m))
+       ;; (println ":begin-test-var" (cljs.test/testing-vars-str m))
        )
      (defmethod cljs.test/report [:cljs.test/default :end-run-tests] [m]
        (if-not (cljs.test/successful? m)
