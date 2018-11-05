@@ -70,3 +70,4 @@ flycheck_*.el
 /.nrepl-history
 /nashorn_code_cache
 /issues/nashorn_code_cache
+/out

@@ -34,6 +34,8 @@
                           "-r"]}
   :cljs-tests
   {:main-opts ["-m" "cljs.main" "-re" "node" "-m" "speculative.test-runner"]}
+  :compile-node-tests
+  {:main-opts ["-m" "cljs.main" "-t" "node" "-c" "speculative.test-runner"]}
   :cljs-tests-nashorn
   {:main-opts ["-m" "cljs.main" "-re" "nashorn" "-m" "speculative.test-runner"]}
   ;; we use the test runner because vanilla cljs.main + node doesn't exit
