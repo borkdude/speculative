@@ -9,5 +9,6 @@ Issues are sorted by date from newest to oldest.
 - [Stack overflow calling instrumented variadic fn with zero args](https://dev.clojure.org/jira/browse/CLJS-2948) (CLJS)
 - [merge-with being passed seq of lazy-seqs](https://github.com/gf3/secretary/issues/100) (gf3/secretary)
 - [Update merge-with to use key / val](https://dev.clojure.org/jira/browse/CLJS-2943) (CLJS)
+- [Remove useless call to merge](https://github.com/juxt/yada/pull/246) (juxt/yada)
 - [spec fdef triggering for variadic fn](https://dev.clojure.org/jira/browse/CLJS-2942) (CLJS)
 - [Can't define nilable spec on undefined pred](https://dev.clojure.org/jira/browse/CLJS-2940) (CLJS)
