@@ -8,8 +8,13 @@ if [ $? -eq 1 ]; then
     exit_code=1
 fi
 
-echo "\n=== Running cljs-tests"
-clojure -A:test:cljs-tests-nashorn
+echo "\n=== Running node tests"
+clojure -A:test:compile-node-tests
+if [ $? -eq 1 ]; then
+    exit_code=1
+fi
+
+node out/main.js
 if [ $? -eq 1 ]; then
     exit_code=1
 fi

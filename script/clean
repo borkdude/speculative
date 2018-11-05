@@ -1,3 +1,5 @@
 #!/bin/sh
 
 rm -rf cljs-test-runner-out
+rm -rf nashorn_code_cache
+rm -rf out

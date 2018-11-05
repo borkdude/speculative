@@ -10,16 +10,17 @@
   [status]
   #?(:cljs
      (when-let
-         [exit-fn (cond
-                    ;; node
-                    (exists? js/process)
-                    #(.exit js/process %)
-                    ;; nashorn
-                    (exists? js/exit)
-                    js/exit
-                    ;; planck
-                    (planck-env?)
-                    js/PLANCK_EXIT_WITH_VALUE)]
+         [exit-fn
+          (cond
+            ;; node
+            (exists? js/process)
+            #(.exit js/process %)
+            ;; nashorn
+            (exists? js/exit)
+            js/exit
+            ;; planck
+            (planck-env?)
+            js/PLANCK_EXIT_WITH_VALUE)]
        (exit-fn status))
      :clj (do
             (shutdown-agents)
@@ -48,3 +49,5 @@
 (defn -main [& args]
   (clojure.test/run-tests 'speculative.test-test
                           'speculative.core-test))
+
+#?(:cljs (set! *main-cli-fn* -main))
