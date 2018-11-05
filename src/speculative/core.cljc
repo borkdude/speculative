@@ -2,7 +2,42 @@
   (:refer-clojure :exclude [map-entry? reduceable?])
   (:require [clojure.spec.alpha :as s]
             [clojure.spec.gen.alpha :as gen]
-            [clojure.spec.test.alpha :as stest]))
+            [clojure.spec.test.alpha :as stest]
+            [workarounds-1-10-439.core]))
+
+(defn reducible? [x]
+  #?(:clj
+     (instance? clojure.lang.IReduceInit x)
+     :cljs (clojure.core/reduceable? x)))
+
+#?(:clj
+   (defn- iterable? [x]
+     (instance? java.lang.Iterable x)))
+
+(defn map-entry? [v]
+  #?(:cljs (clojure.core/map-entry? v)
+     :clj #(instance? java.util.Map$Entry %)))
+
+
+(s/def ::associative associative?)
+(s/def ::any any?)
+(s/def ::boolean boolean?)
+(s/def ::counted counted?)
+(s/def ::ifn ifn?)
+(s/def ::int int?)
+(s/def ::iterable iterable?)
+(s/def ::map map?)
+(s/def ::map-entry
+  (s/with-gen map-entry?
+    (fn []
+      (gen/fmap first
+                (s/gen (s/and ::map seq))))))
+(s/def ::nil nil?)
+(s/def ::number number?)
+(s/def ::reducible reducible?)
+(s/def ::seqable seqable?)
+(s/def ::some some?)
+(s/def ::string string?)
 
 (defn reducible? [x]
   #?(:clj

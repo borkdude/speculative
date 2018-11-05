@@ -11,7 +11,8 @@
                              check
                              gentest
                              success?
-                             test-check-kw]]))
+                             test-check-kw]]
+   [workarounds-1-10-439.core]))
 
 (defn foo [n]
   "ret")
@@ -69,13 +70,12 @@
     (is (not (success? [])))
     (is (success? [{(test-check-kw "ret") {:pass? true}}]))
     (is (not (success? [{(test-check-kw "ret") {:pass? false}}]))))
-  (when-not (planck-env?)
-    (testing "gentest"
-      (let [ret (gentest `foo nil {:num-tests 42})
-            rets (map (test-check-kw "ret") ret)]
-        (is (success? ret))
-        (is (every? #(= 42 (:num-tests %)) rets))
-        ))))
+  (testing "gentest"
+    (let [ret (gentest `foo nil {:num-tests 42})
+          rets (map (test-check-kw "ret") ret)]
+      (is (success? ret))
+      (is (every? #(= 42 (:num-tests %)) rets))
+      )))
 
 ;;;; Scratch
 

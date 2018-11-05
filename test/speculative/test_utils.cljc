@@ -7,6 +7,7 @@
    [clojure.spec.alpha :as s]
    [clojure.spec.test.alpha :as stest]
    [speculative.test]
+   [workarounds-1-10-439.core]
    #?(:clj [net.cgrand.macrovich :as macros]))
   #?(:cljs
      (:require-macros
