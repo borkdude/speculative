@@ -18,7 +18,6 @@
   #?(:cljs (clojure.core/map-entry? v)
      :clj #(instance? java.util.Map$Entry %)))
 
-
 (s/def ::associative associative?)
 (s/def ::any any?)
 (s/def ::boolean boolean?)
@@ -38,20 +37,6 @@
 (s/def ::seqable seqable?)
 (s/def ::some some?)
 (s/def ::string string?)
-
-(defn reducible? [x]
-  #?(:clj
-     (instance? clojure.lang.IReduceInit x)
-     :cljs (clojure.core/reduceable? x)))
-
-#?(:clj
-   (defn- iterable? [x]
-     (instance? java.lang.Iterable x)))
-
-(defn map-entry? [v]
-  #?(:cljs (clojure.core/map-entry? v)
-     :clj #(instance? java.util.Map$Entry %)))
-
 
 (s/def ::associative associative?)
 (s/def ::any any?)
