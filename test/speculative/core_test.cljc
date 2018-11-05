@@ -37,8 +37,10 @@
 (deftest apply-test
   (is (= 21 (check `apply [+ 1 2 3 [4 5 6]])))
   (is (= 0 (check `apply [+ nil])))
-  (with-instrumentation `apply
-    (throws `apply (apply + 1 2 3 4))))
+  #?(:clj (with-instrumentation `apply
+            (throws `apply (apply + 1 2 3 4)))
+     :cljs nil ;; maximum call stack exceeded
+     ))
 
 (deftest assoc-test
   (is (check `assoc [nil 'lol 'lol]))

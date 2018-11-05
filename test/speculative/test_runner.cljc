@@ -19,10 +19,15 @@
             (System/exit status))))
 
 #?(:cljs
-   (defmethod cljs.test/report [:cljs.test/default :end-run-tests] [m]
-     (if-not (cljs.test/successful? m)
-       (exit 1)
-       (exit 0)))
+   (do
+     (defmethod cljs.test/report [:cljs.test/default :begin-test-var] [m]
+       ;; for debugging:
+       ;;(println ":begin-test-var" (cljs.test/testing-vars-str m))
+       )
+     (defmethod cljs.test/report [:cljs.test/default :end-run-tests] [m]
+       (if-not (cljs.test/successful? m)
+         (exit 1)
+         (exit 0))))
    :clj
    (defmethod clojure.test/report :summary [m]
      (clojure.test/with-test-out
