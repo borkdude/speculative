@@ -2,6 +2,7 @@
   "Performance cost estimations"
   (:require
    [speculative.core]
+   [speculative.cost.popularity :refer [popularity-map]]
    [speculative.test :as t]
    [clojure.pprint :as pprint]
    [clojure.spec.alpha :as s]
@@ -20,6 +21,9 @@
 
 (def ^:dynamic *iterations* 100000)
 
+(defn unqualify [sym]
+  (symbol (name sym)))
+
 (macros/deftime
   (defmacro cost [symbol args]
     `(let [f# (resolve ~symbol)
@@ -32,10 +36,14 @@
            (t/with-instrumentation ~symbol
              (profiled {}
                        (dotimes [_# 100000]
-                         (p :cost (apply f# args#)))))]
+                         (p :cost (apply f# args#)))))
+           cost# (int (/ (mean instrumented#)
+                         (mean unstrumented#)))
+           popularity# (get popularity-map (unqualify ~symbol))]
        {:fdef ~symbol
-        :cost (int (/ (mean instrumented#)
-                      (mean unstrumented#)))})))
+        :cost cost#
+        :popularity popularity#
+        :penalty (and cost# popularity# (* cost# popularity#))})))
 
 (defn costs []
   [(cost `count [(list 1 2 3 4)])]
@@ -52,7 +60,9 @@
    (cost `juxt [:a :b])])
 
 (defn print-cost-table []
-  (pprint/print-table (costs)))
+  (pprint/print-table [:fdef :penalty :cost :popularity]
+                      (sort-by (comp (fnil - 0) :penalty)
+                               (costs))))
 
 (defn parse-int [s]
   (when s
