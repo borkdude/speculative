@@ -6,7 +6,6 @@
    [clojure.test :as t :refer [deftest is testing]]
    [clojure.spec.alpha :as s]
    [clojure.spec.test.alpha :as stest]
-   [workarounds-1-10-439.core]
    #?(:clj [net.cgrand.macrovich :as macros]))
   #?(:cljs
      (:require-macros
