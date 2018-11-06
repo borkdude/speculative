@@ -57,6 +57,7 @@ jobs:
       # run tests!
       - run: script/clean
       - run: script/test
+      - run: script/cost
 
       - save_cache:
           paths:
