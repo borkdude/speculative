@@ -1,26 +1,24 @@
-Based on https://lispcast.com/100-most-used-clojure-expressions/
-The top 150-ish, just enough to include `juxt`!
+(ns speculative.cost.popularity)
 
-Please mark anything already spec'ed.
+;; Based on https://lispcast.com/100-most-used-clojure-expressions/
 
-```
-symbol,count
-
-# =,183713
-# str,65937
-# map,52295
+(def popularity-map
+'{
+=,183713
+str,65937
+map,52295
 ->,46439
-# first,37981
+first,37981
 when,34247
 or,31252
-# apply,30907
+apply,30907
 assoc,29215
-# count,28660
+count,28660
 and,26442
 not,24785
 nil?,21570
 +,19170
-# get,18547
+get,18547
 *,16945
 cond,16672
 recur,16569
@@ -29,27 +27,27 @@ do,15841
 seq,15683
 ->>,15004
 atom,14024
-# reduce,13785
+reduce,13785
 -,13236
 name,12880
 instance?,12674
 conj,12548
 inc,12482
-# swap!,12462
+swap!,12462
 into,11580
-# range,11124
-# filter,10851
+range,11124
+filter,10851
 get-in,10604
-# merge,10506
+merge,10506
 empty?,10495
 list,9523
 format,9508
 rest,8766
 <,8618
 vec,8601
-# partial,8595
+partial,8595
 concat,8334
-# reset!,8122
+reset!,8122
 set,8071
 /,8033
 int,7811
@@ -74,8 +72,8 @@ dissoc,5720
 comp,5305
 not=,5286
 float,5175
-# some,5053
-# every?,4722
+some,5053
+every?,4722
 constantly,4707
 last,4524
 declare,4513
@@ -84,7 +82,7 @@ vector?,4408
 zero?,4286
 re-find,4255
 take,4113
-# remove,3987
+remove,3987
 <=,3978
 pr-str,3825
 repeat,3764
@@ -161,5 +159,7 @@ take-while,1100
 sorted-map,1091
 transient,1087
 replace,1083
-# juxt,1080
-```
+juxt,1080
+
+fnil,892  
+})
