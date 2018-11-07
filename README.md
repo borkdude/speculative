@@ -70,9 +70,7 @@ user=>
 ## Test tools
 
 Namespace `speculative.test` provides macros and functions that are used in the
-tests for speculative, but may also come in handy in other projects. You have to
-bring in [macrovich](https://github.com/cgrand/macrovich) as an extra dependency
-if you want to use this namespace.
+tests for speculative, but may also come in handy in other projects.
 
 ``` clojure
 $ clj -Sdeps '{:deps {net.cgrand/macrovich {:mvn/version "0.2.1"}}}'

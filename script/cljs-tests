@@ -1,0 +1,16 @@
+#!/bin/sh
+
+set $exit_code=0
+
+echo "\n=== Running node tests"
+clojure -A:test:compile-node-tests
+if [ $? -eq 1 ]; then
+    exit_code=1
+fi
+
+node out/main.js
+if [ $? -eq 1 ]; then
+    exit_code=1
+fi
+
+exit $exit_code

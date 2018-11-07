@@ -1,30 +1,44 @@
 (ns speculative.test
-  "Useful macros and functions for clojure.spec.test.alpha. API may
-  change at any time. Requires dependency on macrovich."
+  "Macros and function utils for clojure.spec.test.alpha. API may change
+  at any time."
   (:require
    [clojure.string :as str]
    [clojure.test :as t :refer [deftest is testing]]
    [clojure.spec.alpha :as s]
-   [clojure.spec.test.alpha :as stest]
-   #?(:clj [net.cgrand.macrovich :as macros]))
+   [clojure.spec.test.alpha :as stest])
   #?(:cljs
      (:require-macros
-      [net.cgrand.macrovich :as macros]
       [speculative.test :refer [with-instrumentation
                                 with-unstrumentation
+                                choose-env
                                 throws
                                 check
                                 gentest]])))
+
+;; deftime macro from https://github.com/cgrand/macrovich
+(defmacro deftime
+  [& body]
+  (when #?(:clj (not (:ns &env))
+           :cljs (when-let [n (and *ns* (ns-name *ns*))]
+                   (re-matches #".*\$macros" (name n))))
+    `(do ~@body)))
+
+;; case macro from https://github.com/cgrand/macrovich
+(deftime
+  (defmacro choose-env [& {:keys [cljs clj]}]
+    (if (contains? &env '&env)
+      `(if (:ns ~'&env) ~cljs ~clj)
+      (if #?(:clj (:ns &env) :cljs true)
+        cljs
+        clj))))
 
 (defn throwable? [e]
   (instance? #?(:clj Throwable
                 :cljs js/Error) e))
 
-(macros/deftime
-
+(deftime
   ;; with-(i/u)nstrumentation avoids using finally as a workaround for
   ;; https://dev.clojure.org/jira/browse/CLJS-2949
-
   (defmacro with-instrumentation
     "Executes body while instrumenting symbol."
     [symbol & body]
@@ -61,13 +75,14 @@
     "Asserts that body throws spec error concerning s/fdef for symbol."
     [symbol & body]
     `(let [msg#
-           (net.cgrand.macrovich/case
-               :clj (try ~@body
-                         (catch clojure.lang.ExceptionInfo e#
-                           (.getMessage e#)))
-               :cljs (try ~@body
-                          (catch js/Error e#
-                            (.-message e#))))]
+           (choose-env :clj (try
+                              ~@body
+                              (catch clojure.lang.ExceptionInfo e#
+                                (.getMessage e#)))
+                       :cljs (try
+                               ~@body
+                               (catch js/Error e#
+                                 (.-message e#))))]
        (clojure.test/is (clojure.string/starts-with?
                          msg#
                          (str "Call to " (resolve ~symbol)
@@ -101,8 +116,7 @@
       (throw ret)
       ret)))
 
-(macros/deftime
-
+(deftime
   (defmacro check
     "Applies args to function resolved by symbol. Checks :args, :ret
   and :fn specs for spec resolved by symbol. Returns return value if check
@@ -112,7 +126,6 @@
     `(let [f# (resolve ~symbol)
            spec# (s/get-spec ~symbol)]
        (check* f# spec# ~args))))
-
 
 (defn test-check-kw
   "Returns qualified keyword used for interfacing with
@@ -130,8 +143,7 @@
                    (:pass? check-ret)))
                stc-result)))
 
-(macros/deftime
-
+(deftime
   (defmacro gentest
     "spec.test/check with third arg for passing clojure.test.check options."
     ([sym]
