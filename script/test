@@ -14,7 +14,7 @@ if [ $? -eq 1 ]; then
     exit_code=1
 fi
 
-node out/main.js
+script/cljs-tests
 if [ $? -eq 1 ]; then
     exit_code=1
 fi
