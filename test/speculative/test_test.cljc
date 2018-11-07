@@ -3,15 +3,14 @@
    [clojure.spec.alpha :as s]
    [clojure.spec.test.alpha :as stest]
    [clojure.test :as t :refer [deftest is testing]]
-   [clojure.test.check]
-   [speculative.test-utils :refer [planck-env?]]
    [speculative.test :refer [with-instrumentation
                              with-unstrumentation
                              throws
                              check
                              gentest
-                             success?
+                             successful?
                              test-check-kw]]
+   ;; included for self-hosted cljs
    [workarounds-1-10-439.core]))
 
 (defn foo [n]
@@ -66,14 +65,14 @@
   (s/fdef foo
     :args (s/cat :n number?)
     :ret string?)
-  (testing "success?"
-    (is (not (success? [])))
-    (is (success? [{(test-check-kw "ret") {:pass? true}}]))
-    (is (not (success? [{(test-check-kw "ret") {:pass? false}}]))))
+  (testing "successful?"
+    (is (not (successful? [])))
+    (is (successful? [{(test-check-kw "ret") {:pass? true}}]))
+    (is (not (successful? [{(test-check-kw "ret") {:pass? false}}]))))
   (testing "gentest"
     (let [ret (gentest `foo nil {:num-tests 42})
           rets (map (test-check-kw "ret") ret)]
-      (is (success? ret))
+      (is (successful? ret))
       (is (every? #(= 42 (:num-tests %)) rets))
       )))
 

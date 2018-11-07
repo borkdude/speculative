@@ -10,6 +10,7 @@
                              throws
                              check]]
    [speculative.test-utils :refer [gentest]]
+   ;; included for self-hosted cljs
    [workarounds-1-10-439.core]))
 
 (deftest =-test

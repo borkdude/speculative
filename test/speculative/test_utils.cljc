@@ -1,13 +1,8 @@
 (ns speculative.test-utils
   "Test utils."
   (:require
-   [clojure.string :as str]
    [clojure.test]
-   [clojure.test.check]
-   [clojure.spec.alpha :as s]
-   [clojure.spec.test.alpha :as stest]
-   [speculative.test :refer [deftime]]
-   [workarounds-1-10-439.core])
+   [speculative.test :refer [deftime]])
   #?(:cljs
      (:require-macros
       [speculative.test-utils :refer [gentest]])))
@@ -23,7 +18,7 @@
     [sym]
     `(let [stc-result#
            (speculative.test/gentest ~sym nil {:num-tests 50})]
-       (clojure.test/is (speculative.test/success? stc-result#)))))
+       (clojure.test/is (speculative.test/successful? stc-result#)))))
 
 ;;;; Scratch
 
