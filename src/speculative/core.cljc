@@ -1,8 +1,7 @@
 (ns speculative.core
   (:refer-clojure :exclude [map-entry? reduceable?])
   (:require [clojure.spec.alpha :as s]
-            [clojure.spec.gen.alpha :as gen]
-            [clojure.spec.test.alpha :as stest]))
+            [clojure.spec.gen.alpha :as gen]))
 
 (defn reducible? [x]
   #?(:clj
@@ -167,7 +166,10 @@
 (s/fdef clojure.core/swap!
   :args (s/cat :atom ::atom :f ::ifn :args (s/* ::any)))
 
+;;;; Scratch
+
 (comment
+  (require '[clojure.spec.test.alpha :as stest])
   (stest/instrument)
   (stest/unstrument)
   )

@@ -2,10 +2,9 @@
   "Macros and function utils for clojure.spec.test.alpha. API may change
   at any time."
   (:require
-   [clojure.string :as str]
-   [clojure.test :as t :refer [deftest is testing]]
    [clojure.spec.alpha :as s]
-   [clojure.spec.test.alpha :as stest])
+   [clojure.spec.test.alpha :as stest]
+   [clojure.test :as t :refer [deftest is testing]])
   #?(:cljs
      (:require-macros
       [speculative.test :refer [with-instrumentation
@@ -134,7 +133,7 @@
   (keyword #?(:clj "clojure.spec.test.check"
               :cljs "clojure.test.check") name))
 
-(defn success?
+(defn successful?
   "Returns true if all spec.test.check tests have pass? true."
   [stc-result]
   (and (seq stc-result)
