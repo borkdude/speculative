@@ -60,7 +60,6 @@
   (testing "no instrumentation"
     (is (= "ret" (foo "not a number")))))
 
-
 (deftest gentest-test
   (s/fdef foo
     :args (s/cat :n number?)
@@ -73,8 +72,7 @@
     (let [ret (gentest `foo nil {:num-tests 42})
           rets (map (test-check-kw "ret") ret)]
       (is (successful? ret))
-      (is (every? #(= 42 (:num-tests %)) rets))
-      )))
+      (is (every? #(= 42 (:num-tests %)) rets)))))
 
 ;;;; Scratch
 

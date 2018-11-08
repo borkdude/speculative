@@ -197,6 +197,18 @@
     (throws `swap! (swap! 1 identity))
     (throws `swap! (swap! (atom nil) 1) (+ 1 2 3))))
 
+(deftest instrument-all-test
+  (testing "all specs should be instrumentable and unstrumentable"
+    (let [spec-count #?(:clj 25 :cljs 24)
+          instrumented (stest/instrument)
+          _ (println "instrumented" instrumented)
+          instrumented (filter #(= #?(:clj "clojure.core"
+                                      :cljs "cljs.core")
+                                   (namespace %))
+                               instrumented)]
+      (is (= spec-count (count )))
+      (println (stest/unstrument)))))
+
 ;;;; Scratch
 
 (comment
