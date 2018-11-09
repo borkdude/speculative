@@ -81,6 +81,11 @@ Namespace `speculative.test` provides various tools around
    
     plk -A:test:plk-tests
 
+## Try online
+
+[KLIPSE REPL](http://bit.ly/speculative-repl) with speculative and
+[expound](https://github.com/bhb/expound).
+
 ## Origins
 
 The project started based on two tweets. First @mfikes tweeted
