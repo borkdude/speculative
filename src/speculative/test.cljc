@@ -87,23 +87,21 @@
                          (str "Call to " (resolve ~symbol)
                               " did not conform to spec"))))))
 
-(def ^:private explain-check #'stest/explain-check)
-
 (defn check-call
   "From clojure.spec.test.alpha, adapted for speculative."
   [f specs args]
-  (stest/with-instrument-disabled
+  (clojure.spec.test.alpha/with-instrument-disabled
     (let [cargs (when (:args specs) (s/conform (:args specs) args))]
       (if (= cargs ::s/invalid)
-        (explain-check args (:args specs) args :args)
+        (#'clojure.spec.test.alpha/explain-check args (:args specs) args :args)
         (let [ret (apply f args)
               cret (when (:ret specs) (s/conform (:ret specs) ret))]
           (if (= cret ::s/invalid)
-            (explain-check args (:ret specs) ret :ret)
+            (#'clojure.spec.test.alpha/explain-check args (:ret specs) ret :ret)
             (if (and (:args specs) (:ret specs) (:fn specs))
-              (if (s/valid? (:fn specs) {:args cargs :ret cret})
+              (if (clojure.spec.alpha/valid? (:fn specs) {:args cargs :ret cret})
                 ret
-                (explain-check args (:fn specs) {:args cargs :ret cret} :fn))
+                (#'clojure.spec.test.alpha/explain-check args (:fn specs) {:args cargs :ret cret} :fn))
               ret)))))))
 
 (defn check*
@@ -123,7 +121,8 @@
     [symbol args]
     (assert (vector? args))
     `(let [f# (resolve ~symbol)
-           spec# (s/get-spec ~symbol)]
+           spec# (choose-env :clj (clojure.spec.alpha/get-spec ~symbol)
+                             :cljs (cljs.spec.alpha/get-spec ~symbol))]
        (check* f# spec# ~args))))
 
 (defn test-check-kw
@@ -156,7 +155,8 @@
                                (fn [o#]
                                  (merge o# tc-opts#)))
               ret#
-              (clojure.spec.test.alpha/check ~sym opts#)]
+              (choose-env :clj (clojure.spec.test.alpha/check ~sym opts#)
+                          :cljs (cljs.spec.test.alpha/check ~sym opts#))]
           ret#)))))
 
 ;;;; Scratch
