@@ -1,4 +1,4 @@
-(defproject speculative "0.0.2"
+(defproject speculative "0.0.3-SNAPSHOT"
   :description "A collection of specs for clojure.core functions"
   :url "https://github.com/slipset/speculative"
   :license {:name "Eclipse Public License"
