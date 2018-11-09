@@ -7,26 +7,6 @@ its ultimate goal is to be rendered obsolete by these or similar specs being
 added to `clojure.core` proper, speculative hopefully provides some value while
 we're waiting for that to happen.
 
-# Origins
-
-The project started based on two tweets. First @mfikes tweeted
-
-<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">I still
-hold the view that Clojure’s core fns should have specs. <br><br>Ex: While<br>
-(merge-with + [0 3] {0 7 1 2} {0 3 2 32})<br>produces a reasonable result, it is
-not even a map. A spec would reject 2nd arg.<br><br>What if I conclude dot
-products are possible via<br> (merge-with + [0 3] [1 2])<br>?</p>&mdash; Mike
-Fikes (@mfikes) <a
-href="https://twitter.com/mfikes/status/1053304266239197184?ref_src=twsrc%5Etfw">October
-19, 2018</a></blockquote>
-
-Then @borkdude tweeted a couple of days later: <blockquote class="twitter-tweet"
-data-conversation="none" data-lang="en"><p lang="en" dir="ltr">Or maybe have a
-development version with guards and a production version without guards (I think
-Stu said something like this)</p>&mdash; (λ. borkdude) (@borkdude) <a
-href="https://twitter.com/borkdude/status/1053404362062606336?ref_src=twsrc%5Etfw">October
-19, 2018</a></blockquote>
-
 ## Rationale
 
 With the new error-messages that are coming with Clojure 1.10, adding specs to
@@ -63,7 +43,7 @@ speculative {:mvn/version "0.0.2"}
 lein
 
 ```
-[speculative "0.0.1"]
+[speculative "0.0.2"]
 ```
 
 ## Usage
@@ -73,7 +53,7 @@ user=> (require 'speculative.core)
 nil
 user=> (require '[clojure.spec.test.alpha :as stest])
 nil
-user=> (stest/instrument `clojure.core/map)
+user=> (stest/instrument `map)
 [clojure.core/map]
 user=> (map 1 'lol)
 Evaluation error - invalid arguments to clojure.core/map at (NO_SOURCE_FILE:4).
@@ -84,28 +64,47 @@ user=>
 
 ## Test tools
 
-Namespace `speculative.test` provides macros and functions that are used in the
-tests for speculative, but may also come in handy in other projects. Read about
-it [here](doc/test.md).
-
-## Issues found
-
-[These issues](doc/issues.md) were found while developing and using speculative.
+Namespace `speculative.test` provides various tools around
+`clojure.spec.test.alpha`. More info [here](doc/test.md).
 
 ## Tests
 
 ### Clojure
 
-     clj -A:test:clj-tests
+    clj -A:test:clj-tests
      
 ### ClojureScript
 
-    clj -A:test:cljs-tests
+    script/cljs-tests
     
 ### Self-Hosted ClojureScript
    
     plk -A:test:plk-tests
-    
+
+## Origins
+
+The project started based on two tweets. First @mfikes tweeted
+
+<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">I still
+hold the view that Clojure’s core fns should have specs. <br><br>Ex: While<br>
+(merge-with + [0 3] {0 7 1 2} {0 3 2 32})<br>produces a reasonable result, it is
+not even a map. A spec would reject 2nd arg.<br><br>What if I conclude dot
+products are possible via<br> (merge-with + [0 3] [1 2])<br>?</p>&mdash; Mike
+Fikes (@mfikes) <a
+href="https://twitter.com/mfikes/status/1053304266239197184?ref_src=twsrc%5Etfw">October
+19, 2018</a></blockquote>
+
+Then @borkdude tweeted a couple of days later: <blockquote class="twitter-tweet"
+data-conversation="none" data-lang="en"><p lang="en" dir="ltr">Or maybe have a
+development version with guards and a production version without guards (I think
+Stu said something like this)</p>&mdash; (λ. borkdude) (@borkdude) <a
+href="https://twitter.com/borkdude/status/1053404362062606336?ref_src=twsrc%5Etfw">October
+19, 2018</a></blockquote>
+
+## Issues found
+
+[These issues](doc/issues.md) were found while developing and using speculative.
+
 ## Contributing
 
 In the hope that the code in this project would be useful for `clojure.core`,
@@ -113,7 +112,7 @@ any contributer to this repo needs to have a [Contributor
 Agreement](https://clojure.org/community/contributing) for Clojure so that any
 code in speculative can be used in either Clojure or Clojurescript.
 
-Take a look at the [style guide](doc/style.md).
+Please have look at the [style guide](doc/style.md) before submiting a PR.
 
 ## License
 
