@@ -124,9 +124,9 @@ true
 user=>
 ```
 
-## Issues detected by usage of speculative
+## Issues found
 
-[These issues](doc/issues.md) were detected by usage of speculative.
+[These issues](doc/issues.md) were found while developing and using speculative.
 
 ## Tests
 
