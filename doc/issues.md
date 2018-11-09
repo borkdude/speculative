@@ -2,7 +2,7 @@
 
 Issues are sorted by date from newest to oldest.
 
-- [https://dev.clojure.org/jira/browse/CLJS-2967](Make clojure.spec.alpha reloadable) (CLJS)
+- [Make clojure.spec.alpha reloadable](https://dev.clojure.org/jira/browse/CLJS-2967) (CLJS)
 - [Requiring clojure.spec.test.alpha loads clojure.test.check](https://dev.clojure.org/jira/browse/CLJS-2964) (CLJS)
 - [Stack overflow when specing core =](https://dev.clojure.org/jira/browse/CLJS-2956) (CLJS)
 - [Self-host: spec check macro compile-time expansion](https://dev.clojure.org/jira/browse/CLJS-2955) (CLJS)

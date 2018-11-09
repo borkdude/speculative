@@ -1,55 +1,61 @@
-## Test tools
+# Test tools
 
-Namespace `speculative.test` provides macros and functions that are used in the
-tests for speculative, but may also come in handy in other projects.
+Namespace `speculative.test` provides tools around `clojure.spec.test.alpha`. Demo:
 
 ``` clojure
-$ clj -Sdeps '{:deps {net.cgrand/macrovich {:mvn/version "0.2.1"}}}'
-Clojure 1.10.0-RC1
+$ clj -Sdeps '{:deps {org.clojure/test.check {:mvn/version "RELEASE"}}}'
+Clojure 1.10.0-beta5
 
-user=> (require '[speculative.test :refer [check
-                                    with-instrumentation
-                                    gentest
-                                    successful?]])
+user=> (require '[speculative.test :as test])
 nil
 
 user=> (require '[clojure.spec.alpha :as s])
 nil
 
-user=> (s/fdef foo
-  :args (s/cat :n number?)
-  :ret number?)
+user=> (s/fdef foo :args (s/cat :n number?) :ret number?)
 user/foo
 
-user=> (defn foo [n]
-  "ret")
+;; this function has the wrong return value according to the spec:
+
+user=> (defn foo [n] "ret")
 #'user/foo
 
-user=> (check `foo [1])
-Evaluation error - invalid arguments to null at clojure.spec.test.alpha/explain-check (alpha.clj:278).
+;; test/check helps with checking `:ret` and `:fn` specs:
+
+user=> (test/check `foo [1])
+Execution error - invalid arguments to speculative.test$check_call/invokeStatic at (test.cljc:100).
 "ret" - failed: number? at: [:ret]
 
-user=> (s/fdef foo
-  :args (s/cat :n number?)
-  :ret string?)
+;; change the spec:
+
+user=> (s/fdef foo :args (s/cat :n number?) :ret string?)
 user/foo
 
-user=> (check `foo [1])
+;; ;; no error anymore:
+
+user=> (test/check `foo [1])
 "ret"
 
-user=> (with-instrumentation `foo
-  (foo "a"))
-Evaluation error - invalid arguments to user/foo at (NO_SOURCE_FILE:15).
+;; instrument a function within a scope:
+
+user=> (test/with-instrumentation `foo (foo "a"))
+Execution error - invalid arguments to user/foo at (REPL:1).
 "a" - failed: number? at: [:n]
+
+;; not instrumented:
 
 user=> (foo "a")
 "ret"
 
-user=> (gentest `foo nil {:num-tests 1})
+;; `gentest` has a third arg for passing `clojure.test.check` options:
+
+user=> (test/gentest `foo nil {:num-tests 1})
 generatively testing user/foo
 ({:spec #object[clojure.spec.alpha$fspec_impl$reify__2524 0x72bd06ca "clojure.spec.alpha$fspec_impl$reify__2524@72bd06ca"], :clojure.spec.test.check/ret {:result true, :pass? true, :num-tests 1, :time-elapsed-ms 1, :seed 1541249961647}, :sym user/foo})
 
-user=> (successful? *1)
+;; validate if generative test was successful:
+
+user=> (test/successful? *1)
 true
 
 user=>
