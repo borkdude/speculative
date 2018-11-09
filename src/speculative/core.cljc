@@ -45,10 +45,14 @@
                :denominators (s/* ::number))
   :ret ::number)
 
-(s/fdef clojure.core/apply
-  :args (s/cat :f ::ifn
-               :intervening (s/* ::any)
-               :args (s/nilable ::seqable)))
+#?(:clj
+   (s/fdef clojure.core/apply
+     :args (s/cat :f ::ifn
+                  :intervening (s/* ::any)
+                  :args (s/nilable ::seqable)))
+   :cljs nil
+   ;; apply doesn't work on cljs
+   )
 
 (s/fdef clojure.core/assoc
   :args (s/cat :map (s/nilable ::associative)
