@@ -9,7 +9,6 @@
      (:require-macros
       [speculative.test :refer [with-instrumentation
                                 with-unstrumentation
-                                choose-env
                                 throws
                                 check
                                 gentest]])))
@@ -22,20 +21,61 @@
                    (re-matches #".*\$macros" (name n))))
     `(do ~@body)))
 
-;; case macro from https://github.com/cgrand/macrovich
 (deftime
-  (defmacro choose-env [& {:keys [cljs clj]}]
+
+  ;; case macro from https://github.com/cgrand/macrovich
+  (defmacro ? [& {:keys [cljs clj]}]
     (if (contains? &env '&env)
       `(if (:ns ~'&env) ~cljs ~clj)
       (if #?(:clj (:ns &env) :cljs true)
         cljs
-        clj))))
+        clj)))
+
+  ;; aliases so you don't have to require spec as clojure.spec.test.alpha in cljs
+  ;; before using this namespace, see #95
+  (defmacro with-instrument-disabled [& body]
+    `(? :clj
+        (clojure.spec.test.alpha/with-instrument-disabled ~@body)
+        :cljs
+        (cljs.spec.test.alpha/with-instrument-disabled ~@body)))
+
+  (defmacro instrument [symbol]
+    `(? :clj
+        (clojure.spec.test.alpha/instrument ~symbol)
+        :cljs
+        (cljs.spec.test.alpha/instrument ~symbol)))
+
+  (defmacro unstrument [symbol]
+    `(? :clj
+        (clojure.spec.test.alpha/unstrument ~symbol)
+        :cljs
+        (cljs.spec.test.alpha/unstrument ~symbol)))
+
+  (defmacro get-spec [symbol]
+    `(? :clj
+        (clojure.spec.alpha/get-spec ~symbol)
+        :cljs
+        (cljs.spec.alpha/get-spec ~symbol)))
+
+  (defmacro test-check [symbol opts]
+    `(? :clj
+        (clojure.spec.test.alpha/check ~symbol ~opts)
+        :cljs
+        (cljs.spec.test.alpha/check ~symbol ~opts))))
 
 (defn throwable? [e]
   (instance? #?(:clj Throwable
                 :cljs js/Error) e))
 
 (deftime
+
+  (defmacro try-return
+    "Executes body and returns exception as value"
+    [& body]
+    `(try ~@body
+          (catch ~(? :clj 'Exception :cljs ':default) e#
+            e#)))
+
   ;; with-(i/u)nstrumentation avoids using finally as a workaround for
   ;; https://dev.clojure.org/jira/browse/CLJS-2949
   (defmacro with-instrumentation
@@ -43,45 +83,43 @@
     [symbol & body]
     `(let [was-instrumented?#
            (boolean
-            (seq (clojure.spec.test.alpha/unstrument ~symbol)))]
-       (let [ret# (try (clojure.spec.test.alpha/instrument ~symbol)
-                       ~@body
-                       (catch #?(:clj Exception :cljs :default) e#
-                         e#))]
-         (when-not was-instrumented?#
-           (clojure.spec.test.alpha/unstrument ~symbol))
-         (if (throwable? ret#)
-           (throw ret#)
-           ret#))))
+            (seq (unstrument ~symbol)))
+           ret# (try-return
+                 (instrument ~symbol)
+                 ~@body)]
+       (when-not was-instrumented?#
+         (unstrument ~symbol))
+       (if (throwable? ret#)
+         (throw ret#)
+         ret#)))
 
   (defmacro with-unstrumentation
     "Executes body while unstrumenting symbol."
     [symbol & body]
     `(let [was-instrumented?#
            (boolean
-            (seq (clojure.spec.test.alpha/unstrument ~symbol)))]
-       (let [ret# (try (clojure.spec.test.alpha/unstrument ~symbol)
-                       ~@body
-                       (catch #?(:clj Exception :cljs :default) e#
-                         e#))]
-         (when was-instrumented?#
-           (clojure.spec.test.alpha/instrument ~symbol))
-         (if (throwable? ret#)
-           (throw ret#)
-           ret#))))
+            (seq (unstrument ~symbol)))
+           ret# (try-return
+                 (unstrument ~symbol)
+                 ~@body)]
+       (when was-instrumented?#
+         (instrument ~symbol))
+       (if (throwable? ret#)
+         (throw ret#)
+         ret#)))
 
   (defmacro throws
     "Asserts that body throws spec error concerning s/fdef for symbol."
     [symbol & body]
     `(let [msg#
-           (choose-env :clj (try
-                              ~@body
-                              (catch clojure.lang.ExceptionInfo e#
-                                (.getMessage e#)))
-                       :cljs (try
-                               ~@body
-                               (catch js/Error e#
-                                 (.-message e#))))]
+           (? :clj (try
+                     ~@body
+                     (catch clojure.lang.ExceptionInfo e#
+                       (.getMessage e#)))
+                   :cljs (try
+                           ~@body
+                           (catch js/Error e#
+                             (.-message e#))))]
        (clojure.test/is (clojure.string/starts-with?
                          msg#
                          (str "Call to " (resolve ~symbol)
@@ -107,13 +145,13 @@
 (defn check*
   [f spec args]
   (let [ret (check-call f spec args)
-        ex? #?(:clj (instance? clojure.lang.ExceptionInfo ret)
-               :cljs (instance? cljs.core/ExceptionInfo ret))]
+        ex? (throwable? ret)]
     (if ex?
       (throw ret)
       ret)))
 
 (deftime
+
   (defmacro check
     "Applies args to function resolved by symbol. Checks :args, :ret
   and :fn specs for spec resolved by symbol. Returns return value if check
@@ -121,8 +159,7 @@
     [symbol args]
     (assert (vector? args))
     `(let [f# (resolve ~symbol)
-           spec# (choose-env :clj (clojure.spec.alpha/get-spec ~symbol)
-                             :cljs (cljs.spec.alpha/get-spec ~symbol))]
+           spec# (get-spec ~symbol)]
        (check* f# spec# ~args))))
 
 (defn test-check-kw
@@ -142,12 +179,13 @@
                stc-result)))
 
 (deftime
+
   (defmacro gentest
     "spec.test/check with third arg for passing clojure.test.check options."
     ([sym]
      `(gentest ~sym nil nil))
     ([sym opts tc-opts]
-     `(clojure.spec.test.alpha/with-instrument-disabled
+     `(with-instrument-disabled
         (println "generatively testing" ~sym)
         (let [opts# ~opts
               tc-opts# ~tc-opts
@@ -155,8 +193,7 @@
                                (fn [o#]
                                  (merge o# tc-opts#)))
               ret#
-              (choose-env :clj (clojure.spec.test.alpha/check ~sym opts#)
-                          :cljs (cljs.spec.test.alpha/check ~sym opts#))]
+              (test-check ~sym opts#)]
           ret#)))))
 
 ;;;; Scratch
