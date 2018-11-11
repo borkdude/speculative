@@ -1,7 +1,18 @@
 (ns speculative.core
-  (:refer-clojure :exclude [reduceable?])
+  (:refer-clojure :exclude [seqable? reduceable?])
   (:require [clojure.spec.alpha :as s]
-            [clojure.spec.gen.alpha :as gen]))
+            [clojure.spec.gen.alpha :as gen]
+            #?(:cljs [goog.string])))
+
+#?(:cljs
+   (if (and *clojurescript-version*
+            (pos? (goog.string/compareVersions "1.10.439"
+                                               *clojurescript-version*)))
+     (defn seqable? [v]
+       (or (nil? v)
+           (clojure.core/seqable? v)))
+     (def seqable? clojure.core/seqable?))
+   :clj (def seqable? clojure.core/seqable?))
 
 (defn reducible? [x]
   #?(:clj
@@ -48,10 +59,9 @@
    (s/fdef clojure.core/apply
      :args (s/cat :f ::ifn
                   :intervening (s/* ::any)
-                  :args (s/nilable ::seqable)))
-   :cljs nil
+                  :args ::seqable))
    ;; apply doesn't work on cljs
-   )
+   :cljs nil)
 
 (s/fdef clojure.core/assoc
   :args (s/cat :map (s/nilable ::associative)
@@ -65,7 +75,7 @@
 (s/def ::predicate ::ifn)
 
 (s/fdef clojure.core/every?
-  :args (s/cat :pred ::predicate :coll (s/nilable ::seqable))
+  :args (s/cat :pred ::predicate :coll ::seqable)
   :ret ::boolean)
 
 (s/def ::transducer ::ifn)
@@ -76,13 +86,13 @@
 
 (s/fdef clojure.core/filter
   :args (s/alt :transducer (s/cat :xf ::ifn)
-               :seqable (s/cat :f ::ifn :coll (s/nilable ::seqable)))
+               :seqable (s/cat :f ::ifn :coll ::seqable))
   :ret ::seqable-or-transducer
   :fn (fn [{:keys [args ret]}]
         (= (key args) (key ret))))
 
 (s/fdef clojure.core/first
-  :args (s/cat :coll (s/nilable ::seqable)))
+  :args (s/cat :coll ::seqable))
 
 (s/fdef clojure.core/fnil
   :args (s/cat :f ::ifn :xs (s/+ ::any))
@@ -101,7 +111,7 @@
 (s/fdef clojure.core/map
   :args (s/alt :transducer (s/cat :xf ::ifn)
                :seqable (s/cat :f ::ifn :colls
-                               (s/+ (s/nilable ::seqable))))
+                               (s/+ ::seqable)))
   :ret ::seqable-or-transducer
   :fn (fn [{:keys [args ret]}]
         (= (key args) (key ret))))
@@ -118,11 +128,11 @@
   :ret (s/nilable map?))
 
 (s/fdef clojure.core/not-any?
-  :args (s/cat :pred ::predicate :coll (s/nilable ::seqable))
+  :args (s/cat :pred ::predicate :coll ::seqable)
   :ret ::boolean)
 
 (s/fdef clojure.core/not-every?
-  :args (s/cat :pred ::predicate :coll (s/nilable ::seqable))
+  :args (s/cat :pred ::predicate :coll ::seqable)
   :ret ::boolean)
 
 (s/fdef clojure.core/range
@@ -137,16 +147,17 @@
   :ret ::ifn)
 
 (s/def ::reducible-coll
-  (s/nilable (s/or :reducible ::reducible
-                   :iterable   ::iterable
-                   :seqable    ::seqable)))
+  (s/or
+   :seqable    ::seqable
+   :reducible  (s/nilable ::reducible)
+   :iterable   (s/nilable ::iterable)))
 
 (s/fdef clojure.core/reduce
   :args (s/cat :f ::ifn :val (s/? ::any) :coll ::reducible-coll))
 
 (s/fdef clojure.core/remove
   :args (s/cat :pred ::predicate
-               :coll (s/? (s/nilable ::seqable)))
+               :coll (s/? ::seqable))
   :ret ::seqable-or-transducer)
 
 (s/def ::atom
@@ -158,7 +169,7 @@
   :args (s/cat :atom ::atom :v ::any))
 
 (s/fdef clojure.core/some
-  :args (s/cat :pred ::predicate :coll (s/nilable ::seqable))
+  :args (s/cat :pred ::predicate :coll ::seqable)
   :ret (s/or :found ::some :not-found ::nil))
 
 (s/fdef clojure.core/some?
