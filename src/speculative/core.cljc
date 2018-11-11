@@ -33,7 +33,7 @@
 (s/def ::string string?)
 
 (s/def ::seqable-of-map-entry
-  (s/every ::map-entry :kind seqable?))
+  (s/coll-of ::map-entry :kind seqable?))
 
 (s/fdef clojure.core/=
   :args (s/+ ::any)
@@ -112,8 +112,9 @@
 
 (s/fdef clojure.core/merge-with
   :args (s/cat :f ::ifn
-               :init-map (s/? map?)
-               :maps (s/* ::seqable-of-map-entry))
+               :maps (s/? (s/cat
+                           :init-map map?
+                           :rest-maps (s/* ::seqable-of-map-entry))))
   :ret (s/nilable map?))
 
 (s/fdef clojure.core/not-any?
