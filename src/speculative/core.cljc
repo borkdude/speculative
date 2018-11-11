@@ -1,7 +1,18 @@
 (ns speculative.core
-  (:refer-clojure :exclude [reduceable?])
+  (:refer-clojure :exclude [seqable? reduceable?])
   (:require [clojure.spec.alpha :as s]
-            [clojure.spec.gen.alpha :as gen]))
+            [clojure.spec.gen.alpha :as gen]
+            #?(:cljs [goog.string])))
+
+#?(:cljs
+   (if (and *clojurescript-version*
+            (pos? (goog.string/compareVersions "1.10.439"
+                                               *clojurescript-version*)))
+     (defn seqable? [v]
+       (or (nil? v)
+           (clojure.core/seqable? v)))
+     (def seqable? clojure.core/seqable?))
+   :clj (def seqable? clojure.core/seqable?))
 
 (defn reducible? [x]
   #?(:clj
