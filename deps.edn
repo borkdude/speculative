@@ -25,7 +25,7 @@
    :main-opts ["-m" "cognitect.test-runner"
                "-d" "test"]}
   :cljs-repl {:main-opts ["-m" "cljs.main" "-re" "node"
-                          ;;"-e" "(require,'[speculative.core])"
+                          "-e" "(require,'[speculative.core])"
                           "-e" "(require,'[speculative.test,:refer,[with-instrumentation,with-unstrumentation,check]])"
                           "-e" "(require,'[clojure.spec.alpha,:as,s])"
                           "-e" "(require,'[clojure.spec.test.alpha,:as,stest])"

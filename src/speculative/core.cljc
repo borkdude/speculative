@@ -1,5 +1,5 @@
 (ns speculative.core
-  (:refer-clojure :exclude [map-entry? reduceable?])
+  (:refer-clojure :exclude [reduceable?])
   (:require [clojure.spec.alpha :as s]
             [clojure.spec.gen.alpha :as gen]))
 
@@ -11,10 +11,6 @@
 #?(:clj
    (defn- iterable? [x]
      (instance? java.lang.Iterable x)))
-
-(defn map-entry? [v]
-  #?(:cljs (clojure.core/map-entry? v)
-     :clj #(instance? java.util.Map$Entry %)))
 
 (s/def ::associative associative?)
 (s/def ::any any?)
@@ -35,6 +31,9 @@
 (s/def ::seqable seqable?)
 (s/def ::some some?)
 (s/def ::string string?)
+
+(s/def ::seqable-of-map-entry
+  (s/every ::map-entry :kind seqable?))
 
 (s/fdef clojure.core/=
   :args (s/+ ::any)
@@ -112,8 +111,10 @@
   :ret (s/nilable ::associative))
 
 (s/fdef clojure.core/merge-with
-  :args (s/cat :f ::ifn :maps (s/* (s/nilable ::associative)))
-  :ret (s/nilable ::associative))
+  :args (s/cat :f ::ifn
+               :init-map (s/? map?)
+               :maps (s/* ::seqable-of-map-entry))
+  :ret (s/nilable map?))
 
 (s/fdef clojure.core/not-any?
   :args (s/cat :pred ::predicate :coll (s/nilable ::seqable))

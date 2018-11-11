@@ -1,5 +1,6 @@
 ## 0.2.1-SNAPSHOT
 
+* `merge-with` spec more strict
 * `speculative.test` macros `gentest` and `check` renamed to `check` and `check-call` to closer resemble naming in `clojure.spec.test.alpha`
 * `speculative.test` no longer needs require to `clojure.spec.test.alpha` in CLJS ([#95](https://github.com/slipset/speculative/issues/95))
 

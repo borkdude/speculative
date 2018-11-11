@@ -136,12 +136,16 @@
     (throws `merge (merge 1))))
 
 (deftest merge-with-test
-  (is (check-call `merge-with [+ {}]))
   (is (nil? (check-call `merge-with [+])))
-  (is (check-call `merge-with [+ {} nil]))
   (is (nil? (check-call `merge-with [+ nil])))
+  (is (= {:a 1} (check-call `merge-with [+ {:a 1}])))
+  (is (= {:a 1} (check-call `merge-with [+ {:a 1} nil])))
+  (is (= {:a 3}
+         (check-call `merge-with [+ {:a 1} [(first {:a 2})]])))
   (with-instrumentation `merge-with
-    (throws `merge-with (merge-with 1))))
+    (throws `merge-with (merge-with 1))
+    ;; the following is no longer allowed in CLJS, see CLJS-2943
+    (throws `merge-with (merge-with + {:a 1} [[:a 2]]))))
 
 (deftest not-any-test
   (is (check-call `not-any? [pos? nil]))
