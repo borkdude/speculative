@@ -10,8 +10,8 @@
       [speculative.test :refer [with-instrumentation
                                 with-unstrumentation
                                 throws
-                                check
-                                gentest]])))
+                                check-call
+                                check]])))
 
 ;; deftime macro from https://github.com/cgrand/macrovich
 (defmacro deftime
@@ -125,7 +125,7 @@
                          (str "Call to " (resolve ~symbol)
                               " did not conform to spec"))))))
 
-(defn check-call
+(defn do-check-call
   "From clojure.spec.test.alpha, adapted for speculative."
   [f specs args]
   (clojure.spec.test.alpha/with-instrument-disabled
@@ -142,9 +142,9 @@
                 (#'clojure.spec.test.alpha/explain-check args (:fn specs) {:args cargs :ret cret} :fn))
               ret)))))))
 
-(defn check*
+(defn check-call*
   [f spec args]
-  (let [ret (check-call f spec args)
+  (let [ret (do-check-call f spec args)
         ex? (throwable? ret)]
     (if ex?
       (throw ret)
@@ -152,7 +152,7 @@
 
 (deftime
 
-  (defmacro check
+  (defmacro check-call
     "Applies args to function resolved by symbol. Checks :args, :ret
   and :fn specs for spec resolved by symbol. Returns return value if check
   succeeded, else throws."
@@ -160,7 +160,7 @@
     (assert (vector? args))
     `(let [f# (resolve ~symbol)
            spec# (get-spec ~symbol)]
-       (check* f# spec# ~args))))
+       (check-call* f# spec# ~args))))
 
 (defn test-check-kw
   "Returns qualified keyword used for interfacing with
@@ -180,7 +180,7 @@
 
 (deftime
 
-  (defmacro gentest
+  (defmacro check
     "spec.test/check with third arg for passing clojure.test.check options."
     ([sym]
      `(gentest ~sym nil nil))

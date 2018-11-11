@@ -20,10 +20,10 @@ user/foo
 user=> (defn foo [n] "ret")
 #'user/foo
 
-;; test/check helps with checking `:ret` and `:fn` specs:
+;; test/check-call helps with checking `:ret` and `:fn` specs:
 
-user=> (test/check `foo [1])
-Execution error - invalid arguments to speculative.test$check_call/invokeStatic at (test.cljc:100).
+user=> (test/check-call `foo [1])
+Execution error - invalid arguments to speculative.test$do_check_call/invokeStatic at (test.cljc:138).
 "ret" - failed: number? at: [:ret]
 
 ;; change the spec:
@@ -33,7 +33,7 @@ user/foo
 
 ;; ;; no error anymore:
 
-user=> (test/check `foo [1])
+user=> (test/check-call `foo [1])
 "ret"
 
 ;; instrument a function within a scope:
@@ -47,9 +47,9 @@ Execution error - invalid arguments to user/foo at (REPL:1).
 user=> (foo "a")
 "ret"
 
-;; `gentest` has a third arg for passing `clojure.test.check` options:
+;; `test/check` has a third arg for passing `clojure.test.check` options:
 
-user=> (test/gentest `foo nil {:num-tests 1})
+user=> (test/check `foo nil {:num-tests 1})
 generatively testing user/foo
 ({:spec #object[clojure.spec.alpha$fspec_impl$reify__2524 0x72bd06ca "clojure.spec.alpha$fspec_impl$reify__2524@72bd06ca"], :clojure.spec.test.check/ret {:result true, :pass? true, :num-tests 1, :time-elapsed-ms 1, :seed 1541249961647}, :sym user/foo})
 
