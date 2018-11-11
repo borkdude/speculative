@@ -113,7 +113,7 @@
 (s/fdef clojure.core/merge-with
   :args (s/cat :f ::ifn
                :maps (s/? (s/cat
-                           :init-map map?
+                           :init-map (s/nilable map?)
                            :rest-maps (s/* ::seqable-of-map-entry))))
   :ret (s/nilable map?))
 
