@@ -1,5 +1,21 @@
 ## 0.2.1-SNAPSHOT
 
+* Stricter `merge-with` spec:
+
+``` clojure
+user=> (merge-with assoc {:a 1} [:a :b])
+Execution error (ClassCastException) at user$eval164/invokeStatic (REPL:1).
+clojure.lang.Keyword cannot be cast to java.util.Map$Entry
+```
+becomes
+
+``` clojure
+user=> (merge-with + {:a 1} [:a :b])
+Evaluation error - invalid arguments to clojure.core/merge-with at (NO_SOURCE_FILE:15).
+:a - failed: map-entry? at: [:maps :rest-maps] spec: :speculative.core/map-entry
+:b - failed: map-entry? at: [:maps :rest-maps] spec: :speculative.core/map-entry
+```
+
 * `speculative.test` macros `gentest` and `check` renamed to `check` and `check-call` to closer resemble naming in `clojure.spec.test.alpha`
 * `speculative.test` no longer needs require to `clojure.spec.test.alpha` in CLJS ([#95](https://github.com/slipset/speculative/issues/95))
 
