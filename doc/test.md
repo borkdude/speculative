@@ -31,7 +31,7 @@ Execution error - invalid arguments to speculative.test$do_check_call/invokeStat
 user=> (s/fdef foo :args (s/cat :n number?) :ret string?)
 user/foo
 
-;; ;; no error anymore:
+;; no error anymore:
 
 user=> (test/check-call `foo [1])
 "ret"
