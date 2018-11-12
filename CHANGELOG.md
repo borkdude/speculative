@@ -1,5 +1,19 @@
 ## 0.2.1-SNAPSHOT
 
+* Moved specs that are not likely to find errors while instrumented to
+  `speculative.optional`. Not requiring this namespace before instrumenting has
+  significant performance benefit.
+
+Running the first 20 coal-mine tests in cljs+node, compare
+
+``` shell
+"Elapsed time: 3198.731217 msecs"
+```
+to
+``` shell
+"Elapsed time: 21343.952922 msecs"
+```
+
 * Stricter `merge-with` spec:
 
 ``` clojure

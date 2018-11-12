@@ -46,15 +46,6 @@
 (s/def ::seqable-of-map-entry
   (s/coll-of ::map-entry :kind seqable?))
 
-(s/fdef clojure.core/=
-  :args (s/+ ::any)
-  :ret ::boolean)
-
-(s/fdef clojure.core//
-  :args (s/cat :numerator ::number
-               :denominators (s/* ::number))
-  :ret ::number)
-
 #?(:clj
    (s/fdef clojure.core/apply
      :args (s/cat :f ::ifn
@@ -97,12 +88,6 @@
 (s/fdef clojure.core/fnil
   :args (s/cat :f ::ifn :xs (s/+ ::any))
   :ret ::ifn)
-
-(s/fdef clojure.core/get
-  :args (s/cat :map ::any
-               :key ::any
-               :default (s/? ::any))
-  :ret ::any)
 
 (s/fdef clojure.core/juxt
   :args (s/+ ::ifn)
@@ -171,14 +156,6 @@
 (s/fdef clojure.core/some
   :args (s/cat :pred ::predicate :coll ::seqable)
   :ret (s/or :found ::some :not-found ::nil))
-
-(s/fdef clojure.core/some?
-  :args (s/cat :x ::any)
-  :ret ::boolean)
-
-(s/fdef clojure.core/str
-  :args (s/* ::any)
-  :ret ::string)
 
 (s/fdef clojure.core/swap!
   :args (s/cat :atom ::atom :f ::ifn :args (s/* ::any)))

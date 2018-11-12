@@ -5,7 +5,8 @@
    [clojure.spec.gen.alpha :as gen]
    [clojure.test :as t :refer [is deftest testing]]
    [clojure.set :as set]
-   [speculative.core :as speculative]
+   [speculative.core :as sp]
+   [speculative.optional]
    [speculative.test :refer [with-instrumentation
                              with-unstrumentation
                              throws
@@ -123,7 +124,7 @@
     (throws `map (map 1))))
 
 (deftest map-entry-test
-  (let [mes (gen/sample (s/gen ::speculative/map-entry))]
+  (let [mes (gen/sample (s/gen ::sp/map-entry))]
     (is (seq mes))
     (is (every? #(= 2 (count %)) mes))))
 

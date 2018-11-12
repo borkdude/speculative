@@ -67,4 +67,16 @@
                "-re" "node"
                "-e" "(require,'speculative.core,'clojure.spec.test.alpha)"
                "-e" "(clojure.spec.test.alpha/instrument)"
-               "-m" "coal-mine.test-runner"]}}}
+               "-m" "coal-mine.test-runner"]}
+  :coal-mine-runner-cljs
+  {:extra-deps {github-mfikes/coal-mine
+                {:git/url "https://github.com/mfikes/coal-mine"
+                 :sha "4b85fa78af4ec7be2e56803440ff78186f9b10c8"}}
+   :jvm-opts ["-Xmx6g"]
+   :main-opts ["-m" "cljs.main"
+               "-co" "{:parallel-build,true}"
+               "-re" "node"
+               "-e" "(require,'speculative.core,'clojure.spec.test.alpha)"
+               ;; "-e" "(require,'speculative.optional)"
+               "-e" "(clojure.spec.test.alpha/instrument)"
+               "-m" "speculative.coal-mine-runner"]}}}
