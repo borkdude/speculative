@@ -2,7 +2,7 @@
 
 * Moved specs that are not likely to find errors while instrumented to
   `speculative.optional`. Not requiring this namespace before instrumenting has
-  significant benefit on performance.
+  significant performance benefit.
 
 Running the first 20 coal-mine tests in cljs+node, compare
 
