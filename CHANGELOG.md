@@ -4,7 +4,7 @@
   `speculative.optional`. Not requiring this namespace before instrumenting has
   significant performance benefit.
 
-Running the first 20 coal-mine tests in cljs+node, compare
+Running the first 20 coal-mine test sets in cljs+node, compare
 
 ``` shell
 "Elapsed time: 3198.731217 msecs"
