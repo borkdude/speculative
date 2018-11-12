@@ -1,8 +1,9 @@
-(ns speculative.optional
+(ns speculative.core.extra
   "This namespace contains optional core specs that are not likely to
   find errors while instrumented."
-  (:require [clojure.spec.alpha :as s]
-            [speculative.core :as sp]))
+  (:require
+   [clojure.spec.alpha :as s]
+   [speculative.specs :as ss]))
 
 (comment
   = ;; no way to pass wrong args (except 0-arity)
@@ -13,28 +14,28 @@
 )
 
 (s/fdef clojure.core/=
-  :args (s/+ ::sp/any)
-  :ret ::sp/boolean)
+  :args (s/+ ::ss/any)
+  :ret ::ss/boolean)
 
 ;; inlined
 (s/fdef clojure.core//
-  :args (s/cat :numerator ::sp/number
-               :denominators (s/* ::sp/number))
-  :ret ::sp/number)
+  :args (s/cat :numerator ::ss/number
+               :denominators (s/* ::ss/number))
+  :ret ::ss/number)
 
 (s/fdef clojure.core/get
-  :args (s/cat :map ::sp/any
-               :key ::sp/any
-               :default (s/? ::sp/any))
-  :ret ::sp/any)
+  :args (s/cat :map ::ss/any
+               :key ::ss/any
+               :default (s/? ::ss/any))
+  :ret ::ss/any)
 
 (s/fdef clojure.core/some?
-  :args (s/cat :x ::sp/any)
-  :ret ::sp/any)
+  :args (s/cat :x ::ss/any)
+  :ret ::ss/any)
 
 (s/fdef clojure.core/str
-  :args (s/* ::sp/any)
-  :ret ::sp/string)
+  :args (s/* ::ss/any)
+  :ret ::ss/string)
 
 ;;;; Scratch
 

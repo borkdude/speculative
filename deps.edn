@@ -77,6 +77,6 @@
                "-co" "{:parallel-build,true}"
                "-re" "node"
                "-e" "(require,'speculative.core,'clojure.spec.test.alpha)"
-               ;; "-e" "(require,'speculative.optional)"
+               ;; "-e" "(require,'speculative.core.extra)"
                "-e" "(clojure.spec.test.alpha/instrument)"
                "-m" "speculative.coal-mine-runner"]}}}
