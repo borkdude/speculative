@@ -101,7 +101,7 @@
 (s/fdef clojure.core/get
   :args (s/cat :map ::any
                :key ::any
-               :default (s/* ::any))
+               :default (s/? ::any))
   :ret ::any)
 
 (s/fdef clojure.core/juxt
