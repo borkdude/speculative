@@ -6,6 +6,9 @@ then
     exit 0;
 fi
 
+echo "BRANCH $CIRCLE_BRANCH"
+echo "USERNAME $CIRCLE_USERNAME"
+
 if [ "$CIRCLE_BRANCH" = "master" ] && [ "$CIRCLE_USERNAME" = "slipset" ]
 then
     lein deploy clojars
