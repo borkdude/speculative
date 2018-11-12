@@ -1,6 +1,8 @@
-(defproject speculative "0.2.1-SNAPSHOT"
+(defproject speculative "0.0.3-SNAPSHOT"
   :description "A collection of specs for clojure.core functions"
   :url "https://github.com/slipset/speculative"
+  :scm {:name "git"
+        :url "https://github.com/slipset/speculative"}
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.10.0-RC1"]]
