@@ -11,8 +11,18 @@ else
     timeout_cmd="$timeout 80"
 fi
 
-echo "=== Generating coal-mine-runner with random problem"
-clojure -A:test:coal-mine-generator out/out.cljc 1
+op=$1
+if [ -z $op ]; then
+   op="random"
+fi
+
+max_or_nth=$2
+if [ -z $max_or_nth ]; then
+    max_or_nth="1"
+fi
+
+echo "=== Generating coal-mine-runner"
+clojure -A:test:coal-mine-generator out/out.cljc $op $max_or_nth
 
 echo "\n=== Running clj coal-mine tests"
 $timeout_cmd clojure -R:test:coal-mine-clj -i out/out.cljc

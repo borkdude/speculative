@@ -184,9 +184,13 @@
   (spit out (str (with-out-str (pprint (run-form))) "\n")
         :append true))
 
-(defn -main [& [out max]]
-  (let [max #?(:clj (Integer/parseInt max)
-               :cljs (js/parseInt max))
-        problems (sort (take max (shuffle syms)))]
+(defn -main [& [out op max-or-nth]]
+  (let [max-or-n #?(:clj (Integer/parseInt max-or-nth)
+                    :cljs (js/parseInt max-or-nth))
+        problems (case op
+                   "nth"
+                   [(nth syms max-or-n)]
+                   "random"
+                   (sort (take max-or-n (shuffle syms))))]
     (io/make-parents out)
     (emit-program out problems)))
