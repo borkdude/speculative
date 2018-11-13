@@ -2,6 +2,7 @@
 
 Issues are sorted by date from newest to oldest.
 
+- [Coal-mine test found use of merge that doesn't conform to spec](https://github.com/slipset/speculative/issues/113) (4clojure)
 - [Make clojure.spec.alpha reloadable](https://dev.clojure.org/jira/browse/CLJS-2967) (CLJS)
 - [Requiring clojure.spec.test.alpha loads clojure.test.check](https://dev.clojure.org/jira/browse/CLJS-2964) (CLJS)
 - [Stack overflow when specing core =](https://dev.clojure.org/jira/browse/CLJS-2956) (CLJS)
