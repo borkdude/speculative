@@ -1,0 +1,10 @@
+#!/bin/sh
+
+echo "=== Generating coal-mine-runner with random problem"
+clojure -A:test:coal-mine-generator out/out.cljc 1
+
+echo "\n=== Running clj coal-mine tests"
+clojure -R:test:coal-mine-clj -i out/out.cljc
+
+echo "\n=== Running cljs node coal-mine tests"
+clojure -R:test:coal-mine-cljs -m cljs.main -re node -i out/out.cljc
