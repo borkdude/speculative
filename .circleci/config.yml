@@ -56,7 +56,7 @@ jobs:
       # run tests!
       - run: script/clean
       - run: script/test
-      - run: script/coal-mine-random
+      - run: script/coal-mine
 
       - save_cache:
           paths:
