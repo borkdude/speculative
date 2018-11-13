@@ -68,6 +68,8 @@
                "-e" "(require,'speculative.core,'clojure.spec.test.alpha)"
                "-e" "(clojure.spec.test.alpha/instrument)"
                "-m" "coal-mine.test-runner"]}
+  :coal-mine-generator
+  {:main-opts ["-m" "speculative.coal-mine-generator"]}
   :coal-mine-runner-cljs
   {:extra-deps {github-mfikes/coal-mine
                 {:git/url "https://github.com/mfikes/coal-mine"
