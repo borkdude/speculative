@@ -5,7 +5,7 @@
          :extra-deps {org.clojure/clojure {:mvn/version "1.10.0-RC1"}
                       org.clojure/clojurescript {:mvn/version "1.10.439"}
                       mfikes/workarounds-1.10.439 {:git/url "https://github.com/mfikes/workarounds-1.10.439"
-                                                   :sha "a559201602fc6a21701479b83086d76bd5ed09eb"}
+                                                   :sha  "a559201602fc6a21701479b83086d76bd5ed09eb"}
                       org.clojure/test.check {:mvn/version "RELEASE"}}}
   :repl ;; works for clj and planck, use :cljs-repl for normal cljs
   {:main-opts
