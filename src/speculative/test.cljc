@@ -183,7 +183,7 @@
   (defmacro check
     "spec.test/check with third arg for passing clojure.test.check options."
     ([sym]
-     `(gentest ~sym nil nil))
+     `(check ~sym nil nil))
     ([sym opts tc-opts]
      `(with-instrument-disabled
         (println "generatively testing" ~sym)
