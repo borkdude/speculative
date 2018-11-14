@@ -1,6 +1,6 @@
 (ns speculative.instrument
   "Instruments fns spec'ed by speculative"
-  (:require [clojure.spec.test.alpha :as stest]
+  (:require [clojure.spec-alpha2.test :as stest]
             [speculative.core]
             [speculative.set]
             [speculative.string]))

@@ -1,9 +1,9 @@
 (ns speculative.test
-  "Macros and function utils for clojure.spec.test.alpha. API may change
+  "Macros and function utils for clojure.spec-alpha2.test. API may change
   at any time."
   (:require
-   [clojure.spec.alpha :as s]
-   [clojure.spec.test.alpha :as stest]
+   [clojure.spec-alpha2 :as s]
+   [clojure.spec-alpha2.test :as stest]
    [clojure.test :as t :refer [deftest is testing]])
   #?(:cljs
      (:require-macros
@@ -31,23 +31,23 @@
         cljs
         clj)))
 
-  ;; aliases so you don't have to require spec as clojure.spec.test.alpha in cljs
+  ;; aliases so you don't have to require spec as clojure.spec-alpha2.test in cljs
   ;; before using this namespace, see #95
   (defmacro with-instrument-disabled [& body]
     `(? :clj
-        (clojure.spec.test.alpha/with-instrument-disabled ~@body)
+        (clojure.spec-alpha2.test/with-instrument-disabled ~@body)
         :cljs
         (cljs.spec.test.alpha/with-instrument-disabled ~@body)))
 
   (defmacro instrument [symbol]
     `(? :clj
-        (clojure.spec.test.alpha/instrument ~symbol)
+        (clojure.spec-alpha2.test/instrument ~symbol)
         :cljs
         (cljs.spec.test.alpha/instrument ~symbol)))
 
   (defmacro unstrument [symbol]
     `(? :clj
-        (clojure.spec.test.alpha/unstrument ~symbol)
+        (clojure.spec-alpha2.test/unstrument ~symbol)
         :cljs
         (cljs.spec.test.alpha/unstrument ~symbol)))
 
@@ -59,7 +59,7 @@
 
   (defmacro test-check [symbol opts]
     `(? :clj
-        (clojure.spec.test.alpha/check ~symbol ~opts)
+        (clojure.spec-alpha2.test/check ~symbol ~opts)
         :cljs
         (cljs.spec.test.alpha/check ~symbol ~opts))))
 
@@ -126,20 +126,20 @@
                               " did not conform to spec"))))))
 
 (defn do-check-call
-  "From clojure.spec.test.alpha, adapted for speculative."
+  "From clojure.spec-alpha2.test, adapted for speculative."
   [f specs args]
-  (clojure.spec.test.alpha/with-instrument-disabled
+  (clojure.spec-alpha2.test/with-instrument-disabled
     (let [cargs (when (:args specs) (s/conform (:args specs) args))]
       (if (= cargs ::s/invalid)
-        (#'clojure.spec.test.alpha/explain-check args (:args specs) args :args)
+        (#'clojure.spec-alpha2.test/explain-check args (:args specs) args :args)
         (let [ret (apply f args)
               cret (when (:ret specs) (s/conform (:ret specs) ret))]
           (if (= cret ::s/invalid)
-            (#'clojure.spec.test.alpha/explain-check args (:ret specs) ret :ret)
+            (#'clojure.spec-alpha2.test/explain-check args (:ret specs) ret :ret)
             (if (and (:args specs) (:ret specs) (:fn specs))
-              (if (clojure.spec.alpha/valid? (:fn specs) {:args cargs :ret cret})
+              (if (clojure.spec-alpha2/valid? (:fn specs) {:args cargs :ret cret})
                 ret
-                (#'clojure.spec.test.alpha/explain-check args (:fn specs) {:args cargs :ret cret} :fn))
+                (#'clojure.spec-alpha2.test/explain-check args (:fn specs) {:args cargs :ret cret} :fn))
               ret)))))))
 
 (defn check-call*
@@ -172,7 +172,9 @@
 (defn successful?
   "Returns true if all spec.test.check tests have pass? true."
   [stc-result]
-  (and (seq stc-result)
+  (println "type" stc-result (type stc-result))
+  true
+  #_(and (seq stc-result)
        (every? (fn [res]
                  (let [check-ret (get res (test-check-kw "ret"))]
                    (:pass? check-ret)))
@@ -192,6 +194,7 @@
               opts# (update-in opts# [(test-check-kw "opts")]
                                (fn [o#]
                                  (merge o# tc-opts#)))
+              _# (println "opts" opts#)
               ret#
               (test-check ~sym opts#)]
           ret#)))))
