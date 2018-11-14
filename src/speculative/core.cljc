@@ -1,7 +1,7 @@
 (ns speculative.core
   "Specs for clojure.core"
   (:require
-   [clojure.spec.alpha :as s]
+   [clojure.spec-alpha2 :as s]
    [speculative.specs :as ss]))
 
 ;; 49
