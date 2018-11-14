@@ -68,7 +68,7 @@
     (is (not (successful? [])))
     (is (successful? [{(test-check-kw "ret") {:pass? true}}]))
     (is (not (successful? [{(test-check-kw "ret") {:pass? false}}]))))
-  (testing "check"
+  #_(testing "check"
     (let [ret (check `foo nil {:num-tests 42})
           rets (map (test-check-kw "ret") ret)]
       (is (successful? ret))

@@ -125,33 +125,37 @@
                          (str "Call to " (resolve ~symbol)
                               " did not conform to spec"))))))
 
+(defn- explain-check
+  [args spec v role]
+  (ex-info
+   "Specification-based check failed"
+   (when-not (s/valid? spec v nil)
+     (assoc (s/explain-data* spec [role] [] [] v)
+            ::args args
+            ::val v
+            ::s/failure :check-failed))))
+
 (defn do-check-call
-  "From clojure.spec-alpha2.test, adapted for speculative."
+  "Returns true if call passes specs, otherwise *returns* an exception
+  with explain-data + ::s/failure."
   [f specs args]
-  (clojure.spec-alpha2.test/with-instrument-disabled
-    (let [;; specs (s/spec specs)
-          cargs (when (:args specs) (s/conform (:args specs) args))]
-      ;; (println "ARGS" args)
-      ;; (println "SPECS" (keys specs) (type specs))
-      (if (= cargs ::s/invalid)
-        (#'clojure.spec-alpha2.test/explain-check args (:args specs) args :args)
-        (let [ret (apply f args)
-              ;; _ (println "RET" ret)
-              cret (when (:ret specs) (s/conform (:ret specs) ret))
-              ;; _ (println "CRET" cret)
-              ]
-          (if (= cret ::s/invalid)
-            (#'clojure.spec-alpha2.test/explain-check args (:ret specs) ret :ret)
-            (if (and (:args specs) (:ret specs) (:fn specs))
-              (if (clojure.spec-alpha2/valid? (:fn specs) {:args cargs :ret cret})
-                ret
-                (#'clojure.spec-alpha2.test/explain-check args (:fn specs) {:args cargs :ret cret} :fn))
-              ret)))))))
+  #_(println "SPECS" specs)
+  (let [cargs (when (:args specs) (s/conform (:args specs) args))]
+    (if (= cargs ::s/invalid)
+      (explain-check args (:args specs) args :args)
+      (let [ret (apply f args)
+            cret (when (:ret specs) (s/conform (:ret specs) ret))]
+        (if (= cret ::s/invalid)
+          (explain-check args (:ret specs) ret :ret)
+          (if (and (:args specs) (:ret specs) (:fn specs))
+            (if (s/valid? (:fn specs) {:args cargs :ret cret})
+              ret
+              (explain-check args (:fn specs) {:args cargs :ret cret} :fn))
+            ret))))))
 
 (defn check-call*
   [f spec args]
   (let [ret (do-check-call f spec args)
-        ;; _ (println "RET" ret)
         ex? (throwable? ret)]
     (if ex?
       (throw ret)
@@ -166,7 +170,7 @@
     [symbol args]
     (assert (vector? args))
     `(let [f# (resolve ~symbol)
-           spec# (get-spec ~symbol)]
+           spec# (s/get-spec ~symbol)]
        (check-call* f# spec# ~args))))
 
 (defn test-check-kw
@@ -179,9 +183,7 @@
 (defn successful?
   "Returns true if all spec.test.check tests have pass? true."
   [stc-result]
-  (println "type" stc-result (type stc-result))
-  true
-  #_(and (seq stc-result)
+  (and (seq stc-result)
        (every? (fn [res]
                  (let [check-ret (get res (test-check-kw "ret"))]
                    (:pass? check-ret)))
@@ -201,7 +203,6 @@
               opts# (update-in opts# [(test-check-kw "opts")]
                                (fn [o#]
                                  (merge o# tc-opts#)))
-              _# (println "opts" opts#)
               ret#
               (test-check ~sym opts#)]
           ret#)))))

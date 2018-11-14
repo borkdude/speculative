@@ -162,7 +162,7 @@
     (throws `not-every? (not-every? 1 []))))
 
 (deftest range-test
-  ;; (is (check-call `range []))
+  (is (check-call `range []))
   (is (check-call `range [1]))
   (is (check-call `range [1 10]))
   (is (check-call `range [10 0 -1]))
