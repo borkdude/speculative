@@ -120,8 +120,7 @@
                  (when (<= start (dec (count s)))
                    {:s s :start start :end (or end (count s))}))
                (fn end-idx [{:keys [s start end]}]
-                 (and (<= start end)
-                      (<= end (count s)))))
+                 (and (<= start end (count s)))))
   :ret ::ss/string)
 
 ;; 6536
