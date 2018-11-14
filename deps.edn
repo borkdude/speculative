@@ -1,9 +1,9 @@
 {:paths ["resources" "src"]
- :deps {}
+ :deps {clojure/spec-alpha2 {:git/url "https://github.com/clojure/spec-alpha2"
+                             :sha "639767ebe1491536ec7404d8b478628ecfe9200b"}}
  :aliases
  {:test {:extra-paths ["test"]
          :extra-deps {org.clojure/clojure {:mvn/version "1.10.0-beta5"}
-                      spec-alpha2 {:local/root "/Users/Borkdude/git/spec-alpha2"}
                       org.clojure/clojurescript {:mvn/version "1.10.439"}
                       mfikes/workarounds-1.10.439 {:git/url "https://github.com/mfikes/workarounds-1.10.439"
                                                    :sha "a559201602fc6a21701479b83086d76bd5ed09eb"}
