@@ -5,17 +5,14 @@
  {:test {:extra-paths ["test"]
          :extra-deps {org.clojure/clojure {:mvn/version "1.10.0-beta5"
                                            :exclusions [org.clojure/spec.alpha]}
-                      org.clojure/clojurescript {:mvn/version "1.10.439"}
-                      mfikes/workarounds-1.10.439 {:git/url "https://github.com/mfikes/workarounds-1.10.439"
-                                                   :sha "a559201602fc6a21701479b83086d76bd5ed09eb"}
                       org.clojure/test.check {:mvn/version "RELEASE"}}}
   :repl ;; works for clj and planck, use :cljs-repl for normal cljs
   {:main-opts
    ["-e" "(require,'[speculative.core])"
     "-e" "(require,'[speculative.test,:refer,[with-instrumentation,with-unstrumentation,check]])"
-    "-e" "(require,'[clojure.spec.alpha,:as,s])"
-    "-e" "(require,'[clojure.spec.test.alpha,:as,stest])"
-    "-e" "(require,'[clojure.spec.gen.alpha,:as,gen])"
+    "-e" "(require,'[clojure.spec-alpha2,:as,s])"
+    "-e" "(require,'[clojure.spec-alpha.test,:as,stest])"
+    "-e" "(require,'[clojure.spec-alpha.gen,:as,gen])"
     "-r"]}
   :clj-tests ;; we use a script, because then we can call shutdown-agents, which
   ;; brings down the process faster after running generative tests
@@ -29,8 +26,8 @@
   :cljs-repl {:main-opts ["-m" "cljs.main" "-re" "node"
                           "-e" "(require,'[speculative.core])"
                           "-e" "(require,'[speculative.test,:refer,[with-instrumentation,with-unstrumentation,check]])"
-                          "-e" "(require,'[clojure.spec.alpha,:as,s])"
-                          "-e" "(require,'[clojure.spec.test.alpha,:as,stest])"
+                          "-e" "(require,'[clojure.spec-alpha2,:as,s])"
+                          "-e" "(require,'[clojure.spec-alpha2.test,:as,stest])"
                           "-e" "(require,'[clojure.spec.gen.alpha,:as,gen])"
                           "-r"]}
   :cljs-tests
