@@ -223,6 +223,9 @@
     (testing "not a string"
       (throws `subs (subs nil 10))
       (throws `subs (subs 1 2 3)))
+    (testing "not a nat-int?"
+      (throws `subs (subs "foo" "bar"))
+      (throws `subs (subs "foo" 0 "baz")))
     (testing "start index too large"
       (throws `subs (subs "foo" 10)))
     (testing "end index too large"
