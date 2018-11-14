@@ -161,8 +161,7 @@
     `(~'ns speculative.coal-mine-runner
        (:require
         ~@require-syms
-        [speculative.core]
-        [clojure.spec.test.alpha :as ~'stest]
+        [speculative.instrument]
         [clojure.test]))))
 
 (defn run-tests-form [problems]
@@ -173,7 +172,6 @@
 
 (defn run-form []
   `(do
-     (println "Instrumented fns:" (stest/instrument))
      (time (~'run-tests))
      ~(reader-conditional '(:clj (shutdown-agents)) false)))
 
