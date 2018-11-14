@@ -110,6 +110,20 @@
                            :rest-maps (s/* ::ss/seqable-of-map-entry))))
   :ret (s/nilable map?))
 
+;; 4981
+(s/fdef clojure.core/subs
+  :args (s/and (s/cat :s ::ss/string
+                      :start ::ss/nat-int
+                      :end (s/? ::ss/nat-int))
+               ;; multiple named predicates for better error reporting
+               (fn start-idx [{:keys [s start end]}]
+                 (when (<= start (dec (count s)))
+                   {:s s :start start :end (or end (count s))}))
+               (fn end-idx [{:keys [s start end]}]
+                 (and (<= start end)
+                      (<= end (count s)))))
+  :ret ::ss/string)
+
 ;; 6536
 (s/fdef clojure.core/fnil
   :args (s/cat :f ::ss/ifn :xs (s/+ ::ss/any))

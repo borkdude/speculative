@@ -1,5 +1,7 @@
 ## 0.0.3-SNAPSHOT
 
+* Spec for `subs`
+
 * Namespace `speculative.instrument`: requiring it instruments fns spec'ed by
   speculative.
 

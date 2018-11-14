@@ -30,6 +30,7 @@
 (s/def ::counted counted?)
 (s/def ::ifn ifn?)
 (s/def ::int int?)
+(s/def ::nat-int nat-int?)
 (s/def ::iterable iterable?)
 (s/def ::map map?)
 (s/def ::map-entry
