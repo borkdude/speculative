@@ -6,7 +6,7 @@
          :jvm-opts ["-Dclojure.spec.skip-macros"]
          :extra-deps {org.clojure/clojure {:mvn/version "1.10.0-beta5"
                                            :exclusions
-                                           [org.clojure/spec.alpha
+                                           [#_org.clojure/spec.alpha
                                             org.clojure/core.specs.alpha]
                                            }
                       org.clojure/test.check {:mvn/version "RELEASE"}}}
