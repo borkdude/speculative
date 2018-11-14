@@ -11,7 +11,7 @@
                              successful?
                              test-check-kw]]
    ;; included for self-hosted cljs
-   [workarounds-1-10-439.core]))
+   #_[workarounds-1-10-439.core]))
 
 (defn foo [n]
   "ret")

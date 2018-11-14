@@ -7,7 +7,7 @@
          :extra-deps {org.clojure/clojure {:mvn/version "1.10.0-beta5"
                                            :exclusions
                                            [#_org.clojure/spec.alpha
-                                            org.clojure/core.specs.alpha]
+                                            #_org.clojure/core.specs.alpha]
                                            }
                       org.clojure/test.check {:mvn/version "RELEASE"}}}
   :repl ;; works for clj and planck, use :cljs-repl for normal cljs

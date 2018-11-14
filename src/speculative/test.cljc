@@ -129,11 +129,17 @@
   "From clojure.spec-alpha2.test, adapted for speculative."
   [f specs args]
   (clojure.spec-alpha2.test/with-instrument-disabled
-    (let [cargs (when (:args specs) (s/conform (:args specs) args))]
+    (let [;; specs (s/spec specs)
+          cargs (when (:args specs) (s/conform (:args specs) args))]
+      ;; (println "ARGS" args)
+      ;; (println "SPECS" (keys specs) (type specs))
       (if (= cargs ::s/invalid)
         (#'clojure.spec-alpha2.test/explain-check args (:args specs) args :args)
         (let [ret (apply f args)
-              cret (when (:ret specs) (s/conform (:ret specs) ret))]
+              ;; _ (println "RET" ret)
+              cret (when (:ret specs) (s/conform (:ret specs) ret))
+              ;; _ (println "CRET" cret)
+              ]
           (if (= cret ::s/invalid)
             (#'clojure.spec-alpha2.test/explain-check args (:ret specs) ret :ret)
             (if (and (:args specs) (:ret specs) (:fn specs))
@@ -145,6 +151,7 @@
 (defn check-call*
   [f spec args]
   (let [ret (do-check-call f spec args)
+        ;; _ (println "RET" ret)
         ex? (throwable? ret)]
     (if ex?
       (throw ret)
