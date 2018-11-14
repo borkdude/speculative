@@ -30,7 +30,7 @@
    (do
      (defmethod cljs.test/report [:cljs.test/default :begin-test-var] [m]
        ;; for debugging:
-       (println ":begin-test-var" (cljs.test/testing-vars-str m))
+       ;; (println ":begin-test-var" (cljs.test/testing-vars-str m))
        )
      (defmethod cljs.test/report [:cljs.test/default :end-run-tests] [m]
        (if-not (cljs.test/successful? m)
