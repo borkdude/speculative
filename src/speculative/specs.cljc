@@ -64,7 +64,7 @@
 ;;;; Scratch
 
 (comment
-  (require '[clojure.spec.test.alpha :as stest])
+  (require '[clojure.spec-alpha2.test :as stest])
   (stest/instrument)
   (stest/unstrument)
   )

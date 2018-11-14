@@ -5,8 +5,8 @@
    [speculative.cost.popularity :refer [popularity-map]]
    [speculative.test :as t]
    [clojure.pprint :as pprint]
-   [clojure.spec.alpha :as s]
-   [clojure.spec.test.alpha :as stest]
+   [clojure.spec-alpha2 :as s]
+   [clojure.spec-alpha2.test :as stest]
    [workarounds-1-10-439.core]
    #?(:clj [taoensso.tufte :as tufte :refer [defnp p profiled profile]]
       :cljs [taoensso.tufte :as tufte :refer-macros [defnp p profiled profile]])
