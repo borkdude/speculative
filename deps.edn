@@ -29,8 +29,8 @@
   :cljs-repl {:main-opts ["-m" "cljs.main" "-re" "node"
                           "-e" "(require,'[speculative.core])"
                           "-e" "(require,'[speculative.test,:refer,[with-instrumentation,with-unstrumentation,check]])"
-                          "-e" "(require,'[clojure.spec-alpha2,:as,s])"
-                          "-e" "(require,'[clojure.spec-alpha2.test,:as,stest])"
+                          "-e" "(require,'[clojure.spec.alpha,:as,s])"
+                          "-e" "(require,'[clojure.spec.test.alpha,:as,stest])"
                           "-e" "(require,'[clojure.spec.gen.alpha,:as,gen])"
                           "-r"]}
   :cljs-tests
