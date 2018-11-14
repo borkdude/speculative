@@ -1,5 +1,8 @@
 ## 0.0.3-SNAPSHOT
 
+* Namespace `speculative.instrument`: requiring it instruments fns spec'ed by
+  speculative.
+
 * Moved specs that are not likely to find errors while instrumented to
   `speculative.core.extra`. Not requiring this namespace before instrumenting has
   significant performance benefit.
