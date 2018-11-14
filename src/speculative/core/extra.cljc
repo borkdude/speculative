@@ -2,7 +2,8 @@
   "This namespace contains optional core specs that are not likely to
   find errors while instrumented."
   (:require
-   [clojure.spec-alpha2 :as s]
+   #?(:clj [clojure.spec-alpha2 :as s]
+      :cljs [clojure.spec.alpha :as s])
    [speculative.specs :as ss]))
 
 (comment

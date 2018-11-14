@@ -1,8 +1,11 @@
 (ns speculative.core-test
   (:require
-   [clojure.spec-alpha2 :as s]
-   [clojure.spec-alpha2.test :as stest]
-   [clojure.spec-alpha2.gen :as gen]
+   #?(:clj [clojure.spec-alpha2 :as s]
+      :cljs [clojure.spec.alpha :as s])
+   #?(:clj [clojure.spec-alpha2.test :as stest]
+      :cljs [clojure.spec.test.alpha :as stest])
+   #?(:clj [clojure.spec-alpha2.gen :as gen]
+      :cljs [clojure.spec.gen.alpha :as gen])
    [clojure.test :as t :refer [is deftest testing]]
    [clojure.set :as set]
    [speculative.specs :as ss]

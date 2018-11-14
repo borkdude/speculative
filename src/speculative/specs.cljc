@@ -1,8 +1,12 @@
 (ns speculative.specs
   "Primitive specs"
   (:refer-clojure :exclude [seqable? reduceable?])
-  (:require [clojure.spec-alpha2 :as s]
-            [clojure.spec-alpha2.gen :as gen]
+  (:require #?(:clj [clojure.spec-alpha2 :as s]
+               :cljs [clojure.spec.alpha :as s])
+            #?(:clj [clojure.spec-alpha2.test :as stest]
+               :cljs [clojure.spec.test.alpha :as stest])
+            #?(:clj [clojure.spec-alpha2.gen :as gen]
+               :cljs [clojure.spec.gen.alpha :as gen])
             #?(:cljs [goog.string])))
 
 #?(:cljs

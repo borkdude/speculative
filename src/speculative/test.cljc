@@ -2,8 +2,10 @@
   "Macros and function utils for clojure.spec-alpha2.test. API may change
   at any time."
   (:require
-   [clojure.spec-alpha2 :as s]
-   [clojure.spec-alpha2.test :as stest]
+   #?(:clj [clojure.spec-alpha2 :as s]
+      :cljs [clojure.spec.alpha :as s])
+   #?(:clj [clojure.spec-alpha2.test :as stest]
+      :cljs [clojure.spec.test.alpha :as stest])
    [clojure.test :as t :refer [deftest is testing]])
   #?(:cljs
      (:require-macros
@@ -53,7 +55,7 @@
 
   (defmacro get-spec [symbol]
     `(? :clj
-        (clojure.spec.alpha/get-spec ~symbol)
+        (clojure.spec-alpha2/get-spec ~symbol)
         :cljs
         (cljs.spec.alpha/get-spec ~symbol)))
 
@@ -136,10 +138,9 @@
             ::s/failure :check-failed))))
 
 (defn do-check-call
-  "Returns true if call passes specs, otherwise *returns* an exception
-  with explain-data + ::s/failure."
+  "If call passes specs returns value of call, otherwise *returns* an
+  exception with explain-data + ::s/failure."
   [f specs args]
-  #_(println "SPECS" specs)
   (let [cargs (when (:args specs) (s/conform (:args specs) args))]
     (if (= cargs ::s/invalid)
       (explain-check args (:args specs) args :args)
@@ -170,7 +171,7 @@
     [symbol args]
     (assert (vector? args))
     `(let [f# (resolve ~symbol)
-           spec# (s/get-spec ~symbol)]
+           spec# (get-spec ~symbol)]
        (check-call* f# spec# ~args))))
 
 (defn test-check-kw
