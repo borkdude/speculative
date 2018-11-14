@@ -3,8 +3,12 @@
                              :sha "639767ebe1491536ec7404d8b478628ecfe9200b"}}
  :aliases
  {:test {:extra-paths ["test"]
+         :jvm-opts ["-Dclojure.spec.skip-macros"]
          :extra-deps {org.clojure/clojure {:mvn/version "1.10.0-beta5"
-                                           :exclusions [org.clojure/spec.alpha]}
+                                           :exclusions
+                                           [org.clojure/spec.alpha
+                                            org.clojure/core.specs.alpha]
+                                           }
                       org.clojure/test.check {:mvn/version "RELEASE"}}}
   :repl ;; works for clj and planck, use :cljs-repl for normal cljs
   {:main-opts
