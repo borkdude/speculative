@@ -17,7 +17,7 @@
                              check-call]]
    [speculative.test-utils :refer [check]]
    ;; included for self-hosted cljs
-   #_[workarounds-1-10-439.core]))
+   #?(:cljs [workarounds-1-10-439.core])))
 
 (deftest instrument-all-test
   (testing "all specs should be instrumentable and unstrumentable"
