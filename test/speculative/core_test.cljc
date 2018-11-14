@@ -18,7 +18,7 @@
 
 (deftest instrument-all-test
   (testing "all specs should be instrumentable and unstrumentable"
-    (let [spec-count #?(:clj 25 :cljs 24)
+    (let [spec-count #?(:clj 26 :cljs 25)
           instrumented (stest/instrument)
           instrumented (filter #(= #?(:clj "clojure.core"
                                       :cljs "cljs.core")
@@ -217,8 +217,22 @@
     (throws `swap! (swap! 1 identity))
     (throws `swap! (swap! (atom nil) 1) (+ 1 2 3))))
 
+(deftest subs-test
+  (is (check-call `subs ["foo" 0 2]))
+  (with-instrumentation `subs
+    (testing "not a string"
+      (throws `subs (subs nil 10))
+      (throws `subs (subs 1 2 3)))
+    (testing "start index too large"
+      (throws `subs (subs "foo" 10)))
+    (testing "end index too large"
+      (throws `subs (subs "foo" 0 20)))
+    (testing "end before start"
+      (throws `subs (subs "foo" 2 0)))))
+
 ;;;; Scratch
 
 (comment
   (t/run-tests)
+  (stest/unstrument)
   )
