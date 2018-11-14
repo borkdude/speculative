@@ -44,7 +44,9 @@ vs.
 ## Code style
 
 * Follow the Clojure [style guide](https://github.com/bbatsov/clojure-style-guide).
-* Sort specs and tests by the way they appear in [clojure/core.clj](https://github.com/clojure/clojure/blob/master/src/clj/clojure/core.clj) when possible.
+* Sort specs and tests by the way they appear in
+  [clojure/core.clj](https://github.com/clojure/clojure/blob/master/src/clj/clojure/core.clj)
+  when possible.
 
 ## Commit style
 

@@ -11,31 +11,35 @@
   get ;; no way to pass wrong args (except 0-arity)
   some? ;; no way to pass wrong args (except 0-arity)
   str ;; no way to pass wrong args
-)
+  )
 
+;; 531
+(s/fdef clojure.core/some?
+  :args (s/cat :x ::ss/any)
+  :ret ::ss/any)
+
+;; 544
+(s/fdef clojure.core/str
+  :args (s/* ::ss/any)
+  :ret ::ss/string)
+
+;; 783
 (s/fdef clojure.core/=
   :args (s/+ ::ss/any)
   :ret ::ss/boolean)
 
-;; inlined
+;; 1020
 (s/fdef clojure.core//
   :args (s/cat :numerator ::ss/number
                :denominators (s/* ::ss/number))
   :ret ::ss/number)
 
+;; 1494
 (s/fdef clojure.core/get
   :args (s/cat :map ::ss/any
                :key ::ss/any
                :default (s/? ::ss/any))
   :ret ::ss/any)
-
-(s/fdef clojure.core/some?
-  :args (s/cat :x ::ss/any)
-  :ret ::ss/any)
-
-(s/fdef clojure.core/str
-  :args (s/* ::ss/any)
-  :ret ::ss/string)
 
 ;;;; Scratch
 
