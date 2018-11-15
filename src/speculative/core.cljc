@@ -99,8 +99,10 @@
 
 ;; 3041
 (s/fdef clojure.core/merge
-  :args (s/cat :maps (s/* (s/nilable ::ss/associative)))
-  :ret (s/nilable ::ss/associative))
+  :args (s/cat :maps (s/? (s/cat
+                           :init-map (s/nilable map?)
+                           :rest-maps (s/* ::ss/seqable-of-map-entry))))
+  :ret (s/nilable map?))
 
 ;; 3051
 (s/fdef clojure.core/merge-with

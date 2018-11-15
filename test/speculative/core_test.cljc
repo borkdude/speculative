@@ -134,7 +134,8 @@
   (is (nil? (check-call `merge [])))
   (is (check-call `merge [{} nil]))
   (is (nil? (check-call `merge [nil])))
-  ;; TODO, spec can't handle: (merge {:a 1} (java.util.HashMap. {:a 1 :b 2}))
+  #?(:clj (is (= {:a 1 :b 2}
+                 (merge {:a 1} (java.util.HashMap. {:a 1 :b 2})))))
   (with-instrumentation `merge
     (throws `merge (merge 1))))
 
