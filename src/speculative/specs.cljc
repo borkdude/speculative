@@ -48,6 +48,12 @@
 (s/def ::seqable-of-map-entry
   (s/coll-of ::map-entry :kind seqable?))
 
+(s/def ::reducible-coll
+  (s/or
+   :seqable    ::seqable
+   :reducible  (s/nilable ::reducible)
+   :iterable   (s/nilable ::iterable)))
+
 (s/def ::predicate ::ifn)
 
 (s/def ::transducer ::ifn)
