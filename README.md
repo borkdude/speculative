@@ -110,6 +110,10 @@ href="https://twitter.com/borkdude/status/1053404362062606336?ref_src=twsrc%5Etf
 
 [These issues](doc/issues.md) were found while developing and using speculative.
 
+## Users
+
+[These projects](doc/users.md) are known to use speculative.
+
 ## Contributing
 
 In the hope that the code in this project would be useful for `clojure.core`,
@@ -117,7 +121,7 @@ any contributer to this repo needs to have a [Contributor
 Agreement](https://clojure.org/community/contributing) for Clojure so that any
 code in speculative can be used in either Clojure or Clojurescript.
 
-Please have look at the [style guide](doc/style.md) before submiting a PR.
+Please have look at the [style guide](doc/style.md) before submitting a PR.
 
 ## License
 
