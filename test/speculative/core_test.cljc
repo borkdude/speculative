@@ -134,6 +134,7 @@
   (is (nil? (check-call `merge [])))
   (is (check-call `merge [{} nil]))
   (is (nil? (check-call `merge [nil])))
+  ;; TODO, spec can't handle: (merge {:a 1} (java.util.HashMap. {:a 1 :b 2}))
   (with-instrumentation `merge
     (throws `merge (merge 1))))
 
@@ -144,6 +145,10 @@
   (is (= {:a 1} (check-call `merge-with [+ {:a 1} nil])))
   (is (= {:a 3}
          (check-call `merge-with [+ {:a 1} [(first {:a 2})]])))
+  #?(:clj
+     (testing "second arg is java Map"
+       (is (= {:a 2 :b 2})
+           (merge-with + {:a 1} (java.util.HashMap. {:a 1 :b 2})))))
   (with-instrumentation `merge-with
     (throws `merge-with (merge-with 1))
     ;; the following is no longer allowed in CLJS, see CLJS-2943
