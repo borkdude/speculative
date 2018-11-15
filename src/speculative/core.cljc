@@ -128,12 +128,6 @@
   :args (s/cat :f ::ss/ifn :xs (s/+ ::ss/any))
   :ret ::ss/ifn)
 
-(s/def ::ss/reducible-coll
-  (s/or
-   :seqable    ::ss/seqable
-   :reducible  (s/nilable ::ss/reducible)
-   :iterable   (s/nilable ::ss/iterable)))
-
 ;; 6790
 (s/fdef clojure.core/reduce
   :args (s/cat :f ::ss/ifn :val (s/? ::ss/any) :coll ::ss/reducible-coll))
