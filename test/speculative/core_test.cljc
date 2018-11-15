@@ -224,6 +224,8 @@
 
 (deftest subs-test
   (is (check-call `subs ["foo" 0 2]))
+  (testing "start and end equal to count of s"
+    (is (= "" (check-call `subs ["foo" 2 2]))))
   (with-instrumentation `subs
     (testing "not a string"
       (throws `subs (subs nil 10))
