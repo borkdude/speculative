@@ -2,7 +2,8 @@
 
 * Spec for `subs`
 
-* Namespace `speculative.instrument`: requiring it instruments fns spec'ed by
+* Namespace `speculative.instrument`: loads all relevant speculative
+  specs. Provides functions to only instrument and unstruments specs provided by
   speculative.
 
 * Moved specs that are not likely to find errors while instrumented to
