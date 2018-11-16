@@ -54,7 +54,8 @@
                 {:git/url "https://github.com/mfikes/coal-mine"
                  :sha "d53d508d955a1434724525cbc40efe83b7622e85"}}
    :jvm-opts ["-XX:CompressedClassSpaceSize=2g"]
-   :main-opts ["-e" "(require,'speculative.instrument)"
+   :main-opts ["-e" "(require,'speculative.instrument,:refer,[instrument])"
+               "-e" "(instrument)"
                "-m" "coal-mine.test-runner"]}
   :coal-mine-cljs
   {:extra-deps {github-mfikes/coal-mine
@@ -64,7 +65,8 @@
    :main-opts ["-m" "cljs.main"
                "-co" "{:parallel-build,true}"
                "-re" "node"
-               "-e" "(require,'speculative.instrument)"
+               "-e" "(require,'speculative.instrument,:refer,[instrument])"
+               "-e" "(instrument)"
                "-m" "coal-mine.test-runner"]}
   :coal-mine-generator
   {:main-opts ["-m" "speculative.coal-mine-generator"]}
@@ -76,5 +78,6 @@
    :main-opts ["-m" "cljs.main"
                "-co" "{:parallel-build,true}"
                "-re" "node"
-               "-e" "(require,'speculative.instrument)"
+               "-e" "(require,'speculative.instrument,:refer,[instrument])"
+               "-e" "(instrument)"
                "-m" "speculative.coal-mine-runner"]}}}

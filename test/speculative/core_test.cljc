@@ -6,7 +6,7 @@
    [clojure.test :as t :refer [is deftest testing]]
    [clojure.set :as set]
    [speculative.specs :as ss]
-   [speculative.core]
+   [speculative.instrument]
    [speculative.core.extra]
    [speculative.test :refer [with-instrumentation
                              with-unstrumentation
@@ -16,18 +16,14 @@
    ;; included for self-hosted cljs
    [workarounds-1-10-439.core]))
 
-(deftest instrument-all-test
-  (testing "all specs should be instrumentable and unstrumentable"
-    (let [spec-count #?(:clj 26 :cljs 25)
-          instrumented (stest/instrument)
-          instrumented (filter #(= #?(:clj "clojure.core"
-                                      :cljs "cljs.core")
-                                   (namespace %))
-                               instrumented)]
+(deftest instrument-test
+  (testing "speculative specs should be instrumentable and unstrumentable"
+    (let [spec-count #?(:clj 21 :cljs 20)
+          instrumented (speculative.instrument/instrument)
+          unstrumented (speculative.instrument/unstrument)]
       (is (= spec-count (count instrumented)))
-      (is (set/subset?
-           (set instrumented)
-           (set (stest/unstrument)))))))
+      ;; <= is a temporary workaround for CLJS-2975
+      (is (<= spec-count (count unstrumented))))))
 
 (deftest =-test
   (is (check-call `= [1]))
