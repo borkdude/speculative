@@ -94,7 +94,7 @@ nil
 user=> (require '[speculative.instrument :refer [instrument]])
 nil
 user=> (instrument)
-[clojure.core/first clojure.core/apply clojure.core/assoc clojure.core/count clojure.core/swap! clojure.core/reset! clojure.core/juxt clojure.core/every? clojure.core/not-every? clojure.core/partial clojure.core/some clojure.core/not-any? clojure.core/map clojure.core/filter clojure.core/remove clojure.core/range clojure.core/merge clojure.core/merge-with clojure.core/subs clojure.core/fnil clojure.core/reduce]
+[clojure.core/first clojure.core/apply clojure.core/assoc ...]
 user=> (merge #{1 2 3} 4)
 Execution error - invalid arguments to clojure.core/merge at (REPL:1).
 #{1 3 2} - failed: map? at: [:maps :init-map :clojure.spec.alpha/pred]
