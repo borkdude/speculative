@@ -80,11 +80,11 @@ java.lang.Long cannot be cast to clojure.lang.IFn
 
 ## Speculative broke my project
 
-Speculative specs find, when instrumented, incorrect or odd usage of Clojure
-core functions. If code is under your control, you can fix it. If the call was
-made in a library not under your control, you can unstrument the spec using
-`clojure.spec.test.alpha/unstrument` or disable it within the scope of a body
-using `speculative.test/with-unstrumentation`:
+Speculative specs find, when instrumented, incorrect or undefined usage of
+Clojure core functions. If code is under your control, you can fix it. If the
+call was made in a library not under your control, you can unstrument the spec
+using `clojure.spec.test.alpha/unstrument` or disable it within the scope of a
+body using `speculative.test/with-unstrumentation`:
 
 ``` clojure
 $ clj
