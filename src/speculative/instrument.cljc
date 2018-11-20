@@ -31,8 +31,10 @@
                    clojure.core/merge
                    clojure.core/merge-with
                    clojure.core/re-pattern
-                   #?(:clj clojure.core/re-matcher)
+                   #?@(:clj [clojure.core/re-matcher
+                             clojure.core/re-groups])
                    clojure.core/re-seq
+                   clojure.core/re-matches
                    clojure.core/subs
                    clojure.core/fnil
                    clojure.core/reduce])
