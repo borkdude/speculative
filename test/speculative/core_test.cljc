@@ -18,7 +18,7 @@
 
 (deftest instrument-test
   (testing "speculative specs should be instrumentable and unstrumentable"
-    (let [spec-count #?(:clj 21 :cljs 20)
+    (let [spec-count #?(:clj 24 :cljs 22)
           instrumented (speculative.instrument/instrument)
           unstrumented (speculative.instrument/unstrument)]
       (is (= spec-count (count instrumented)))
@@ -219,6 +219,32 @@
     (throws `swap! (swap! 1 identity))
     (throws `swap! (swap! (atom nil) 1) (+ 1 2 3))))
 
+(deftest regexp-test
+  (let [res (gen/sample (s/gen ::ss/regexp))]
+    (is (seq res))
+    (is (every? ss/regexp? res))))
+
+(deftest re-pattern-test
+  (is (re-pattern "s"))
+  (with-instrumentation `re-pattern
+    (throws `re-pattern (re-pattern 1)))
+  (check `re-pattern))
+
+#?(:clj
+   (deftest re-matcher-test
+     (is (re-matcher #"s" "s"))
+     (with-instrumentation `re-matcher
+       (throws `re-matcher (re-matcher 1 "s"))
+       (throws `re-matcher (re-matcher #"s" 1)))
+     (check `re-matcher)))
+
+(deftest re-seq-test
+  (is (re-seq #"s" "s"))
+  (with-instrumentation `re-seq
+    (throws `re-seq (re-seq 1 "s"))
+    (throws `re-seq (re-seq #"s" 1)))
+  (check `re-seq))
+
 (deftest subs-test
   (is (check-call `subs ["foo" 0 2]))
   (testing "start and end equal to count of s"
@@ -236,6 +262,7 @@
       (throws `subs (subs "foo" 0 20)))
     (testing "end before start"
       (throws `subs (subs "foo" 2 0)))))
+
 
 ;;;; Scratch
 

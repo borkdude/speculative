@@ -4,6 +4,9 @@
    [clojure.spec.alpha :as s]
    [speculative.specs :as ss]))
 
+;; fdefs sorted by how they appear in
+;; https://github.com/clojure/clojure/blob/master/src/clj/clojure/core.clj
+
 ;; 49
 (s/fdef clojure.core/first
   :args (s/cat :coll ::ss/seqable))
@@ -111,6 +114,31 @@
                            :init-map (s/nilable map?)
                            :rest-maps (s/* ::ss/seqable-of-map-entry))))
   :ret (s/nilable map?))
+
+;; 4839
+(s/fdef clojure.core/re-pattern
+  :args (s/cat :s ::ss/string)
+  :ret ::ss/regexp)
+
+;; 4849
+#?(:clj
+   (s/fdef clojure.core/re-matcher
+     :args (s/cat :re ::ss/regexp :s ::ss/string)
+     :ret ::ss/matcher))
+
+;; 4858
+;; TODO: re-groups
+
+;; 4874
+(s/fdef clojure.core/re-seq
+  :args (s/cat :re ::ss/regexp :s ::ss/string)
+  :ret ::ss/seqable)
+
+;; 4886
+;; TODO: re-matches
+
+;; 4898
+;; TODO: re-find
 
 ;; 4981
 (s/fdef clojure.core/subs
