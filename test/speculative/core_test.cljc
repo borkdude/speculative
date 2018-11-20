@@ -18,7 +18,7 @@
 
 (deftest instrument-test
   (testing "speculative specs should be instrumentable and unstrumentable"
-    (let [spec-count #?(:clj 26 :cljs 23)
+    (let [spec-count #?(:clj 27 :cljs 24)
           instrumented (speculative.instrument/instrument)
           unstrumented (speculative.instrument/unstrument)]
       (is (= spec-count (count instrumented)))
@@ -276,6 +276,20 @@
     (throws `re-matches (re-matches 1 "s"))
     (throws `re-matches (re-matches #"s" 1)))
   (check `re-matches))
+
+(deftest re-find-test
+  #?(:clj (testing "call with matcher"
+            (is (check-call `re-find [(re-matcher #"(a)(a)(a)" "aaa")]))))
+  (testing "no matches"
+    (is (nil? (check-call `re-find [#"a" "b"]))))
+  (testing "returning string"
+    (is (check-call `re-find [#"hello.*" "hello there"])))
+  (testing "returning seqable of string"
+    (is (check-call `re-find [#"(hello.*)" "hello there"])))
+  (with-instrumentation `re-find
+    #?(:clj (throws `re-find (re-find 1)))
+    (throws `re-find (re-find 1 "s"))
+    (throws `re-find (re-find #"s" 1))))
 
 (deftest subs-test
   (is (check-call `subs ["foo" 0 2]))

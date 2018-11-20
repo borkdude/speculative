@@ -1,6 +1,7 @@
 ## 0.0.3-SNAPSHOT
 
-* Spec for `subs`
+* Specs for `re-pattern`, `re-matcher`, `re-groups`, `re-seq`, `re-matches`,
+  `re-find` and `subs`.
 
 * Namespace `speculative.instrument`: loads all relevant speculative
   specs. Provides functions to only instrument and unstruments specs provided by
