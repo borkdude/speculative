@@ -170,7 +170,7 @@ Please have look at the [style guide](doc/style.md) before submitting a PR.
 
 ## License
 
-Copyright © 2018 Erik Assum
+Copyright © 2018 Erik Assum, Michiel Borkent, Mike Fikes and contributors.
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
