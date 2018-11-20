@@ -1,6 +1,6 @@
 (ns speculative.specs
   "Primitive specs"
-  (:refer-clojure :exclude [seqable? reduceable?])
+  (:refer-clojure :exclude [seqable? reduceable? regexp?])
   (:require [clojure.spec.alpha :as s]
             [clojure.spec.gen.alpha :as gen]
             #?(:cljs [goog.string])))
@@ -66,6 +66,22 @@
   (fn [a]
     #?(:clj (instance? clojure.lang.IAtom a)
        :cljs (satisfies? IAtom a))))
+
+#?(:clj
+   (defn regexp? [r]
+     (instance? java.util.regex.Pattern r))
+   :cljs (def regexp? cljs.core/regexp?))
+
+(s/def ::regexp
+  (s/with-gen
+    regexp?
+    (fn []
+      (gen/fmap re-pattern
+                (s/gen ::string)))))
+
+#?(:clj
+   (s/def ::matcher
+     #(instance? java.util.regex.Matcher %)))
 
 ;;;; Scratch
 
