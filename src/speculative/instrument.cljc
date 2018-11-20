@@ -35,6 +35,7 @@
                              clojure.core/re-groups])
                    clojure.core/re-seq
                    clojure.core/re-matches
+                   clojure.core/re-find
                    clojure.core/subs
                    clojure.core/fnil
                    clojure.core/reduce])

@@ -129,7 +129,7 @@
 ;; 4858
 #?(:clj
    (s/fdef clojure.core/re-groups
-     :args (s/cat :matcher ::ss/matcher)
+     :args (s/cat :m ::ss/matcher)
      :ret ::ss/string-or-seqable-of-string))
 
 ;; 4874
@@ -143,7 +143,11 @@
   :ret ::ss/string-or-seqable-of-string)
 
 ;; 4898
-;; TODO: re-find
+(s/fdef clojure.core/re-find
+  :args #?(:clj (s/alt :matcher (s/cat :m ::ss/matcher)
+                       :re-s (s/cat :re ::ss/regexp :s ::ss/string))
+           :cljs (s/cat :re ::ss/regexp :s ::ss/string))
+  :ret ::ss/string-or-seqable-of-string)
 
 ;; 4981
 (s/fdef clojure.core/subs
