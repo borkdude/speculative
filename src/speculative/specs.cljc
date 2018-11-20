@@ -48,6 +48,13 @@
 (s/def ::seqable-of-map-entry
   (s/coll-of ::map-entry :kind seqable?))
 
+(s/def ::seqable-of-string
+  (s/coll-of ::string :kind seqable?))
+
+(s/def ::string-or-seqable-of-string
+  (s/or :string ::string
+        :seqable ::seqable-of-string))
+
 (s/def ::reducible-coll
   (s/or
    :seqable    ::seqable

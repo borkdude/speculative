@@ -18,7 +18,7 @@
 
 (deftest instrument-test
   (testing "speculative specs should be instrumentable and unstrumentable"
-    (let [spec-count #?(:clj 24 :cljs 22)
+    (let [spec-count #?(:clj 26 :cljs 23)
           instrumented (speculative.instrument/instrument)
           unstrumented (speculative.instrument/unstrument)]
       (is (= spec-count (count instrumented)))
@@ -225,25 +225,57 @@
     (is (every? ss/regexp? res))))
 
 (deftest re-pattern-test
-  (is (re-pattern "s"))
+  (is (check-call `re-pattern ["s"]))
   (with-instrumentation `re-pattern
     (throws `re-pattern (re-pattern 1)))
   (check `re-pattern))
 
 #?(:clj
    (deftest re-matcher-test
-     (is (re-matcher #"s" "s"))
+     (is (check-call `re-matcher [#"s" "s"]))
      (with-instrumentation `re-matcher
        (throws `re-matcher (re-matcher 1 "s"))
        (throws `re-matcher (re-matcher #"s" 1)))
      (check `re-matcher)))
 
+#?(:clj
+   (deftest re-groups-test
+     (let [non-matching-matcher (re-matcher #"(a)(a)(a)" "bbb")
+           single-matching-matcher (re-matcher #"aaa" "aaa")
+           groups-matching-matcher (re-matcher #"(a)(a)(a)" "aaa")]
+       (.find single-matching-matcher)
+       (.find groups-matching-matcher)
+       (.find non-matching-matcher)
+       (is (thrown? java.lang.IllegalStateException
+                    (check-call `re-groups [non-matching-matcher])))
+       (testing "returning string"
+         (is (check-call `re-groups [single-matching-matcher])))
+       (testing "returning seqable of strings"
+         (is (check-call `re-groups [groups-matching-matcher])))
+       (with-instrumentation `re-groups
+         (throws `re-groups (re-groups 1))))))
+
 (deftest re-seq-test
-  (is (re-seq #"s" "s"))
+  (testing "no matches"
+    (is (nil? (check-call `re-seq [#"a" "b"]))))
+  (testing "one match"
+    (is (check-call `re-seq [#"s" "s"])))
   (with-instrumentation `re-seq
     (throws `re-seq (re-seq 1 "s"))
     (throws `re-seq (re-seq #"s" 1)))
   (check `re-seq))
+
+(deftest re-matches-test
+  (testing "no matches"
+    (is (nil? (check-call `re-matches [#"a" "b"]))))
+  (testing "returning string"
+    (is (check-call `re-matches [#"hello.*" "hello there"])))
+  (testing "returning seqable of string"
+    (is (check-call `re-matches [#"(hello.*)" "hello there"])))
+  (with-instrumentation `re-matches
+    (throws `re-matches (re-matches 1 "s"))
+    (throws `re-matches (re-matches #"s" 1)))
+  (check `re-matches))
 
 (deftest subs-test
   (is (check-call `subs ["foo" 0 2]))
