@@ -2,6 +2,7 @@
 
 Issues are sorted by date from newest to oldest.
 
+- [stest/check test doesn't work in self-hosted tests](https://dev.clojure.org/jira/browse/CLJS-2964) (CLJS)
 - [re-seq is relying on undefined behavior of subs](https://dev.clojure.org/jira/browse/CLJS-2979) (CLJS)
 - [unstrument returns symbol of non-instrumented var](https://dev.clojure.org/jira/browse/CLJS-2975) (CLJS)
 - [Coal-mine test found use of merge that doesn't conform to spec](https://github.com/slipset/speculative/issues/113) (4clojure)
