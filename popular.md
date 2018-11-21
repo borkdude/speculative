@@ -82,7 +82,7 @@ declare,4513
 mapcat,4512
 vector?,4408
 zero?,4286
-re-find,4255
+# re-find,4255
 take,4113
 # remove,3987
 <=,3978
@@ -108,7 +108,7 @@ symbol?,2738
 long,2620
 lazy-seq,2562
 condp,2553
-subs,2548
+# subs,2548
 print,2522
 select-keys,2470
 ex-info,2457
@@ -125,7 +125,7 @@ drop,2181
 zipmap,2057
 reverse,2034
 satisfies?,1939
-re-matches,1909
+# re-matches,1909
 sort,1901
 boolean,1901
 fn?,1811
