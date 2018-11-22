@@ -1,6 +1,7 @@
 (ns speculative.instrument
   "Loads all relevant speculative specs. Provides functions to only
-  instrument and unstruments specs provided by speculative."
+  instrument and unstruments specs provided by speculative. Alpha,
+  subject to change."
   (:require
    [clojure.string :as str]
    [speculative.core]
