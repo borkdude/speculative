@@ -23,7 +23,10 @@
           unstrumented (speculative.instrument/unstrument)]
       (is (= spec-count (count instrumented)))
       ;; <= is a temporary workaround for CLJS-2975
-      (is (<= spec-count (count unstrumented))))))
+      (is (<= spec-count (count unstrumented)))))
+  (testing "speculative extra specs should be instrumentable and unstrumentable"
+    (is (seq (stest/instrument)))
+    (is (seq (stest/unstrument)))))
 
 (deftest =-test
   (is (check-call `= [1]))
