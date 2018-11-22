@@ -57,7 +57,8 @@ speculative.set  -> clojure.set
 ```
 
 To load all specs at once, you can require `speculative.instrument` which also
-provides functions to only instrument speculative specs.
+provides functions to only instrument speculative specs. This namespace is
+alpha, so use with caution.
 
 ```clojure
 $ clj
@@ -110,7 +111,8 @@ If you believe the spec was wrong, please create an
 ## Test tools
 
 Namespace `speculative.test` provides various tools around
-`clojure.spec.test.alpha`. More info [here](doc/test.md).
+`clojure.spec.test.alpha`. This namespace is alpha, so use with caution. More
+info [here](doc/test.md).
 
 ## Tests
 

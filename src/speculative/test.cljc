@@ -1,6 +1,6 @@
 (ns speculative.test
-  "Macros and function utils for clojure.spec.test.alpha. API may change
-  at any time."
+  "Macros and function utils for clojure.spec.test.alpha. Alpha, subject
+  to change."
   (:require
    [clojure.spec.alpha :as s]
    [clojure.spec.test.alpha :as stest]

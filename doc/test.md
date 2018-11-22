@@ -1,6 +1,7 @@
 # Test tools
 
-Namespace `speculative.test` provides tools around `clojure.spec.test.alpha`. Demo:
+Namespace `speculative.test` provides tools around
+`clojure.spec.test.alpha`. This namespace is alpha, subject to change. Demo:
 
 ``` clojure
 $ clj -Sdeps '{:deps {org.clojure/test.check {:mvn/version "RELEASE"}}}'
