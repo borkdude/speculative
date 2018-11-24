@@ -1,14 +1,16 @@
 #!/bin/sh
 
-timeout=$(command -v timeout)
-if [ -z $timeout ]; then
-    timeout=$(command -v gtimeout)
-fi
+if [ ! -z $COALMINE_TIMEOUT ]; then
+    timeout=$(command -v timeout)
+    if [ -z $timeout ]; then
+        timeout=$(command -v gtimeout)
+    fi
 
-if [ -z $timeout ]; then
-    echo "WARNING: timeout program not found, running without it\n"
-else
-    timeout_cmd="$timeout 80"
+    if [ -z $timeout ]; then
+        echo "WARNING: timeout program not found, running without it\n"
+    else
+        timeout_cmd="$timeout $COALMINE_TIMEOUT"
+    fi
 fi
 
 op=$1
