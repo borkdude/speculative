@@ -128,25 +128,24 @@
   #?(:cljs (exists? js/PLANCK_EXIT_WITH_VALUE)
      :clj false))
 
+;; #?(:clj
+;;    (defn run-tests*
+;;      "Private. run-tests from clojure.test with fix for CLJ-2443"
+;;      ([] (t/run-tests *ns*))
+;;      ([& namespaces]
+;;       (let [summary (assoc (apply merge-with + (mapv t/test-ns namespaces))
+;;                            :type :summary)]
+;;         (t/do-report summary)
+;;         summary))))
 
-#?(:clj
-   (defn run-tests*
-     "Private. run-tests from clojure.test with fix for CLJ-2443"
-     ([] (t/run-tests *ns*))
-     ([& namespaces]
-      (let [summary (assoc (apply merge-with + (mapv t/test-ns namespaces))
-                           :type :summary)]
-        (t/do-report summary)
-        summary))))
+;; (deftime
 
-(deftime
-
-  (defmacro run-tests
-    ([] (t/run-tests))
-    ([& namespaces]
-     `(?
-       :clj (run-tests* ~@namespaces)
-       :cljs (cljs.test/run-tests ~@namespaces)))))
+;;   (defmacro run-tests
+;;     ([] (t/run-tests))
+;;     ([& namespaces]
+;;      `(?
+;;        :clj (run-tests* ~@namespaces)
+;;        :cljs (cljs.test/run-tests ~@namespaces)))))
 
 ;;;; Public API
 

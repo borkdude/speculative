@@ -2,7 +2,9 @@
   (:require
    [speculative.test-test]
    [speculative.core-test]
-   [speculative.test :refer [run-tests planck-env?]]
+   [speculative.test :refer [planck-env?]]
+   [clojure.test :as t :refer [run-tests]]
+   #?(:clj [patch.clj-2443])
    [clojure.test]))
 
 (defn exit
