@@ -128,7 +128,6 @@
   #?(:cljs (exists? js/PLANCK_EXIT_WITH_VALUE)
      :clj false))
 
-
 ;; #?(:clj
 ;;    (defn run-tests*
 ;;      "Private. run-tests from clojure.test with fix for CLJ-2443"
