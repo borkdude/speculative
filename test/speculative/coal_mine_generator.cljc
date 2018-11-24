@@ -161,6 +161,7 @@
     `(~'ns speculative.coal-mine-runner
        (:require
         ~@require-syms
+        ~(reader-conditional '(:clj patch.clj-2443) false)
         [speculative.instrument :refer [~'instrument]]
         [clojure.test]))))
 
