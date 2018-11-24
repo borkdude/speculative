@@ -2,7 +2,7 @@
   (:require
    [speculative.test-test]
    [speculative.core-test]
-   [speculative.test-utils :refer [planck-env?]]
+   [speculative.test :refer [run-tests planck-env?]]
    [clojure.test]))
 
 (defn exit
@@ -47,7 +47,7 @@
        (exit 0))))
 
 (defn -main [& args]
-  (clojure.test/run-tests 'speculative.test-test
-                          'speculative.core-test))
+  (run-tests 'speculative.test-test
+             'speculative.core-test))
 
 #?(:cljs (set! *main-cli-fn* -main))
