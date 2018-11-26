@@ -2,6 +2,7 @@
   (:require
    [speculative.test-test]
    [speculative.core-test]
+   [speculative.set-test]
    [speculative.test :refer [planck-env?]]
    [clojure.test :as t :refer [run-tests]]
    #?(:clj [patch.clj-2443])
@@ -50,6 +51,7 @@
 
 (defn -main [& args]
   (run-tests 'speculative.test-test
-             'speculative.core-test))
+             'speculative.core-test
+             'speculative.set-test))
 
 #?(:cljs (set! *main-cli-fn* -main))
