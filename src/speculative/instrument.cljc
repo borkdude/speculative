@@ -13,55 +13,68 @@
       [speculative.instrument :refer [instrument
                                       unstrument]])))
 
-(def known-fdefs '[clojure.core/first
-                   clojure.core/apply
-                   clojure.core/assoc
-                   clojure.core/count
-                   clojure.core/swap!
-                   clojure.core/reset!
-                   clojure.core/juxt
-                   clojure.core/every?
-                   clojure.core/not-every?
-                   clojure.core/partial
-                   clojure.core/some
-                   clojure.core/not-any?
-                   clojure.core/map
-                   clojure.core/filter
-                   clojure.core/remove
-                   clojure.core/range
-                   clojure.core/merge
-                   clojure.core/merge-with
-                   clojure.core/re-pattern
-                   #?@(:clj [clojure.core/re-matcher
-                             clojure.core/re-groups])
-                   clojure.core/re-seq
-                   clojure.core/re-matches
-                   clojure.core/re-find
-                   clojure.core/subs
-                   clojure.core/fnil
-                   clojure.core/reduce])
+(def known-fdefs `[;; clojure.core
+                   first
+                   apply
+                   assoc
+                   count
+                   swap!
+                   reset!
+                   juxt
+                   every?
+                   not-every?
+                   partial
+                   some
+                   not-any?
+                   map
+                   filter
+                   remove
+                   range
+                   merge
+                   merge-with
+                   re-pattern
+                   #?@(:clj [re-matcher
+                             re-groups])
+                   re-seq
+                   re-matches
+                   re-find
+                   subs
+                   fnil
+                   reduce
+
+                   ;; clojure.string
+                   str/starts-with?
+                   str/ends-with?
+                   ])
 
 (deftime
+
   (defmacro instrument []
-    (let [known (mapv (fn [sym]
-                        [sym]
-                        (let [ns (namespace sym)
-                              ns (? :cljs
-                                    (str/replace ns #"^clojure\." "cljs.")
-                                    :clj ns)
-                              sym (symbol ns (name sym))]
-                          (list 'quote sym)))
-                      known-fdefs)]
+    (let [known (mapv
+                 (fn [sym]
+                   (let [ns (namespace sym)
+                         ns (? :cljs
+                               (str/replace ns #"^clojure\.core" "cljs.core")
+                               :clj ns)
+                         sym (symbol ns (name sym))]
+                     (list 'quote sym)))
+                 known-fdefs)]
       `(speculative.test/instrument ~known)))
 
   (defmacro unstrument []
-    (let [known (mapv (fn [sym]
-                        [sym]
-                        (let [ns (namespace sym)
-                              ns (? :cljs
-                                    (str/replace ns #"^clojure\." "cljs.")
-                                    :clj ns)
-                              sym (symbol ns (name sym))]
-                          (list 'quote sym)))
-                      known-fdefs)]
+    (let [known (mapv
+                 (fn [sym]
+                   [sym]
+                   (let [ns (namespace sym)
+                         ns (? :cljs
+                               (str/replace ns #"^clojure\.core" "cljs.core")
+                               :clj ns)
+                         sym (symbol ns (name sym))]
+                     (list 'quote sym)))
+                 known-fdefs)]
       `(speculative.test/unstrument ~known))))
+
+;;;; Scratch
+
+(comment
+  (instrument))
