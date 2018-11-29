@@ -173,6 +173,7 @@
   (is (check-call `range [10 0 -1]))
   (is (check-call `range [1.1 2.2 3.3]))
   (with-instrumentation `range
+    ;; (is (range)) ;; doesn't work with advanced: CLJS-2995
     (throws `range (range 'lol))
     (throws `range (range 0 1 2 3))))
 
