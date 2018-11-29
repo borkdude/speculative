@@ -54,7 +54,8 @@
                 {:git/url "https://github.com/mfikes/coal-mine"
                  :sha "d53d508d955a1434724525cbc40efe83b7622e85"}}
    :jvm-opts ["-XX:CompressedClassSpaceSize=2g"]
-   :main-opts ["-e" "(require,'speculative.instrument,:refer,[instrument])"
+   :main-opts ["-e" "(require,'[patch.clj-2443])"
+               "-e" "(require,'[speculative.instrument,:refer,[instrument]])"
                "-e" "(instrument)"
                "-m" "coal-mine.test-runner"]}
   :coal-mine-cljs
@@ -65,11 +66,17 @@
    :main-opts ["-m" "cljs.main"
                "-co" "{:parallel-build,true}"
                "-re" "node"
-               "-e" "(require,'speculative.instrument,:refer,[instrument])"
+               "-e" "(require,'[speculative.instrument,:refer,[instrument]])"
                "-e" "(instrument)"
                "-m" "coal-mine.test-runner"]}
-  :coal-mine-generator
-  {:main-opts ["-m" "speculative.coal-mine-generator"]}
+  :coal-mine-runner-clj
+  {:extra-deps {github-mfikes/coal-mine
+                {:git/url "https://github.com/mfikes/coal-mine"
+                 :sha "d53d508d955a1434724525cbc40efe83b7622e85"}}
+   :jvm-opts ["-Xmx6g"]
+   :main-opts ["-e" "(require,'[speculative.instrument,:refer,[instrument]])"
+               "-e" "(instrument)"
+               "-m" "speculative.coal-mine-runner"]}
   :coal-mine-runner-cljs
   {:extra-deps {github-mfikes/coal-mine
                 {:git/url "https://github.com/mfikes/coal-mine"
@@ -78,6 +85,9 @@
    :main-opts ["-m" "cljs.main"
                "-co" "{:parallel-build,true}"
                "-re" "node"
-               "-e" "(require,'speculative.instrument,:refer,[instrument])"
+               "-e" "(require,'[speculative.instrument,:refer,[instrument]])"
                "-e" "(instrument)"
-               "-m" "speculative.coal-mine-runner"]}}}
+               "-m" "speculative.coal-mine-runner"]}
+  :coal-mine-generator
+  {:main-opts ["-m" "speculative.coal-mine-generator"]}
+  }}

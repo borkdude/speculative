@@ -46,6 +46,16 @@
 (s/def ::sequential sequential?)
 (s/def ::some some?)
 (s/def ::string string?)
+#?(:clj (s/def ::char-sequence
+          (s/with-gen
+            #(instance? java.lang.CharSequence %)
+            (fn []
+              (gen/one-of (map #(gen/fmap %
+                                          (s/gen ::string))
+                               [#(StringBuffer. %)
+                                #(StringBuilder. %)
+                                #(java.nio.CharBuffer/wrap %)
+                                #(String. %)]))))))
 
 (s/def ::seqable-of-map-entry
   (s/coll-of ::map-entry :kind seqable?))

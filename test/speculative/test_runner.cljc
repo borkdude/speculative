@@ -1,12 +1,13 @@
 (ns speculative.test-runner
   (:require
-   [speculative.test-test]
+   #?(:clj [patch.clj-2443])
+   [clojure.test :as t :refer [run-tests]]
+   [clojure.test]
    [speculative.core-test]
    [speculative.set-test]
+   [speculative.string-test]
    [speculative.test :refer [planck-env?]]
-   [clojure.test :as t :refer [run-tests]]
-   #?(:clj [patch.clj-2443])
-   [clojure.test]))
+   [speculative.test-test]))
 
 (defn exit
   "Exit with the given status."
@@ -52,6 +53,6 @@
 (defn -main [& args]
   (run-tests 'speculative.test-test
              'speculative.core-test
-             'speculative.set-test))
+             'speculative.string-test))
 
 #?(:cljs (set! *main-cli-fn* -main))
