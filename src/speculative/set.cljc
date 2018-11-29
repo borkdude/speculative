@@ -12,7 +12,7 @@
 (s/def ::rel
   (s/nilable (s/coll-of ::nilable-map)))
 
-(s/def ::nilable-seqable-of-map-entry
+(s/def ::rel*
   (s/nilable (s/coll-of ::ss/seqable-of-map-entry)))
 
 (s/def ::seqable-of-pairs
@@ -60,7 +60,7 @@
   :ret ::nilable-set)
 
 (s/fdef set/project
-  :args (s/cat :xrel ::nilable-seqable-of-map-entry
+  :args (s/cat :xrel ::rel*
                :ks ::ss/sequential)
   :ret ::ss/set)
 
@@ -75,7 +75,7 @@
   :ret ::ss/set)
 
 (s/fdef set/index
-  :args (s/cat :xrel ::nilable-seqable-of-map-entry
+  :args (s/cat :xrel ::rel*
                :ks ::ss/sequential)
   :ret ::ss/map)
 
@@ -85,9 +85,9 @@
 
 (s/fdef set/join
   :args (s/alt :binary (s/cat :xrel ::rel
-                              :yrel ::nilable-seqable-of-map-entry)
+                              :yrel ::rel*)
                :ternary (s/cat :xrel ::rel
-                               :yrel ::nilable-seqable-of-map-entry
+                               :yrel ::rel*
                                :km ::nilable-map))
   :ret ::ss/set)
 
