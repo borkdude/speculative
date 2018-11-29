@@ -2,7 +2,7 @@
 
 Issues are sorted by date from newest to oldest.
 
-- [Instrumented range throws maximum call stack exceeded with optimizations advanced](https://dev.clojure.org/jira/browse/CLJS-2995) (CLJS)
+- [Instrumented multi-arity fn throws maximum call stack exceeded with optimizations advanced](https://dev.clojure.org/jira/browse/CLJS-2995) (CLJS)
 - [Spec'ed fn doesn't throw when called lazily](https://dev.clojure.org/jira/browse/CLJ-2443) (CLJ)
 - [re-seq is relying on undefined behavior of subs](https://dev.clojure.org/jira/browse/CLJS-2979) (CLJS)
 - [unstrument returns symbol of non-instrumented var](https://dev.clojure.org/jira/browse/CLJS-2975) (CLJS)
