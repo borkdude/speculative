@@ -2,7 +2,8 @@
 
 Issues are sorted by date from newest to oldest.
 
-- [Spec'ed fn doesn't throw when called lazily](https://dev.clojure.org/jira/browse/CLJ-2443)
+- [Instrumented range throws maximum call stack exceeded with optimizations advanced](https://dev.clojure.org/jira/browse/CLJS-2995)
+- [Spec'ed fn doesn't throw when called lazily](https://dev.clojure.org/jira/browse/CLJ-2443) (CLJ)
 - [re-seq is relying on undefined behavior of subs](https://dev.clojure.org/jira/browse/CLJS-2979) (CLJS)
 - [unstrument returns symbol of non-instrumented var](https://dev.clojure.org/jira/browse/CLJS-2975) (CLJS)
 - [Coal-mine test found use of merge that doesn't conform to spec](https://github.com/slipset/speculative/issues/113) (4clojure)
