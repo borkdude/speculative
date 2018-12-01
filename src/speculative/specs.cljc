@@ -38,10 +38,12 @@
     (fn []
       (gen/fmap first
                 (s/gen (s/and ::map seq))))))
+(s/def ::set set?)
 (s/def ::nil nil?)
 (s/def ::number number?)
 (s/def ::reducible reducible?)
 (s/def ::seqable seqable?)
+(s/def ::sequential sequential?)
 (s/def ::some some?)
 (s/def ::string string?)
 #?(:clj (s/def ::char-sequence

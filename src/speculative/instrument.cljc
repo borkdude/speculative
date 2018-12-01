@@ -3,6 +3,7 @@
   instrument and unstruments specs provided by speculative. Alpha,
   subject to change."
   (:require
+   [clojure.set :as set]
    [clojure.string :as str]
    [speculative.core]
    [speculative.set]
@@ -45,7 +46,20 @@
                    ;; clojure.string
                    str/starts-with?
                    str/ends-with?
-                   ])
+
+                   ;; clojure.set
+                   set/union
+                   set/intersection
+                   set/difference
+                   set/select
+                   set/project
+                   set/rename-keys
+                   set/rename
+                   set/index
+                   set/map-invert
+                   set/join
+                   set/subset?
+                   set/superset?])
 
 (deftime
 
