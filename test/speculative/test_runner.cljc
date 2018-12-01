@@ -53,6 +53,7 @@
 (defn -main [& args]
   (run-tests 'speculative.test-test
              'speculative.core-test
-             'speculative.string-test))
+             'speculative.string-test
+             'speculative.set-test))
 
 #?(:cljs (set! *main-cli-fn* -main))
