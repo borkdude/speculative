@@ -88,6 +88,15 @@
                  known-fdefs)]
       `(speculative.test/unstrument ~known))))
 
+(defn fixture
+  "Fixture that can be used with clojure.test"
+  [test]
+  (try
+    (instrument)
+    (test)
+    (finally
+      (unstrument))))
+
 ;;;; Scratch
 
 (comment
