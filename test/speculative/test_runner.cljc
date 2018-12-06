@@ -5,6 +5,7 @@
    [clojure.test]
    [speculative.core-test]
    [speculative.string-test]
+   [speculative.instrument-test]
    [speculative.test :refer [planck-env?]]
    [speculative.test-test]))
 
@@ -52,6 +53,7 @@
 (defn -main [& args]
   (run-tests 'speculative.test-test
              'speculative.core-test
-             'speculative.string-test))
+             'speculative.string-test
+             'speculative.instrument-test))
 
 #?(:cljs (set! *main-cli-fn* -main))
