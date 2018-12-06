@@ -6,6 +6,7 @@
    [speculative.core-test]
    [speculative.set-test]
    [speculative.string-test]
+   [speculative.instrument-test]
    [speculative.test :refer [planck-env?]]
    [speculative.test-test]))
 
@@ -54,6 +55,6 @@
   (run-tests 'speculative.test-test
              'speculative.core-test
              'speculative.string-test
-             'speculative.set-test))
+             'speculative.instrument-test))
 
 #?(:cljs (set! *main-cli-fn* -main))
