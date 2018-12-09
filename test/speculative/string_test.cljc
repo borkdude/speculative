@@ -3,10 +3,10 @@
    [clojure.test :as t :refer [is deftest testing]]
    [clojure.string :as str]
    [speculative.instrument] ;; loads all specs
-   [speculative.test :refer [with-instrumentation
-                             with-unstrumentation
-                             throws
-                             check-call]]
+   [respeced.test :refer [with-instrumentation
+                          with-unstrumentation
+                          caught?
+                          check-call]]
    [speculative.test-utils :refer [check]]
    ;; included for self-hosted cljs
    [workarounds-1-10-439.core]))
@@ -17,10 +17,10 @@
                                  [(StringBuffer. "foo") "fo"]))))
   (is (false? (check-call `str/starts-with? ["foo" "ba"])))
   (with-instrumentation `str/starts-with?
-    (throws `str/starts-with?
-            (str/starts-with? #"foo" "bar"))
-    (throws `str/starts-with?
-            (str/starts-with? "foo" #"bar")))
+    (is (caught? `str/starts-with?
+                 (str/starts-with? #"foo" "bar")))
+    (is (caught? `str/starts-with?
+                 (str/starts-with? "foo" #"bar"))))
   (check `str/starts-with?))
 
 (deftest ends-with?-test
@@ -29,10 +29,10 @@
                                  [(StringBuffer. "foo") "oo"]))))
   (is (false? (check-call `str/ends-with? ["foo" "fo"])))
   (with-instrumentation `str/ends-with?
-    (throws `str/ends-with?
-            (str/ends-with? #"foo" "bar"))
-    (throws `str/ends-with?
-            (str/ends-with? "foo" #"bar")))
+    (is (caught? `str/ends-with?
+                 (str/ends-with? #"foo" "bar")))
+    (is (caught? `str/ends-with?
+                 (str/ends-with? "foo" #"bar"))))
   (check `str/ends-with?))
 
 ;;;; Scratch

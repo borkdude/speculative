@@ -50,7 +50,7 @@
    ;; coal-mine.problem-48
    ;; coal-mine.problem-49
    ;; coal-mine.problem-50
-   [speculative.test :refer [planck-env?]]
+   [respeced.test :refer [planck-env?]]
    [clojure.test]
    #?(:clj patch.clj-2443))
   #?(:cljs (:require-macros [speculative.coal-mine-runner :refer [run-tests]])))

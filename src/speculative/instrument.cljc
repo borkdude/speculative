@@ -8,7 +8,8 @@
    [speculative.core]
    [speculative.set]
    [speculative.string]
-   [speculative.test :refer [deftime ?]])
+   [speculative.impl :as impl]
+   [clojure.spec.test.alpha])
   #?(:cljs
      (:require-macros
       [speculative.instrument :refer [instrument
@@ -61,32 +62,32 @@
                    set/subset?
                    set/superset?])
 
-(deftime
+(impl/deftime
 
   (defmacro instrument []
     (let [known (mapv
                  (fn [sym]
                    (let [ns (namespace sym)
-                         ns (? :cljs
-                               (str/replace ns #"^clojure\.core" "cljs.core")
-                               :clj ns)
+                         ns (impl/? :cljs
+                                    (str/replace ns #"^clojure\.core" "cljs.core")
+                                    :clj ns)
                          sym (symbol ns (name sym))]
                      (list 'quote sym)))
                  known-fdefs)]
-      `(speculative.test/instrument ~known)))
+      `(impl/instrument* ~known)))
 
   (defmacro unstrument []
     (let [known (mapv
                  (fn [sym]
                    [sym]
                    (let [ns (namespace sym)
-                         ns (? :cljs
+                         ns (impl/? :cljs
                                (str/replace ns #"^clojure\.core" "cljs.core")
                                :clj ns)
                          sym (symbol ns (name sym))]
                      (list 'quote sym)))
                  known-fdefs)]
-      `(speculative.test/unstrument ~known))))
+      `(impl/unstrument* ~known))))
 
 (defn fixture
   "Fixture that can be used with clojure.test"

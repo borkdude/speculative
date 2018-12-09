@@ -6,9 +6,11 @@
    [speculative.core-test]
    [speculative.set-test]
    [speculative.string-test]
-   [speculative.instrument-test]
-   [speculative.test :refer [planck-env?]]
-   [speculative.test-test]))
+   [speculative.instrument-test]))
+
+(defn planck-env? []
+  #?(:cljs (exists? js/PLANCK_EXIT_WITH_VALUE)
+     :clj false))
 
 (defn exit
   "Exit with the given status."
@@ -52,8 +54,7 @@
        (exit 0))))
 
 (defn -main [& args]
-  (run-tests 'speculative.test-test
-             'speculative.core-test
+  (run-tests 'speculative.core-test
              'speculative.string-test
              'speculative.instrument-test))
 

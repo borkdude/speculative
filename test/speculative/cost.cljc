@@ -3,7 +3,7 @@
   (:require
    [speculative.core]
    [speculative.cost.popularity :refer [popularity-map]]
-   [speculative.test :as t]
+   [respeced.test :as t]
    [clojure.pprint :as pprint]
    [clojure.spec.alpha :as s]
    [clojure.spec.test.alpha :as stest]

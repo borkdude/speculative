@@ -2,7 +2,7 @@
   "Test utils."
   (:require
    [clojure.test]
-   [speculative.test :refer [deftime]])
+   [speculative.impl :refer [deftime]])
   #?(:cljs
      (:require-macros
       [speculative.test-utils :refer [check]])))
@@ -13,8 +13,8 @@
   assertion."
     [sym]
     `(let [stc-result#
-           (speculative.test/check ~sym nil {:num-tests 50})]
-       (clojure.test/is (speculative.test/successful? stc-result#)))))
+           (respeced.test/check ~sym nil {:num-tests 50})]
+       (clojure.test/is (respeced.test/successful? stc-result#)))))
 
 ;;;; Scratch
 
