@@ -9,6 +9,6 @@ clojure -A:test:cost:cljs-cost
 # Tufte doesn't work on self-hosted yet
 # echo "\n=== Running plk cost calculations"
 # plk -A:test:cost
-# if [ $? -eq 1 ]; then
+# if [ $? != 0 ]; then
 #     exit_code=1
 # fi

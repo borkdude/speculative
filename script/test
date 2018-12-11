@@ -4,18 +4,18 @@ set $exit_code=0
 
 echo "=== Running clj-tests"
 clojure -A:test:clj-tests
-if [ $? -eq 1 ]; then
+if [ $? != 0 ]; then
     exit_code=1
 fi
 
 script/cljs-tests
-if [ $? -eq 1 ]; then
+if [ $? != 0 ]; then
     exit_code=1
 fi
 
 echo "\n=== Running plk-tests"
 plk -A:test:plk-tests
-if [ $? -eq 1 ]; then
+if [ $? != 0 ]; then
     exit_code=1
 fi
 
