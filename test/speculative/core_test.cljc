@@ -18,7 +18,7 @@
 
 (deftest instrument-test
   (testing "speculative specs should be instrumentable and unstrumentable"
-    (let [spec-count #?(:clj 41 :cljs 38)
+    (let [spec-count #?(:clj 42 :cljs 39)
           instrumented (speculative.instrument/instrument)
           unstrumented (speculative.instrument/unstrument)]
       (is (= spec-count (count instrumented)))
@@ -117,7 +117,7 @@
   (testing "multiple collections"
     (is (= '(5 7 9)
            (check-call `map [(fn [a b] (+ a b))
-                        [1 2 3] [4 5 6]]))))
+                             [1 2 3] [4 5 6]]))))
   (testing "nil collection"
     (is (= '() (check-call `map [identity nil]))))
   (with-instrumentation `map
@@ -313,6 +313,15 @@
     (testing "end before start"
       (throws `subs (subs "foo" 2 0)))))
 
+(deftest interpose-test
+  (is (check-call `interpose [0]))
+  (is (check-call `interpose [0 [1 1 1]]))
+  (check `interpose)
+  (with-instrumentation `interpose
+    (testing "wrong amount of args"
+      (throws `interpose (interpose)))
+    (testing "non-coll arg"
+      (throws `interpose (interpose 0 0)))))
 
 ;;;; Scratch
 
