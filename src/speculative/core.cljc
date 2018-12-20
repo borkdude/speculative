@@ -9,7 +9,23 @@
 
 ;; 49
 (s/fdef clojure.core/first
-  :args (s/cat :coll ::ss/seqable))
+  :args (s/cat :coll ::ss/seqable)
+  :ret ::ss/any)
+
+;; 57
+(s/fdef clojure.core/next
+  :args (s/cat :coll ::ss/seqable)
+  :ret ::ss/seqable)
+
+;; 66
+(s/fdef clojure.core/rest
+  :args (s/cat :coll ::ss/seqable)
+  :ret ::ss/seqable)
+
+;; 262
+(s/fdef clojure.core/last
+  :args (s/cat :coll ::ss/seqable)
+  :ret ::ss/any)
 
 ;; 660
 #?(:clj
