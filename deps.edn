@@ -6,11 +6,13 @@
                       org.clojure/clojurescript {:mvn/version "1.10.439"}
                       mfikes/workarounds-1.10.439 {:git/url "https://github.com/mfikes/workarounds-1.10.439"
                                                    :sha "a559201602fc6a21701479b83086d76bd5ed09eb"}
-                      org.clojure/test.check {:mvn/version "RELEASE"}}}
+                      org.clojure/test.check {:mvn/version "RELEASE"}
+                      respeced {:git/url "https://github.com/borkdude/respeced"
+                                :sha "4e2100d67e7a0d782917102d2362e3ebe0d5e957"}}}
   :repl ;; works for clj and planck, use :cljs-repl for normal cljs
   {:main-opts
    ["-e" "(require,'[speculative.core])"
-    "-e" "(require,'[speculative.test,:refer,[with-instrumentation,with-unstrumentation,check]])"
+    "-e" "(require,'[respeced.test,:refer,[with-instrumentation,with-unstrumentation,check]])"
     "-e" "(require,'[clojure.spec.alpha,:as,s])"
     "-e" "(require,'[clojure.spec.test.alpha,:as,stest])"
     "-e" "(require,'[clojure.spec.gen.alpha,:as,gen])"
@@ -26,7 +28,7 @@
                "-d" "test"]}
   :cljs-repl {:main-opts ["-m" "cljs.main" "-re" "node"
                           "-e" "(require,'[speculative.core])"
-                          "-e" "(require,'[speculative.test,:refer,[with-instrumentation,with-unstrumentation,check]])"
+                          "-e" "(require,'[respeced.test,:refer,[with-instrumentation,with-unstrumentation,check]])"
                           "-e" "(require,'[clojure.spec.alpha,:as,s])"
                           "-e" "(require,'[clojure.spec.test.alpha,:as,stest])"
                           "-e" "(require,'[clojure.spec.gen.alpha,:as,gen])"

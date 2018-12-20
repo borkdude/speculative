@@ -85,12 +85,13 @@ Speculative specs find, when instrumented, incorrect or undefined usage of
 Clojure core functions. If code is under your control, you can fix it. If the
 call was made in a library not under your control, you can unstrument the spec
 using `clojure.spec.test.alpha/unstrument` or disable it within the scope of a
-body using `speculative.test/with-unstrumentation`:
+body using `respeced.test/with-unstrumentation` (see
+[respeced](https://github.com/borkdude/respeced)):
 
 ``` clojure
 $ clj
 Clojure 1.10.0-beta6
-user=> (require '[speculative.test :refer [with-unstrumentation]])
+user=> (require '[respeced.test :refer [with-unstrumentation]])
 nil
 user=> (require '[speculative.instrument :refer [instrument]])
 nil
@@ -100,19 +101,12 @@ user=> (merge #{1 2 3} 4)
 Execution error - invalid arguments to clojure.core/merge at (REPL:1).
 #{1 3 2} - failed: map? at: [:maps :init-map :clojure.spec.alpha/pred]
 #{1 3 2} - failed: nil? at: [:maps :init-map :clojure.spec.alpha/nil]
-user=> (speculative.test/with-unstrumentation `merge (merge #{1 2 3} 4))
+user=> (respeced.test/with-unstrumentation `merge (merge #{1 2 3} 4))
 #{1 4 3 2}
 ```
 
 If you believe the spec was wrong, please create an
 [issue](https://github.com/slipset/speculative/issues).
-
-
-## Test tools
-
-Namespace `speculative.test` provides various tools around
-`clojure.spec.test.alpha`. This namespace is alpha, so use with caution. More
-info [here](doc/test.md).
 
 ## Tests
 

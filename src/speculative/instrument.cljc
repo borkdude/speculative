@@ -8,7 +8,8 @@
    [speculative.core]
    [speculative.set]
    [speculative.string]
-   [speculative.test :refer [deftime ?]])
+   [speculative.impl :as impl]
+   [clojure.spec.test.alpha])
   #?(:cljs
      (:require-macros
       [speculative.instrument :refer [instrument
@@ -69,36 +70,36 @@
 (def instrumentable-syms-clj
   (into instrumentable-syms `[next re-matcher re-groups]))
 
-(deftime
+(impl/deftime
 
   (defmacro instrument []
     (let [instrumentable-syms
-          (? :cljs instrumentable-syms :clj instrumentable-syms-clj)
+          (impl/? :cljs instrumentable-syms :clj instrumentable-syms-clj)
           syms (mapv
                 (fn [sym]
                   (let [ns (namespace sym)
-                        ns (? :cljs
-                              (str/replace ns #"^clojure\.core" "cljs.core")
-                              :clj ns)
+                        ns (impl/? :cljs
+                                   (str/replace ns #"^clojure\.core" "cljs.core")
+                                   :clj ns)
                         sym (symbol ns (name sym))]
                     (list 'quote sym)))
                 instrumentable-syms)]
-      `(speculative.test/instrument ~syms)))
+      `(impl/instrument* ~syms)))
 
   (defmacro unstrument []
     (let [instrumentable-syms
-          (? :cljs instrumentable-syms :clj instrumentable-syms-clj)
+          (impl/? :cljs instrumentable-syms :clj instrumentable-syms-clj)
           syms (mapv
                 (fn [sym]
                   [sym]
                   (let [ns (namespace sym)
-                        ns (? :cljs
-                              (str/replace ns #"^clojure\.core" "cljs.core")
-                              :clj ns)
+                        ns (impl/? :cljs
+                                   (str/replace ns #"^clojure\.core" "cljs.core")
+                                   :clj ns)
                         sym (symbol ns (name sym))]
                     (list 'quote sym)))
                 instrumentable-syms)]
-      `(speculative.test/unstrument ~syms))))
+      `(impl/unstrument* ~syms))))
 
 (defn fixture
   "Fixture that can be used with clojure.test"
