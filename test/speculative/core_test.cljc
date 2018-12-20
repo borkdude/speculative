@@ -18,15 +18,18 @@
 
 (deftest instrument-test
   (testing "speculative specs should be instrumentable and unstrumentable"
-    (let [spec-count #?(:clj 42 :cljs 39)
+    (let [spec-count #?(:clj 45 :cljs 41)
           instrumented (speculative.instrument/instrument)
           unstrumented (speculative.instrument/unstrument)]
       (is (= spec-count (count instrumented)))
       ;; <= is a temporary workaround for CLJS-2975
       (is (<= spec-count (count unstrumented)))))
   (testing "speculative extra specs should be instrumentable and unstrumentable"
-    (is (seq (stest/instrument)))
-    (is (seq (stest/unstrument)))))
+    ;; disabled for cljs until `next` can be instrumented
+    ;; See: https://dev.clojure.org/jira/browse/CLJS-3023
+    #?@(:clj
+        [(is (seq (stest/instrument)))
+         (is (seq (stest/unstrument)))])))
 
 (deftest =-test
   (is (check-call `= [1]))
@@ -322,6 +325,35 @@
       (throws `interpose (interpose)))
     (testing "non-coll arg"
       (throws `interpose (interpose 0 0)))))
+
+(deftest next-test
+  (is (nil? (check-call `next [[]])))
+  (is (nil? (check-call `next [[1]])))
+  (is (some? (check-call `next [[1 2]])))
+  (check `next)
+  ;; CLJS cannot yet instrument `next`
+  ;; See: https://dev.clojure.org/jira/browse/CLJS-3023
+  #?(:clj
+     (with-instrumentation `next
+       (testing "wrong type"
+         (throws `next (next 1))))))
+
+(deftest rest-test
+  (is (= () (check-call `rest [[]])))
+  (is (= () (check-call `rest [[1]])))
+  (is (= '(2) (check-call `rest [[1 2]])))
+  (check `rest)
+  (with-instrumentation `rest
+    (testing "wrong type"
+      (throws `rest (rest 1)))))
+
+(deftest last-test
+  (is (nil? (check-call `last [[]])))
+  (is (= 1 (check-call `last [[1]])))
+  (check `last)
+  (with-instrumentation `last
+    (testing "wrong type"
+      (throws `last (last 1)))))
 
 ;;;; Scratch
 
