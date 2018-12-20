@@ -1,7 +1,9 @@
 ## 0.0.3-SNAPSHOT
 
-* Specs for `re-pattern`, `re-matcher`, `re-groups`, `re-seq`, `re-matches`,
-  `re-find` and `subs`.
+* Specs for the entire `clojure.set` namespace (@eerohele)
+
+* Specs for `interpose`, `re-pattern`, `re-matcher`, `re-groups`, `re-seq`,
+  `re-matches`, `re-find` and `subs`.
 
 * Namespace `speculative.instrument`: loads all relevant speculative
   specs. Provides functions to only instrument and unstruments specs provided by

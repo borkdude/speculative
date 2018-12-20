@@ -159,6 +159,14 @@
                    (<= start end (count s)))))
   :ret ::ss/string)
 
+;; 5206
+(s/fdef clojure.core/interpose
+  :args (s/alt :transducer (s/cat :sep ::ss/any)
+               :seqable (s/cat :sep ::ss/any :coll ::ss/seqable))
+  :ret ::ss/seqable-or-transducer
+  :fn (fn [{:keys [args ret]}]
+        (= (key args) (key ret))))
+
 ;; 6536
 (s/fdef clojure.core/fnil
   :args (s/cat :f ::ss/ifn :xs (s/+ ::ss/any))

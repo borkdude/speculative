@@ -40,6 +40,7 @@
                    re-matches
                    re-find
                    subs
+                   interpose
                    fnil
                    reduce
 
