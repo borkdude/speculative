@@ -22,6 +22,9 @@
     apply
     assoc
     count
+    inc
+    /
+    dec
     swap!
     reset!
     juxt

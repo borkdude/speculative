@@ -47,6 +47,22 @@
   :args (s/cat :coll (s/or :counted ::ss/counted :seqable ::ss/seqable))
   :ret ::ss/int)
 
+;; 922
+(s/fdef clojure.core/inc
+  :args (s/cat :x ::ss/number)
+  :ret ::ss/number)
+
+;; 1020
+(s/fdef clojure.core//
+  :args (s/cat :numerator ::ss/number
+               :denominators (s/* ::ss/number))
+  :ret ::ss/number)
+
+;; 1142
+(s/fdef clojure.core/dec
+  :args (s/cat :x ::ss/number)
+  :ret ::ss/number)
+
 ;; 2345
 (s/fdef clojure.core/swap!
   :args (s/cat :atom ::ss/atom :f ::ss/ifn :args (s/* ::ss/any)))

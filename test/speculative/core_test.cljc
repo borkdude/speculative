@@ -18,7 +18,7 @@
 
 (deftest instrument-test
   (testing "speculative specs should be instrumentable and unstrumentable"
-    (let [spec-count #?(:clj 45 :cljs 41)
+    (let [spec-count #?(:clj 48 :cljs 44)
           instrumented (speculative.instrument/instrument)
           unstrumented (speculative.instrument/unstrument)]
       (is (= spec-count (count instrumented)))
@@ -354,6 +354,18 @@
   (with-instrumentation `last
     (testing "wrong type"
       (throws `last (last 1)))))
+
+(deftest inc-dec-test
+  (is (check-call `inc [0]))
+  (is (check-call `dec [0]))
+  (check `inc)
+  (check `dec)
+  (with-instrumentation `inc
+    (testing "wrong type"
+      (throws `inc (apply inc ["f"]))))
+  (with-instrumentation `dec
+    (testing "wrong type"
+      (throws `dec (apply dec ["f"])))))
 
 ;;;; Scratch
 
