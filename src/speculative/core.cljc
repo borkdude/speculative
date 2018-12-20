@@ -9,7 +9,23 @@
 
 ;; 49
 (s/fdef clojure.core/first
-  :args (s/cat :coll ::ss/seqable))
+  :args (s/cat :coll ::ss/seqable)
+  :ret ::ss/any)
+
+;; 57
+(s/fdef clojure.core/next
+  :args (s/cat :coll ::ss/seqable)
+  :ret ::ss/seqable)
+
+;; 66
+(s/fdef clojure.core/rest
+  :args (s/cat :coll ::ss/seqable)
+  :ret ::ss/seqable)
+
+;; 262
+(s/fdef clojure.core/last
+  :args (s/cat :coll ::ss/seqable)
+  :ret ::ss/any)
 
 ;; 660
 #?(:clj
@@ -30,6 +46,22 @@
 (s/fdef clojure.core/count
   :args (s/cat :coll (s/or :counted ::ss/counted :seqable ::ss/seqable))
   :ret ::ss/int)
+
+;; 922
+(s/fdef clojure.core/inc
+  :args (s/cat :x ::ss/number)
+  :ret ::ss/number)
+
+;; 1020
+(s/fdef clojure.core//
+  :args (s/cat :numerator ::ss/number
+               :denominators (s/* ::ss/number))
+  :ret ::ss/number)
+
+;; 1142
+(s/fdef clojure.core/dec
+  :args (s/cat :x ::ss/number)
+  :ret ::ss/number)
 
 ;; 2345
 (s/fdef clojure.core/swap!
@@ -158,6 +190,14 @@
                  (let [end (or end (count s))]
                    (<= start end (count s)))))
   :ret ::ss/string)
+
+;; 5206
+(s/fdef clojure.core/interpose
+  :args (s/alt :transducer (s/cat :sep ::ss/any)
+               :seqable (s/cat :sep ::ss/any :coll ::ss/seqable))
+  :ret ::ss/seqable-or-transducer
+  :fn (fn [{:keys [args ret]}]
+        (= (key args) (key ret))))
 
 ;; 6536
 (s/fdef clojure.core/fnil

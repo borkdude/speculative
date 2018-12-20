@@ -15,79 +15,91 @@
       [speculative.instrument :refer [instrument
                                       unstrument]])))
 
-(def known-fdefs `[;; clojure.core
-                   first
-                   apply
-                   assoc
-                   count
-                   swap!
-                   reset!
-                   juxt
-                   every?
-                   not-every?
-                   partial
-                   some
-                   not-any?
-                   map
-                   filter
-                   remove
-                   range
-                   merge
-                   merge-with
-                   re-pattern
-                   #?@(:clj [re-matcher
-                             re-groups])
-                   re-seq
-                   re-matches
-                   re-find
-                   subs
-                   fnil
-                   reduce
+(def instrumentable-syms
+  `[;; clojure.core
+    first
+    rest
+    last
+    apply
+    assoc
+    count
+    inc
+    /
+    dec
+    swap!
+    reset!
+    juxt
+    every?
+    not-every?
+    partial
+    some
+    not-any?
+    map
+    filter
+    remove
+    range
+    merge
+    merge-with
+    re-pattern
+    re-seq
+    re-matches
+    re-find
+    subs
+    interpose
+    fnil
+    reduce
 
-                   ;; clojure.string
-                   str/starts-with?
-                   str/ends-with?
+    ;; clojure.string
+    str/starts-with?
+    str/ends-with?
 
-                   ;; clojure.set
-                   set/union
-                   set/intersection
-                   set/difference
-                   set/select
-                   set/project
-                   set/rename-keys
-                   set/rename
-                   set/index
-                   set/map-invert
-                   set/join
-                   set/subset?
-                   set/superset?])
+    ;; clojure.set
+    set/union
+    set/intersection
+    set/difference
+    set/select
+    set/project
+    set/rename-keys
+    set/rename
+    set/index
+    set/map-invert
+    set/join
+    set/subset?
+    set/superset?])
+
+(def instrumentable-syms-clj
+  (into instrumentable-syms `[next re-matcher re-groups]))
 
 (impl/deftime
 
   (defmacro instrument []
-    (let [known (mapv
-                 (fn [sym]
-                   (let [ns (namespace sym)
-                         ns (impl/? :cljs
-                                    (str/replace ns #"^clojure\.core" "cljs.core")
-                                    :clj ns)
-                         sym (symbol ns (name sym))]
-                     (list 'quote sym)))
-                 known-fdefs)]
-      `(impl/instrument* ~known)))
+    (let [instrumentable-syms
+          (impl/? :cljs instrumentable-syms :clj instrumentable-syms-clj)
+          syms (mapv
+                (fn [sym]
+                  (let [ns (namespace sym)
+                        ns (impl/? :cljs
+                                   (str/replace ns #"^clojure\.core" "cljs.core")
+                                   :clj ns)
+                        sym (symbol ns (name sym))]
+                    (list 'quote sym)))
+                instrumentable-syms)]
+      `(impl/instrument* ~syms)))
 
   (defmacro unstrument []
-    (let [known (mapv
-                 (fn [sym]
-                   [sym]
-                   (let [ns (namespace sym)
-                         ns (impl/? :cljs
-                               (str/replace ns #"^clojure\.core" "cljs.core")
-                               :clj ns)
-                         sym (symbol ns (name sym))]
-                     (list 'quote sym)))
-                 known-fdefs)]
-      `(impl/unstrument* ~known))))
+    (let [instrumentable-syms
+          (impl/? :cljs instrumentable-syms :clj instrumentable-syms-clj)
+          syms (mapv
+                (fn [sym]
+                  [sym]
+                  (let [ns (namespace sym)
+                        ns (impl/? :cljs
+                                   (str/replace ns #"^clojure\.core" "cljs.core")
+                                   :clj ns)
+                        sym (symbol ns (name sym))]
+                    (list 'quote sym)))
+                instrumentable-syms)]
+      `(impl/unstrument* ~syms))))
 
 (defn fixture
   "Fixture that can be used with clojure.test"

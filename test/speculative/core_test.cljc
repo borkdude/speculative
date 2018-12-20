@@ -301,6 +301,56 @@
     (testing "end before start"
       (is (caught? `subs (subs "foo" 2 0))))))
 
+(deftest interpose-test
+  (is (check-call `interpose [0]))
+  (is (check-call `interpose [0 [1 1 1]]))
+  (check `interpose)
+  (with-instrumentation `interpose
+    (testing "wrong amount of args"
+      (is (caught? `interpose (interpose))))
+    (testing "non-coll arg"
+      (is (caught? `interpose (interpose 0 0))))))
+
+(deftest next-test
+  (is (nil? (check-call `next [[]])))
+  (is (nil? (check-call `next [[1]])))
+  (is (some? (check-call `next [[1 2]])))
+  (check `next)
+  ;; CLJS cannot yet instrument `next`
+  ;; See: https://dev.clojure.org/jira/browse/CLJS-3023
+  #?(:clj
+     (with-instrumentation `next
+       (testing "wrong type"
+         (is (caught? `next (next 1)))))))
+
+(deftest rest-test
+  (is (= () (check-call `rest [[]])))
+  (is (= () (check-call `rest [[1]])))
+  (is (= '(2) (check-call `rest [[1 2]])))
+  (check `rest)
+  (with-instrumentation `rest
+    (testing "wrong type"
+      (is (caught? `rest (rest 1))))))
+
+(deftest last-test
+  (is (nil? (check-call `last [[]])))
+  (is (= 1 (check-call `last [[1]])))
+  (check `last)
+  (with-instrumentation `last
+    (testing "wrong type"
+      (is (caught? `last (last 1))))))
+
+(deftest inc-dec-test
+  (is (check-call `inc [0]))
+  (is (check-call `dec [0]))
+  (check `inc)
+  (check `dec)
+  (with-instrumentation `inc
+    (testing "wrong type"
+      (is (caught? `inc (apply inc ["f"])))))
+  (with-instrumentation `dec
+    (testing "wrong type"
+      (is (caught? `dec (apply dec ["f"]))))))
 
 ;;;; Scratch
 
