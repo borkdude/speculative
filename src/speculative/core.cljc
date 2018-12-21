@@ -208,6 +208,15 @@
 (s/fdef clojure.core/reduce
   :args (s/cat :f ::ss/ifn :val (s/? ::ss/any) :coll ::ss/reducible-coll))
 
+;; 7146
+(s/fdef clojure.core/group-by
+  :args (s/cat :f ::ss/ifn :coll ::ss/reducible-coll)
+  :ret map?
+  :fn (fn [{:keys [args ret]}]
+        (let [[_ coll] (:coll args)]
+          (= (count coll)
+             (reduce + (map count (vals ret)))))))
+
 ;;;; Scratch
 
 (comment

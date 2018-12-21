@@ -352,6 +352,12 @@
     (testing "wrong type"
       (is (caught? `dec (apply dec ["f"]))))))
 
+(deftest group-by-test
+  (is (check-call `group-by [odd? (range 10)]))
+  (with-instrumentation `group-by
+    (is (caught? `group-by (group-by 1 (range 10))))
+    (is (caught? `group-by (group-by odd? 1)))))
+
 ;;;; Scratch
 
 (comment

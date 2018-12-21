@@ -48,6 +48,7 @@
     interpose
     fnil
     reduce
+    group-by
 
     ;; clojure.string
     str/starts-with?
