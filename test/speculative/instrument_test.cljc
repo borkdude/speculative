@@ -10,7 +10,7 @@
 
 (deftest instrument-test
   (testing "speculative specs should be instrumentable and unstrumentable"
-    (let [spec-count #?(:clj 48 :cljs 44)
+    (let [spec-count #?(:clj 49 :cljs 45)
           instrumented (instrument/instrument)
           unstrumented (instrument/unstrument)]
       (is (= spec-count (count instrumented)))
