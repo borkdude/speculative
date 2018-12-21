@@ -208,6 +208,14 @@
 (s/fdef clojure.core/reduce
   :args (s/cat :f ::ss/ifn :val (s/? ::ss/any) :coll ::ss/reducible-coll))
 
+;; 6887
+(s/fdef clojure.core/into
+  :args (s/alt :no-arg (s/cat)
+               :identity (s/cat :to (s/nilable coll?))
+               :seqable (s/cat :to (s/nilable coll?) :from ::ss/reducible-coll)
+               :transducer (s/cat :to (s/nilable coll?) :xf ::ss/ifn :from ::ss/reducible-coll))
+  :ret ::ss/seqable)
+
 ;; 7146
 (s/fdef clojure.core/group-by
   :args (s/cat :f ::ss/ifn :coll ::ss/reducible-coll)
@@ -222,5 +230,5 @@
 (comment
   (require '[clojure.spec.test.alpha :as stest])
   (stest/instrument)
-  (stest/unstrument)
-  )
+  (stest/unstrument))
+
