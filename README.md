@@ -79,6 +79,16 @@ Execution error (ClassCastException) at user$eval344/invokeStatic (REPL:1).
 java.lang.Long cannot be cast to clojure.lang.IFn
 ```
 
+## Managing expectations
+
+These specs try to be as accurate as possible, given what we know about the
+newest releases of Clojure and ClojureScript. However, we cannot guarantee that
+these specs are The Answer, once and for all. Our specs may be inaccurate and we
+may change them based on new insights. Functions in future versions of Clojure
+may allow different arguments and arities or return different values than we
+account for at this time of writing. These specs have no official status, are
+not endorsed by Cognitect and are provided without warranty.
+
 ## Speculative broke my project
 
 Speculative specs find, when instrumented, incorrect or undefined usage of
