@@ -16,11 +16,18 @@
                                       unstrument]])))
 
 (def instrumentable-syms
-  `[;; clojure.core
+  "instrumentable symbols for both clj and cljs. commented out symbols
+  have no point of being instrumented, since there is almost no way to
+  call them with wrong arguments."
+  `[;;;; clojure.core
     first
     rest
     last
-    apply
+    ;; some?
+    ;; str
+    ;; apply
+    ;; =
+    ;; get
     assoc
     count
     inc
@@ -50,11 +57,11 @@
     reduce
     group-by
 
-    ;; clojure.string
+    ;;;; clojure.string
     str/starts-with?
     str/ends-with?
 
-    ;; clojure.set
+    ;;;; clojure.set
     set/union
     set/intersection
     set/difference
@@ -69,13 +76,19 @@
     set/superset?])
 
 (def instrumentable-syms-clj
-  (into instrumentable-syms `[next re-matcher re-groups]))
+  (into instrumentable-syms `[apply
+                              next
+                              re-matcher
+                              re-groups]))
+
+(def instrumentable-syms-cljs
+  instrumentable-syms)
 
 (impl/deftime
 
   (defmacro instrument []
     (let [instrumentable-syms
-          (impl/? :cljs instrumentable-syms :clj instrumentable-syms-clj)
+          (impl/? :clj instrumentable-syms-clj :cljs instrumentable-syms-cljs)
           syms (mapv
                 (fn [sym]
                   (let [ns (namespace sym)
@@ -89,7 +102,7 @@
 
   (defmacro unstrument []
     (let [instrumentable-syms
-          (impl/? :cljs instrumentable-syms :clj instrumentable-syms-clj)
+          (impl/? :clj instrumentable-syms-clj :cljs instrumentable-syms-cljs)
           syms (mapv
                 (fn [sym]
                   [sym]

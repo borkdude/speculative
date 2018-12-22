@@ -4,7 +4,7 @@
    [clojure.spec.alpha :as s]
    [speculative.specs :as ss]))
 
-;; fdefs sorted by how they appear in
+;; fdefs sorted in order of appearance in
 ;; https://github.com/clojure/clojure/blob/master/src/clj/clojure/core.clj
 
 ;; 49
@@ -27,14 +27,33 @@
   :args (s/cat :coll ::ss/seqable)
   :ret ::ss/any)
 
+;; 531
+(s/fdef clojure.core/some?
+  :args (s/cat :x ::ss/any)
+  :ret ::ss/any)
+
+;; 544
+(s/fdef clojure.core/str
+  :args (s/* ::ss/any)
+  :ret ::ss/string)
+
 ;; 660
-#?(:clj
-   (s/fdef clojure.core/apply
-     :args (s/cat :f ::ss/ifn
-                  :intervening (s/* ::ss/any)
-                  :args ::ss/seqable))
-   ;; apply doesn't work on cljs
-   :cljs nil)
+(s/fdef clojure.core/apply
+  :args (s/cat :f ::ss/ifn
+               :intervening (s/* ::ss/any)
+               :args ::ss/seqable))
+
+;; 783
+(s/fdef clojure.core/=
+  :args (s/+ ::ss/any)
+  :ret ::ss/boolean)
+
+;; 1494
+(s/fdef clojure.core/get
+  :args (s/cat :map ::ss/any
+               :key ::ss/any
+               :default (s/? ::ss/any))
+  :ret ::ss/any)
 
 ;; 181
 (s/fdef clojure.core/assoc
