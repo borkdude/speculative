@@ -351,6 +351,15 @@
     (testing "wrong type"
       (is (caught? `dec (apply dec ["f"]))))))
 
+(deftest into-test
+  (is (check-call `into []))
+  (is (check-call `into [[1] [2]]))
+  (is (check-call `into [[1] (map inc) [2]]))
+  (with-instrumentation `into
+                        (is (caught? `into (into :a)))
+                        (is (caught? `into (into [] :a)))
+                        (is (caught? `into (into [] (map inc) :a)))))
+
 (deftest group-by-test
   (is (check-call `group-by [odd? (range 10)]))
   (with-instrumentation `group-by

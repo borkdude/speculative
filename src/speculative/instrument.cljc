@@ -55,6 +55,7 @@
     interpose
     fnil
     reduce
+    into
     group-by
 
     ;;;; clojure.string
