@@ -73,6 +73,8 @@
    :reducible  (s/nilable ::reducible)
    :iterable   (s/nilable ::iterable)))
 
+(s/def ::coll coll?)
+
 (s/def ::predicate ::ifn)
 
 (s/def ::transducer ::ifn)
