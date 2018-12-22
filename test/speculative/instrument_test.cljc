@@ -15,13 +15,7 @@
           unstrumented (instrument/unstrument)]
       (is (= spec-count (count instrumented)))
       ;; <= is a temporary workaround for CLJS-2975
-      (is (<= spec-count (count unstrumented)))))
-  (testing "speculative extra specs should be instrumentable and unstrumentable"
-    ;; disabled for cljs until `next` can be instrumented
-    ;; See: https://dev.clojure.org/jira/browse/CLJS-3023
-    #?@(:clj
-        [(is (seq (stest/instrument)))
-         (is (seq (stest/unstrument)))])))
+      (is (<= spec-count (count unstrumented))))))
 
 (deftest fixture-test
   (testing "without instrumentation"

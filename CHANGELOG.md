@@ -1,24 +1,27 @@
 ## 0.0.3-SNAPSHOT
 
-* Specs for the entire `clojure.set` namespace (@eerohele)
+* Specs for the entire `clojure.set` namespace, contributed by <a
+  href="https://github.com/eerohele">@eerohele</a>
 
-* Specs for `interpose`, `re-pattern`, `re-matcher`, `re-groups`, `re-seq`,
-  `re-matches`, `re-find` and `subs`.
+* Specs for `inc`, `dec`, `rest`, `next`, `last`, `group-by`, `interpose`,
+  `re-pattern`, `re-matcher`, `re-groups`, `re-seq`, `re-matches`, `re-find` and
+  `subs`.
 
-* Namespace `speculative.instrument`: loads all relevant speculative
-  specs. Provides functions to only instrument and unstruments specs provided by
-  speculative.
+* Namespace `speculative.instrument`: loads all speculative specs. Provides
+  functions to only instrument and unstruments specs provided by speculative,
+  with the exception of functions that are either pointless to instrument
+  (e.g. `str`) or in some cases not without throwing errors on CLJS
+  (e.g. `apply` which throws a callstack error).
 
-* Moved specs that are not likely to find errors while instrumented to
-  `speculative.core.extra`. Not requiring this namespace before instrumenting has
-  significant performance benefit.
+To illustrate why not instrumenting some functions that wouldn't catch important
+errors anyway is beneficial for permance, compare running the first 20 coal-mine
+test sets in CLJS on node:
 
-Running the first 20 coal-mine test sets in cljs+node, compare
-
+Without instrumentation of `some?`, `str`, `=` and `get`:
 ``` shell
 "Elapsed time: 3198.731217 msecs"
 ```
-to
+With instrumentation of said functions:
 ``` shell
 "Elapsed time: 21343.952922 msecs"
 ```

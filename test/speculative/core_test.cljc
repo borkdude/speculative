@@ -7,7 +7,6 @@
    [clojure.set :as set]
    [speculative.specs :as ss]
    [speculative.instrument]
-   [speculative.core.extra]
    [respeced.test :refer [with-instrumentation
                           with-unstrumentation
                           caught?
