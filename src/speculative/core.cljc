@@ -2,7 +2,8 @@
   "Specs for clojure.core"
   (:require
    [clojure.spec.alpha :as s]
-   [speculative.specs :as ss]))
+   [speculative.specs :as ss]
+   [clojure.spec.test.alpha :as stest]))
 
 ;; fdefs sorted in order of appearance in
 ;; https://github.com/clojure/clojure/blob/master/src/clj/clojure/core.clj
@@ -21,6 +22,12 @@
 (s/fdef clojure.core/rest
   :args (s/cat :coll ::ss/seqable)
   :ret ::ss/seqable)
+
+;; 75
+(s/fdef clojure.core/conj
+  :args (s/alt :no-args (s/cat)
+               :args (s/cat :coll ::ss/conjable :xs (s/* ::ss/any)))
+  :ret ::ss/conjable)
 
 ;; 262
 (s/fdef clojure.core/last
@@ -230,9 +237,9 @@
 ;; 6887
 (s/fdef clojure.core/into
   :args (s/alt :no-arg (s/cat)
-               :identity (s/cat :to (s/nilable ::ss/coll))
-               :seqable (s/cat :to (s/nilable ::ss/coll) :from ::ss/reducible-coll)
-               :transducer (s/cat :to (s/nilable ::ss/coll) :xf ::ss/ifn :from ::ss/reducible-coll))
+               :identity (s/cat :to ::ss/conjable)
+               :seqable (s/cat :to ::ss/conjable :from ::ss/reducible-coll)
+               :transducer (s/cat :to ::ss/conjable :xf ::ss/transducer :from ::ss/reducible-coll))
   :ret ::ss/seqable)
 
 ;; 7146

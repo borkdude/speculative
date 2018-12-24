@@ -22,6 +22,7 @@
   `[;;;; clojure.core
     first
     rest
+    conj
     last
     ;; some?
     ;; str
