@@ -33,11 +33,17 @@
 (s/def ::nat-int nat-int?)
 (s/def ::iterable iterable?)
 (s/def ::map map?)
+#?(:clj (s/def ::java-map
+          (s/with-gen #(instance? java.util.Map %)
+            (fn [] (gen/fmap #(java.util.HashMap. %)
+                             (s/gen ::map))))))
+(s/def ::map+ #?(:cljs ::map :clj (s/or :map ::map :java-map ::java-map)))
 (s/def ::map-entry
   (s/with-gen map-entry?
     (fn []
       (gen/fmap first
                 (s/gen (s/and ::map seq))))))
+(s/def ::pair (s/tuple ::any ::any))
 (s/def ::set set?)
 (s/def ::nil nil?)
 (s/def ::number number?)
@@ -68,16 +74,22 @@
         :seqable ::seqable-of-string))
 
 (s/def ::reducible-coll
-  (s/or
-   :seqable    ::seqable
-   :reducible  (s/nilable ::reducible)
-   :iterable   (s/nilable ::iterable)))
+  (s/with-gen
+    (s/or
+     :seqable    ::seqable
+     :reducible  (s/nilable ::reducible)
+     :iterable   (s/nilable ::iterable))
+    #(s/gen ::seqable)))
 
 (s/def ::coll coll?)
+(s/def ::conjable (s/nilable ::coll))
 
 (s/def ::predicate ::ifn)
 
-(s/def ::transducer ::ifn)
+(s/def ::transducer (s/with-gen
+                      ::ifn
+                      (fn []
+                        (gen/return (map identity)))))
 
 (s/def ::seqable-or-transducer
   (s/or :seqable ::seqable

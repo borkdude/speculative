@@ -7,10 +7,10 @@
    [clojure.set :as set]
    [speculative.specs :as ss]
    [speculative.instrument]
-   [respeced.test :refer [with-instrumentation
-                          with-unstrumentation
-                          caught?
-                          check-call]]
+   [respeced.test :as rt :refer [with-instrumentation
+                                 with-unstrumentation
+                                 caught?
+                                 check-call]]
    [speculative.test-utils :refer [check]]
    ;; included for self-hosted cljs
    [workarounds-1-10-439.core]))
@@ -355,16 +355,47 @@
   (is (check-call `into []))
   (is (check-call `into [[1] [2]]))
   (is (check-call `into [[1] (map inc) [2]]))
+  (is (check-call `into [{:a 1} {:b 2}]))
+  (is (check-call `into [{:a 1} [[:b 2]]]))
+  (is (rt/successful?
+       (rt/check `into {:gen {::ss/conjable #(s/gen ::ss/map)
+                              ::ss/reducible-coll
+                              #(s/gen (s/or :map+ ::ss/map+
+                                            :maps+ (s/+ ::ss/map+)
+                                            :pairs (s/+ ::ss/pair)))}}
+                 {:num-tests 50})))
+  (is (rt/successful?
+       (rt/check `into {:gen {::ss/conjable #(gen/such-that (comp not map?)
+                                                            (s/gen ::ss/conjable))}}
+                 {:num-tests 50})))
   (with-instrumentation `into
-                        (is (caught? `into (into :a)))
-                        (is (caught? `into (into [] :a)))
-                        (is (caught? `into (into [] (map inc) :a)))))
+    (is (caught? `into (into :a)))
+    (is (caught? `into (into [] :a)))
+    (is (caught? `into (into [] (map inc) :a)))))
 
 (deftest group-by-test
   (is (check-call `group-by [odd? (range 10)]))
   (with-instrumentation `group-by
     (is (caught? `group-by (group-by 1 (range 10))))
     (is (caught? `group-by (group-by odd? 1)))))
+
+(deftest conj-test
+  (is (check-call `conj []))
+  (is (nil? (check-call `conj [nil])))
+  (is (check-call `conj [[]]))
+  (is (check-call `conj [[] 1]))
+  (is (check-call `conj [[] 1 2 3 4 5]))
+  (is (rt/successful?
+       (rt/check `conj {:gen {::ss/conjable #(s/gen ::ss/map)
+                              ::ss/any #(s/gen (s/or :map+ ::ss/map+
+                                                     :pair ::ss/pair))}}
+                 {:num-tests 50})))
+  (is (rt/successful?
+       (rt/check `conj {:gen {::ss/conjable #(gen/such-that (comp not map?)
+                                                            (s/gen ::ss/conjable))}}
+                 {:num-tests 50})))
+  (with-instrumentation `conj
+    (is (caught? `conj (conj 1)))))
 
 ;;;; Scratch
 
