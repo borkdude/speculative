@@ -268,6 +268,26 @@
   :fn (fn [{:keys [args ret]}]
         (= (key args) (key ret))))
 
+;; 6152
+(s/def ::assoc-in-args
+  (s/with-gen (s/cat :map (s/nilable ::ss/associative)
+                     :keys (s/coll-of ::ss/any :min-elements 1 :kind sequential?)
+                     :val ::ss/any)
+              #(gen/one-of
+                 [(gen/tuple (s/gen map?)
+                             (gen/not-empty (gen/vector (gen/any)))
+                             (gen/any))
+                  (gen/bind (gen/vector (gen/any))
+                            (fn [v]
+                              (gen/tuple (gen/return v)
+                                         (gen/bind (gen/choose 0 (max 0 (dec (count v))))
+                                                   (fn [i] (gen/return [i])))
+                                         (gen/any))))])))
+
+(s/fdef clojure.core/assoc-in
+  :args ::assoc-in-args
+  :ret ::ss/associative)
+
 ;; 6536
 (s/fdef clojure.core/fnil
   :args (s/cat :f ::ss/ifn :xs (s/+ ::ss/any))
