@@ -217,9 +217,9 @@
 
 (deftest re-pattern-test
   (is (check-call `re-pattern ["s"]))
+  (check `re-pattern)
   (with-instrumentation `re-pattern
-    (is (caught? `re-pattern (re-pattern 1))))
-  (check `re-pattern))
+    (is (caught? `re-pattern (re-pattern 1)))))
 
 #?(:clj
    (deftest re-matcher-test

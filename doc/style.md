@@ -48,6 +48,26 @@ vs.
   [clojure/core.clj](https://github.com/clojure/clojure/blob/master/src/clj/clojure/core.clj)
   when possible.
 
+## Test style
+
+* Provide example based tests for cases that should be accepted
+* Use generative testing using `respeced.test/check` if possible
+* Provide example based tests for cases that should be rejected
+
+Example:
+
+``` clojure
+(deftest interpose-test
+  (is (check-call `interpose [0]))
+  (is (check-call `interpose [0 [1 1 1]]))
+  (check `interpose)
+  (with-instrumentation `interpose
+    (testing "wrong amount of args"
+      (is (caught? `interpose (interpose))))
+    (testing "non-coll arg"
+      (is (caught? `interpose (interpose 0 0))))))
+```
+
 ## Commit style
 
 * Mention the Github issue number in the title
