@@ -57,6 +57,7 @@
     fnil
     reduce
     into
+    flatten
     group-by
 
     ;;;; clojure.string

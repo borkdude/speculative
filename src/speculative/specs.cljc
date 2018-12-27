@@ -116,10 +116,13 @@
    (s/def ::matcher
      #(instance? java.util.regex.Matcher %)))
 
+(s/def ::sequential-of-not-sequential
+  (s/every (complement sequential?) :kind sequential?))
+
 ;;;; Scratch
 
 (comment
   (require '[clojure.spec.test.alpha :as stest])
   (stest/instrument)
-  (stest/unstrument)
-  )
+  (stest/unstrument))
+
