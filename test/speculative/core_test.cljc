@@ -42,8 +42,8 @@
   (is (= 0 (check-call `apply [+ nil])))
   #?(:clj (with-instrumentation `apply
             (is (caught? `apply (apply + 1 2 3 4))))
-     :cljs nil ;; maximum call stack exceeded
-     ))
+     :cljs nil)) ;; maximum call stack exceeded
+
 
 (deftest assoc-test
   (is (check-call `assoc [nil 'lol 'lol]))
@@ -199,9 +199,9 @@
   (is (= "" (check-call `str [nil])))
   (is (= "lolfoo" (check-call `str ["lol" "foo"])))
   (check `str)
-  (with-instrumentation `str
+  (with-instrumentation `str))
     ;; there's really no way to make str crash, is there?
-    ))
+
 
 (deftest swap!-test
   (is (nil? (check-call `swap! [(atom nil) identity])))
@@ -373,6 +373,17 @@
     (is (caught? `into (into [] :a)))
     (is (caught? `into (into [] (map inc) :a)))))
 
+(deftest flatten-test
+  (is (check-call `flatten [nil]))
+  (is (check-call `flatten [[]]))
+  (is (check-call `flatten [[:a]]))
+  (is (check-call `flatten [[[:a :b]]]))
+  (check `flatten)
+  (with-instrumentation
+    `flatten
+    (is (caught? `flatten (flatten :not-a-sequential)))
+    (is (caught? `flatten (flatten #{:still :not :a :sequential})))))
+
 (deftest group-by-test
   (is (check-call `group-by [odd? (range 10)]))
   (with-instrumentation `group-by
@@ -401,5 +412,5 @@
 
 (comment
   (t/run-tests)
-  (stest/unstrument)
-  )
+  (stest/unstrument))
+

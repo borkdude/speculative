@@ -5,12 +5,12 @@
    [respeced.test :refer [caught?]]
    [speculative.instrument :as instrument]
    ;; included for self-hosted cljs
-   [workarounds-1-10-439.core]
-   ))
+   [workarounds-1-10-439.core]))
+
 
 (deftest instrument-test
   (testing "speculative specs should be instrumentable and unstrumentable"
-    (let [spec-count #?(:clj 51 :cljs 47)
+    (let [spec-count #?(:clj 52 :cljs 48)
           instrumented (instrument/instrument)
           unstrumented (instrument/unstrument)]
       (is (= spec-count (count instrumented)))
