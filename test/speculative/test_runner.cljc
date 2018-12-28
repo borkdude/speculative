@@ -3,14 +3,12 @@
    #?(:clj [patch.clj-2443])
    [clojure.test :as t :refer [run-tests]]
    [clojure.test]
+   [speculative.test-utils :refer [planck-env?]]
+   [speculative.specs-test]
    [speculative.core-test]
    [speculative.set-test]
    [speculative.string-test]
    [speculative.instrument-test]))
-
-(defn planck-env? []
-  #?(:cljs (exists? js/PLANCK_EXIT_WITH_VALUE)
-     :clj false))
 
 (defn exit
   "Exit with the given status."
@@ -54,7 +52,8 @@
        (exit 0))))
 
 (defn -main [& args]
-  (run-tests 'speculative.core-test
+  (run-tests 'speculative.specs-test
+             'speculative.core-test
              'speculative.string-test
              'speculative.instrument-test))
 
