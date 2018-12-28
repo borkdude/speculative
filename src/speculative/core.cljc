@@ -2,9 +2,9 @@
   "Specs for clojure.core"
   (:require
    [clojure.spec.alpha :as s]
-   [speculative.specs :as ss]
+   [clojure.spec.gen.alpha :as gen]
    [clojure.spec.test.alpha :as stest]
-   [clojure.spec.gen.alpha :as gen]))
+   [speculative.specs :as ss]))
 
 ;; fdefs sorted in order of appearance in
 ;; https://github.com/clojure/clojure/blob/master/src/clj/clojure/core.clj
@@ -29,6 +29,23 @@
   :args (s/alt :no-args (s/cat)
                :args (s/cat :coll ::ss/conjable :xs (s/* ::ss/any)))
   :ret ::ss/conjable)
+
+;; 181 assoc
+(s/def ::assoc-args
+  (s/with-gen
+    (s/cat :map (s/nilable ::ss/associative)
+           :key ::ss/any :val ::ss/any :kvs (s/* (s/cat :ks ::ss/any :vs ::ss/any)))
+    (fn []
+      (gen/one-of
+       [(gen/tuple (s/gen map?) (gen/any) (gen/any))
+        (gen/bind (gen/vector (gen/int))
+                  (fn [v]
+                    (gen/tuple (gen/return v)
+                               (gen/choose 0 (max 0 (dec (count v))))
+                               (gen/any))))]))))
+(s/fdef clojure.core/assoc
+  :args ::assoc-args
+  :ret ::ss/associative)
 
 ;; 262
 (s/fdef clojure.core/last
@@ -56,30 +73,6 @@
   :args (s/+ ::ss/any)
   :ret ::ss/boolean)
 
-;; 1494
-(s/fdef clojure.core/get
-  :args (s/cat :map ::ss/any
-               :key ::ss/any
-               :default (s/? ::ss/any))
-  :ret ::ss/any)
-
-;; 181 assoc
-(s/def ::assoc-args
-  (s/with-gen
-    (s/cat :map (s/nilable ::ss/associative)
-           :key ::ss/any :val ::ss/any :kvs (s/* (s/cat :ks ::ss/any :vs ::ss/any)))
-    #(gen/one-of
-      [(gen/tuple (s/gen map?) (gen/any) (gen/any))
-       (gen/bind (gen/vector (gen/any))
-                 (fn [v]
-                   (gen/tuple (gen/return v)
-                              (gen/choose 0 (max 0 (dec (count v))))
-                              (gen/any))))])))
-
-(s/fdef clojure.core/assoc
-  :args ::assoc-args
-  :ret ::ss/associative)
-
 ;; 874
 (s/fdef clojure.core/count
   :args (s/cat :coll (s/or :counted ::ss/counted :seqable ::ss/seqable))
@@ -100,6 +93,13 @@
 (s/fdef clojure.core/dec
   :args (s/cat :x ::ss/number)
   :ret ::ss/number)
+
+;; 1494
+(s/fdef clojure.core/get
+  :args (s/cat :map ::ss/any
+               :key ::ss/any
+               :default (s/? ::ss/any))
+  :ret ::ss/any)
 
 ;; 2345
 (s/fdef clojure.core/swap!
