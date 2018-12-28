@@ -31,7 +31,7 @@
   (is (nil? (check-call `next [[1]])))
   (is (some? (check-call `next [[1 2]])))
   ;; check commented, because this puts next in an instrumented state in self-hosted
-  ;;(check `next)
+  (check `next)
   ;; CLJS cannot yet instrument `next`
   ;; See: https://dev.clojure.org/jira/browse/CLJS-3023
   #?(:clj
@@ -279,7 +279,7 @@
      (testing "second arg is java Map"
        (is (= {:a 2 :b 2})
            (merge-with + {:a 1} (java.util.HashMap. {:a 1 :b 2})))))
-  #_(println "were instrumented:" (stest/unstrument))
+  ;;(println "were instrumented:" (stest/unstrument))
   (with-instrumentation `merge-with
     (is (caught? `merge-with (merge-with 1)))
     ;; the following is no longer allowed in CLJS, see CLJS-2943
