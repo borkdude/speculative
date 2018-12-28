@@ -49,6 +49,7 @@
   (is (check-call `assoc [nil 'lol 'lol]))
   (is (check-call `assoc [{} 'lol 'lol 'bar 'lol]))
   (is (check-call `assoc [[] 0 'lol]))
+  (check `assoc)
   (with-instrumentation `assoc
     (is (caught? `assoc (assoc 'lol 'lol 'lol)))
     (is (caught? `assoc (assoc {} 'lol)))))
@@ -200,7 +201,7 @@
   (is (= "lolfoo" (check-call `str ["lol" "foo"])))
   (check `str)
   (with-instrumentation `str))
-    ;; there's really no way to make str crash, is there?
+;; there's really no way to make str crash, is there?
 
 
 (deftest swap!-test
@@ -357,17 +358,13 @@
   (is (check-call `into [[1] (map inc) [2]]))
   (is (check-call `into [{:a 1} {:b 2}]))
   (is (check-call `into [{:a 1} [[:b 2]]]))
-  (is (rt/successful?
-       (rt/check `into {:gen {::ss/conjable #(s/gen ::ss/map)
-                              ::ss/reducible-coll
-                              #(s/gen (s/or :map+ ::ss/map+
-                                            :maps+ (s/+ ::ss/map+)
-                                            :pairs (s/+ ::ss/pair)))}}
-                 {:num-tests 50})))
-  (is (rt/successful?
-       (rt/check `into {:gen {::ss/conjable #(gen/such-that (comp not map?)
-                                                            (s/gen ::ss/conjable))}}
-                 {:num-tests 50})))
+  (check `into {:gen {::ss/conjable #(s/gen ::ss/map)
+                      ::ss/reducible-coll
+                      #(s/gen (s/or :map+ ::ss/map+
+                                    :maps+ (s/+ ::ss/map+)
+                                    :pairs (s/+ ::ss/pair)))}})
+  (check `into {:gen {::ss/conjable #(gen/such-that (comp not map?)
+                                                    (s/gen ::ss/conjable))}})
   (with-instrumentation `into
     (is (caught? `into (into :a)))
     (is (caught? `into (into [] :a)))
@@ -396,15 +393,11 @@
   (is (check-call `conj [[]]))
   (is (check-call `conj [[] 1]))
   (is (check-call `conj [[] 1 2 3 4 5]))
-  (is (rt/successful?
-       (rt/check `conj {:gen {::ss/conjable #(s/gen ::ss/map)
-                              ::ss/any #(s/gen (s/or :map+ ::ss/map+
-                                                     :pair ::ss/pair))}}
-                 {:num-tests 50})))
-  (is (rt/successful?
-       (rt/check `conj {:gen {::ss/conjable #(gen/such-that (comp not map?)
-                                                            (s/gen ::ss/conjable))}}
-                 {:num-tests 50})))
+  (check `conj {:gen {::ss/conjable #(s/gen ::ss/map)
+                      ::ss/any #(s/gen (s/or :map+ ::ss/map+
+                                             :pair ::ss/pair))}})
+  (check `conj {:gen {::ss/conjable #(gen/such-that (comp not map?)
+                                                    (s/gen ::ss/conjable))}})
   (with-instrumentation `conj
     (is (caught? `conj (conj 1)))))
 
@@ -413,4 +406,3 @@
 (comment
   (t/run-tests)
   (stest/unstrument))
-
