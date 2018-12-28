@@ -50,9 +50,11 @@ vs.
 
 ## Test style
 
-* Provide example based tests for cases that should be accepted
-* Use generative testing using `respeced.test/check` if possible
-* Provide example based tests for cases that should be rejected
+A test for an `fdef` consists of thee parts:
+
+* Example based tests for cases that should be accepted (must have)
+* Generative tests using `respeced.test/check` (nice to have)
+* Example based tests for cases that should be rejected (must have)
 
 Example:
 
