@@ -68,14 +68,14 @@
   (s/with-gen
     (s/cat :map (s/nilable ::ss/associative)
            :key ::ss/any :val ::ss/any :kvs (s/* (s/cat :ks ::ss/any :vs ::ss/any)))
-    (fn []
-      (gen/one-of
-       [(gen/tuple (s/gen map?) (gen/any) (gen/any))
-        (gen/bind (gen/vector (gen/int))
-                  (fn [v]
-                    (gen/tuple (gen/return v)
-                               (gen/choose 0 (max 0 (dec (count v))))
-                               (gen/any))))]))))
+    #(gen/one-of
+      [(gen/tuple (s/gen map?) (gen/any) (gen/any))
+       (gen/bind (gen/vector (gen/any))
+                 (fn [v]
+                   (gen/tuple (gen/return v)
+                              (gen/choose 0 (max 0 (dec (count v))))
+                              (gen/any))))])))
+
 (s/fdef clojure.core/assoc
   :args ::assoc-args
   :ret ::ss/associative)
