@@ -285,11 +285,6 @@
     ;; the following is no longer allowed in CLJS, see CLJS-2943
     (is (caught? `merge-with (merge-with + {:a 1} [[:a 2]])))))
 
-(deftest regexp-test
-  (let [res (gen/sample (s/gen ::ss/regexp))]
-    (is (seq res))
-    (is (every? ss/regexp? res))))
-
 ;; 4839
 (deftest re-pattern-test
   (is (check-call `re-pattern ["s"]))
@@ -444,11 +439,6 @@
   (with-instrumentation `group-by
     (is (caught? `group-by (group-by 1 (range 10))))
     (is (caught? `group-by (group-by odd? 1)))))
-
-(deftest map-entry-test
-  (let [mes (gen/sample (s/gen ::ss/map-entry))]
-    (is (seq mes))
-    (is (every? #(= 2 (count %)) mes))))
 
 ;;;; Scratch
 
