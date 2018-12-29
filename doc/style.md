@@ -6,10 +6,10 @@ All of these are style recommendations, no hard rules.
 
 Be as general as possible, while still being correct.
 
-* Prefer named specs over predicates e.g. `::ifn` instead of `ifn?` [(#76)](https://github.com/slipset/speculative/issues/76)
-* Use `associative?` instead of `map?` or `vector?` [(#46)](https://github.com/slipset/speculative/issues/46)
-* Use `ifn?` instead of `fn?` [(#42)](https://github.com/slipset/speculative/issues/42)
-* Use `seqable?` instead of `seq?` [(#45)](https://github.com/slipset/speculative/issues/45)
+* Prefer named specs over predicates e.g. `::ifn` instead of `ifn?` [(#76)](https://github.com/borkdude/speculative/issues/76)
+* Use `associative?` instead of `map?` or `vector?` [(#46)](https://github.com/borkdude/speculative/issues/46)
+* Use `ifn?` instead of `fn?` [(#42)](https://github.com/borkdude/speculative/issues/42)
+* Use `seqable?` instead of `seq?` [(#45)](https://github.com/borkdude/speculative/issues/45)
 
 
 * Use `s/alt` inside for arity alternatives in favor of `s/or`:
