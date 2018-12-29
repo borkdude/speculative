@@ -43,7 +43,7 @@ Evaluation error - invalid arguments to clojure.core/merge-with at (NO_SOURCE_FI
 ```
 
 * `speculative.test` macros `gentest` and `check` renamed to `check` and `check-call` to closer resemble naming in `clojure.spec.test.alpha`
-* `speculative.test` no longer needs require to `clojure.spec.test.alpha` in CLJS ([#95](https://github.com/slipset/speculative/issues/95))
+* `speculative.test` no longer needs require to `clojure.spec.test.alpha` in CLJS ([#95](https://github.com/borkdude/speculative/issues/95))
 
 ## 0.0.2 (2018-11-09)
 

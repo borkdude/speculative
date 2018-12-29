@@ -7,7 +7,7 @@ Issues are sorted by date from newest to oldest.
 - [Spec'ed fn doesn't throw when called lazily](https://dev.clojure.org/jira/browse/CLJ-2443) (CLJ)
 - [re-seq is relying on undefined behavior of subs](https://dev.clojure.org/jira/browse/CLJS-2979) (CLJS)
 - [unstrument returns symbol of non-instrumented var](https://dev.clojure.org/jira/browse/CLJS-2975) (CLJS)
-- [Coal-mine test found use of merge that doesn't conform to spec](https://github.com/slipset/speculative/issues/113) (4clojure)
+- [Coal-mine test found use of merge that doesn't conform to spec](https://github.com/borkdude/speculative/issues/113) (4clojure)
 - [Make clojure.spec.alpha reloadable](https://dev.clojure.org/jira/browse/CLJS-2967) (CLJS)
 - [Requiring clojure.spec.test.alpha loads clojure.test.check](https://dev.clojure.org/jira/browse/CLJS-2964) (CLJS)
 - [Stack overflow when specing core =](https://dev.clojure.org/jira/browse/CLJS-2956) (CLJS)

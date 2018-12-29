@@ -1,5 +1,5 @@
 # speculative
-[![CircleCI](https://circleci.com/gh/slipset/speculative/tree/master.svg?style=svg)](https://circleci.com/gh/slipset/speculative/tree/master)
+[![CircleCI](https://circleci.com/gh/borkdude/speculative/tree/master.svg?style=svg)](https://circleci.com/gh/borkdude/speculative/tree/master)
 [![Clojars Project](https://img.shields.io/clojars/v/speculative.svg)](https://clojars.org/speculative)
 
 speculative is a collection of specs for the functions in `clojure.core`. While
@@ -116,7 +116,7 @@ user=> (respeced.test/with-unstrumentation `merge (merge #{1 2 3} 4))
 ```
 
 If you believe the spec was wrong, please create an
-[issue](https://github.com/slipset/speculative/issues).
+[issue](https://github.com/borkdude/speculative/issues).
 
 ## Tests
 
