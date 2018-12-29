@@ -159,6 +159,15 @@
   (with-instrumentation `get
     (is (caught? `get (get)))))
 
+;; 1540
+(deftest select-keys-test
+  (is (check-call `select-keys [nil nil]))
+  (is (check-call `select-keys [{:a 1} [:a]]))
+  (check `select-keys)
+  (with-instrumentation `select-keys
+    (is (caught? `select-keys (select-keys 1 [])))
+    (is (caught? `select-keys (select-keys {} 1)))))
+
 ;; 2345
 (deftest swap!-test
   (is (nil? (check-call `swap! [(atom nil) identity])))
