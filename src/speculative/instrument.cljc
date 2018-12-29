@@ -18,22 +18,25 @@
 (def instrumentable-syms
   "instrumentable symbols for both clj and cljs. commented out symbols
   have no point of being instrumented, since there is almost no way to
-  call them with wrong arguments."
+  call them with wrong arguments, or they are not instrumentable for
+  all enviroments."
   `[;;;; clojure.core
     first
+    ;; next (not instrumentable for CLJS)
     rest
     conj
+    assoc
     last
     ;; some?
     ;; str
-    ;; apply
+    ;; apply (not instrumentable for CLJS)
     ;; =
-    ;; get
-    assoc
     count
     inc
     /
     dec
+    ;; get
+    select-keys
     swap!
     reset!
     juxt
@@ -79,8 +82,8 @@
     set/superset?])
 
 (def instrumentable-syms-clj
-  (into instrumentable-syms `[apply
-                              next
+  (into instrumentable-syms `[next
+                              apply
                               re-matcher
                               re-groups]))
 
