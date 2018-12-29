@@ -35,6 +35,8 @@
     inc
     /
     dec
+    min
+    max
     ;; get
     select-keys
     swap!

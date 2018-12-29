@@ -94,6 +94,16 @@
   :args (s/cat :x ::ss/number)
   :ret ::ss/number)
 
+;; 1115
+(s/fdef clojure.core/max
+  :args (s/+ ::ss/number)
+  :ret ::ss/number)
+
+;; 1125
+(s/fdef clojure.core/min
+  :args (s/+ ::ss/number)
+  :ret ::ss/number)
+
 ;; 1494
 (s/fdef clojure.core/get
   :args (s/cat :map ::ss/any

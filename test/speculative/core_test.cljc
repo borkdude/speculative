@@ -152,6 +152,19 @@
     (is (caught? `/ (apply / nil)))
     (is (caught? `/ (apply / ['a])))))
 
+;; 1115 - 1125 min/max
+(deftest min-max-test
+  (is (check-call `min [1]))
+  (is (check-call `max [1]))
+  (is (check-call `min [1 2]))
+  (is (check-call `max [1 2]))
+  (check `min)
+  (check `max)
+  (with-instrumentation `min
+    (is (caught? `min (apply min ["0" "1"]))))
+  (with-instrumentation `max
+    (is (caught? `max (apply max ["0" "1"])))))
+
 ;; 1494
 (deftest get-test
   (is (= 'foo (check-call `get [#{'foo} 'foo 'bar])))
