@@ -101,6 +101,12 @@
                :default (s/? ::ss/any))
   :ret ::ss/any)
 
+;; 1540
+(s/fdef clojure.core/select-keys
+  :args (s/cat :map (s/nilable ::ss/map+)
+               :keyseq ::ss/seqable)
+  :ret ::ss/map)
+
 ;; 2345
 (s/fdef clojure.core/swap!
   :args (s/cat :atom ::ss/atom :f ::ss/ifn :args (s/* ::ss/any)))
