@@ -83,10 +83,25 @@
   :args (s/cat :x ::ss/number)
   :ret ::ss/number)
 
+;; 984
+(s/fdef clojure.core/+
+  :args (s/* ::ss/number)
+  :ret ::ss/number)
+
+;; 1008
+(s/fdef clojure.core/*
+  :args (s/* ::ss/number)
+  :ret ::ss/number)
+
 ;; 1020
 (s/fdef clojure.core//
   :args (s/cat :numerator ::ss/number
                :denominators (s/* ::ss/number))
+  :ret ::ss/number)
+
+;; 1043
+(s/fdef clojure.core/-
+  :args (s/+ ::ss/number)
   :ret ::ss/number)
 
 ;; 1142
