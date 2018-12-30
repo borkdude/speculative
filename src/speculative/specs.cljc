@@ -25,7 +25,25 @@
      (instance? java.lang.Iterable x)))
 
 (s/def ::associative associative?)
-(s/def ::any any?)
+
+;; workaround for https://dev.clojure.org/jira/browse/CLJ-1966
+(s/def ::any
+  (reify
+    s/Specize
+    (specize* [s] s)
+    (specize* [s _] s)
+
+    s/Spec
+    (conform* [_ x] (if (s/invalid? x) ::invalid x))
+    (unform* [_ x] x)
+
+    (explain* [_ path via in x]
+      nil)
+    (gen* [_ overrides path rmap]
+      (gen/any-printable))
+    (with-gen* [_ gfn] nil)
+    (describe* [_] nil)))
+
 (s/def ::boolean boolean?)
 (s/def ::counted counted?)
 (s/def ::ifn ifn?)
@@ -125,4 +143,3 @@
   (require '[clojure.spec.test.alpha :as stest])
   (stest/instrument)
   (stest/unstrument))
-
