@@ -21,3 +21,7 @@ Issues are sorted by date from newest to oldest.
 - [Remove useless call to merge](https://github.com/juxt/yada/pull/246) (juxt/yada)
 - [spec fdef triggering for variadic fn](https://dev.clojure.org/jira/browse/CLJS-2942) (CLJS)
 - [Can't define nilable spec on undefined pred](https://dev.clojure.org/jira/browse/CLJS-2940) (CLJS)
+
+# Other known issues related to self-spec'ing Clojure
+
+- [\[spec\] :clojure.spec/invalid is not a valid :clojure.spec/any value](https://dev.clojure.org/jira/browse/CLJ-1966) (CLJ + CLJS)
