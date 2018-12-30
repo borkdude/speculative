@@ -33,7 +33,10 @@
     ;; =
     count
     inc
+    +
+    *
     /
+    -
     dec
     min
     max

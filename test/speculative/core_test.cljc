@@ -136,6 +136,26 @@
     (testing "wrong type"
       (is (caught? `dec (apply dec ["f"]))))))
 
+;; 984
+(deftest plus-minus-times-test
+  (check `+)
+  #?(:clj
+     (let [times *]
+       (with-redefs [* (fn [& args]
+                         (try (apply times args)
+                              (catch ArithmeticException _ 0)))]
+         (check `*)))
+     :cljs (check `*))
+  (check `-)
+  (with-instrumentation `+
+    (is (caught? `+ (apply + ["f"]))))
+  (with-instrumentation `*
+    (is (caught? `* (apply * ["f"]))))
+  (with-instrumentation `-
+    (is (caught? `- (apply - []))))
+  (with-instrumentation `-
+    (is (caught? `- (apply - ["f"])))))
+
 ;; 1020
 (deftest division-test
   ;; Note: / is inlined when used with more than one argument
