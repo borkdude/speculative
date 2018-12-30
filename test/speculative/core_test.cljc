@@ -1,16 +1,17 @@
 (ns speculative.core-test
   (:require
-   [clojure.spec.alpha :as s]
-   [clojure.spec.test.alpha :as stest]
-   [clojure.spec.gen.alpha :as gen]
-   [clojure.test :as t :refer [is deftest testing]]
    [clojure.set :as set]
-   [speculative.specs :as ss]
-   [speculative.core]
+   [clojure.spec.alpha :as s]
+   [clojure.spec.gen.alpha :as gen]
+   [clojure.spec.test.alpha :as stest]
+   [clojure.test :as t :refer [is deftest testing]]
+   [clojure.test.check.generators :as g]
    [respeced.test :as rt :refer [with-instrumentation
                                  with-unstrumentation
                                  caught?
                                  check-call]]
+   [speculative.core :as c]
+   [speculative.specs :as ss]
    [speculative.test-utils :refer [check planck-env?]]
    ;; included for self-hosted cljs
    [workarounds-1-10-439.core]))
@@ -69,7 +70,14 @@
   (is (check-call `assoc [nil 'lol 'lol]))
   (is (check-call `assoc [{} 'lol 'lol 'bar 'lol]))
   (is (check-call `assoc [[] 0 'lol]))
-  (check `assoc)
+  (check `assoc {:gen {::c/assoc-args
+                       #(gen/one-of
+                         [(gen/tuple (s/gen map?) (gen/any) (gen/any))
+                          (gen/bind (gen/vector (gen/int))
+                                    (fn [v]
+                                      (gen/tuple (gen/return v)
+                                                 (gen/choose 0 (max 0 (dec (count v))))
+                                                 (gen/any))))])}})
   (with-instrumentation `assoc
     (is (caught? `assoc (assoc 'lol 'lol 'lol)))
     (is (caught? `assoc (assoc {} 'lol)))))
@@ -436,12 +444,24 @@
   (is (check-call `assoc-in [[] '(0) :val]))
   (is (check-call `assoc-in [{} [:a] :val]))
   (is (check-call `assoc-in [nil [:a] :val]))
-  (check `assoc-in)
+  (check `assoc-in
+         {:gen {::c/assoc-in-args
+                #(gen/one-of
+                  [(gen/tuple (g/recursive-gen (fn [inner] (g/map g/keyword inner))
+                                               (g/elements [nil]))
+                              (gen/not-empty (gen/vector (gen/keyword)))
+                              (gen/any))
+                   (gen/bind (gen/vector (gen/any))
+                             (fn [v]
+                               (gen/tuple (gen/return v)
+                                          (gen/bind (gen/choose 0 (max 0 (dec (count v))))
+                                                    (fn [i] (gen/return [i])))
+                                          (gen/any))))])}})
   (with-instrumentation `assoc-in
-                        (testing "first arg not an associative/nil"
-                          (is (caught? `assoc-in (assoc-in '() [0] :val))))
-                        (testing "Provided ks not a sequential"
-                          (is (caught? `assoc-in (assoc-in [] 0 :val)))))
+    (testing "first arg not an associative/nil"
+      (is (caught? `assoc-in (assoc-in '() [0] :val))))
+    (testing "Provided ks not a sequential"
+      (is (caught? `assoc-in (assoc-in [] 0 :val)))))
   (testing "Index out of bounds" (is (thrown? #?(:clj java.lang.IndexOutOfBoundsException
                                                  :cljs js/Error)
                                               (check-call `assoc-in [[] [1] :val])))))
