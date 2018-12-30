@@ -23,6 +23,9 @@
     (is (seq res))
     (is (every? ss/regexp? res))))
 
+(deftest any-test
+  (is (s/valid? ::ss/any :clojure.spec.alpha/invalid)))
+
 ;;;; Scratch
 
 (comment
