@@ -102,8 +102,8 @@
   (is (= 0 (check-call `apply [+ nil])))
   #?(:clj (with-instrumentation `apply
             (is (caught? `apply (apply + 1 2 3 4))))
-     :cljs nil ;; maximum call stack exceeded
-     ))
+     :cljs nil)) ;; maximum call stack exceeded
+
 
 ;; 783
 (deftest =-test
@@ -429,6 +429,22 @@
       (is (caught? `interpose (interpose))))
     (testing "non-coll arg"
       (is (caught? `interpose (interpose 0 0))))))
+
+;; 6152
+(deftest assoc-in-test
+  (is (check-call `assoc-in [[] [0] :val]))
+  (is (check-call `assoc-in [[] '(0) :val]))
+  (is (check-call `assoc-in [{} [:a] :val]))
+  (is (check-call `assoc-in [nil [:a] :val]))
+  (check `assoc-in)
+  (with-instrumentation `assoc-in
+                        (testing "first arg not an associative/nil"
+                          (is (caught? `assoc-in (assoc-in '() [0] :val))))
+                        (testing "Provided ks not a sequential"
+                          (is (caught? `assoc-in (assoc-in [] 0 :val)))))
+  (testing "Index out of bounds" (is (thrown? #?(:clj java.lang.IndexOutOfBoundsException
+                                                 :cljs js/Error)
+                                              (check-call `assoc-in [[] [1] :val])))))
 
 ;; 6536
 (deftest fnil-test

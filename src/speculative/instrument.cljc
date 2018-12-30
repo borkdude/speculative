@@ -62,6 +62,7 @@
     re-find
     subs
     interpose
+    assoc-in
     fnil
     reduce
     into
