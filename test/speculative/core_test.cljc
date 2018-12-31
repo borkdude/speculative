@@ -200,6 +200,15 @@
   (with-instrumentation `get
     (is (caught? `get (get)))))
 
+;; 1534
+(deftest find-test
+  (is (nil? (check-call `find [nil nil])))
+  (is (check-call `find [{:a 1} :a]))
+  #?(:clj (is (check-call `find [(java.util.HashMap. {:a 1}) :a])))
+  (check `find)
+  (with-instrumentation `find
+    (is (caught? `find (find 1 1)))))
+
 ;; 1540
 (deftest select-keys-test
   (is (check-call `select-keys [nil nil]))
