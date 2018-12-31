@@ -118,6 +118,11 @@
                :default (s/? ::ss/any))
   :ret ::ss/any)
 
+;; 1534
+(s/fdef clojure.core/find
+  :args (s/cat :map (s/nilable ::ss/map+) :key ::ss/any)
+  :ret (s/nilable ::ss/map-entry))
+
 ;; 1540
 (s/fdef clojure.core/select-keys
   :args (s/cat :map (s/nilable ::ss/map+)

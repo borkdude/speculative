@@ -41,6 +41,7 @@
     min
     max
     ;; get
+    find
     select-keys
     swap!
     reset!
