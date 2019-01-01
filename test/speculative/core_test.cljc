@@ -292,6 +292,8 @@
   (is (check-call `filter [pos?]))
   (is (check-call `filter [pos? nil]))
   (is (= '()  (check-call `filter [identity nil])))
+  (check `filter {:gen {::ss/transducer #(gen/return (map identity))
+                        ::ss/ifn #(gen/return (fn [_] (rand-nth [true false])))}})
   (with-instrumentation `filter
     (is (caught? `filter (filter 1)))))
 
@@ -300,6 +302,8 @@
   (is (check-call `remove [pos?]))
   (is (check-call `remove [pos? nil]))
   (is (= '() (check-call `remove [identity nil])))
+  (check `remove {:gen {::ss/transducer #(gen/return (map identity))
+                        ::ss/ifn #(gen/return (fn [_] (rand-nth [true false])))}})
   (with-instrumentation `remove
     (is (caught? `remove (remove 1)))))
 
@@ -526,6 +530,16 @@
   (with-instrumentation `group-by
     (is (caught? `group-by (group-by 1 (range 10))))
     (is (caught? `group-by (group-by odd? 1)))))
+
+;; 7313
+(deftest keep-test
+  (is (check-call `keep [seq]))
+  (is (check-call `keep [seq nil]))
+  (is (= '[[1 2 3]] (check-call `keep [seq [[] [1 2 3]]])))
+  (check `keep {:gen {::ss/transducer #(gen/return (map identity))
+                      ::ss/ifn #(gen/return (fn [x] (rand-nth [x nil])))}})
+  (with-instrumentation `keep
+    (is (caught? `keep (keep 1)))))
 
 ;;;; Scratch
 

@@ -169,26 +169,29 @@
 
 ;; 2727
 (s/fdef clojure.core/map
-  :args (s/alt :transducer (s/cat :xf ::ss/ifn)
-               :seqable (s/cat :f ::ss/ifn :colls
-                               (s/+ ::ss/seqable)))
+  :args (s/alt :transducer (s/cat :xf ::ss/transducer)
+               :seqable (s/cat :f ::ss/ifn :colls (s/+ ::ss/seqable)))
   :ret ::ss/seqable-or-transducer
   :fn (fn [{:keys [args ret]}]
         (= (key args) (key ret))))
 
 ;; 2793
+(s/def ::filter-fn-args
+  (s/alt :transducer (s/cat :xf ::ss/transducer)
+         :seqable (s/cat :f ::ss/ifn :coll ::ss/seqable)))
+
 (s/fdef clojure.core/filter
-  :args (s/alt :transducer (s/cat :xf ::ss/ifn)
-               :seqable (s/cat :f ::ss/ifn :coll ::ss/seqable))
+  :args ::filter-fn-args
   :ret ::ss/seqable-or-transducer
   :fn (fn [{:keys [args ret]}]
         (= (key args) (key ret))))
 
 ;; 2826
 (s/fdef clojure.core/remove
-  :args (s/cat :pred ::ss/predicate
-               :coll (s/? ::ss/seqable))
-  :ret ::ss/seqable-or-transducer)
+  :args ::filter-fn-args
+  :ret ::ss/seqable-or-transducer
+  :fn (fn [{:keys [args ret]}]
+        (= (key args) (key ret))))
 
 ;; 3019
 (s/fdef clojure.core/range
@@ -306,6 +309,13 @@
         (let [[_ coll] (:coll args)]
           (= (count coll)
              (reduce + (map count (vals ret)))))))
+
+;; 7313
+(s/fdef clojure.core/keep
+  :args ::filter-fn-args
+  :ret ::ss/seqable-or-transducer
+  :fn (fn [{:keys [args ret]}]
+        (= (key args) (key ret))))
 
 ;;;; Scratch
 
