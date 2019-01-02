@@ -9,34 +9,27 @@ symbol,count
 # =,183713
 # str,65937
 # map,52295
-->,46439
 # first,37981
-when,34247
-or,31252
 # apply,30907
-assoc,29215
+# assoc,29215
 # count,28660
 and,26442
 not,24785
 nil?,21570
-+,19170
+# +,19170
 # get,18547
-*,16945
-cond,16672
-recur,16569
+# *,16945
 println,16419
-do,15841
 seq,15683
-->>,15004
 atom,14024
 # reduce,13785
--,13236
+# -,13236
 name,12880
 instance?,12674
-conj,12548
-inc,12482
+# conj,12548
+# inc,12482
 # swap!,12462
-into,11580
+# into,11580
 # range,11124
 # filter,10851
 get-in,10604
@@ -44,14 +37,14 @@ get-in,10604
 empty?,10495
 list,9523
 format,9508
-rest,8766
+# rest,8766
 <,8618
 vec,8601
 # partial,8595
 concat,8334
 # reset!,8122
 set,8071
-/,8033
+# /,8033
 int,7811
 cons,7652
 nth,7628
@@ -62,14 +55,14 @@ update-in,7266
 meta,6737
 ==,6720
 keys,6616
-next,6535
+# next,6535
 map?,6528
 string?,6468
 set!,6421
 aget,6363
 keyword,6338
 symbol,5839
-dec,5823
+# dec,5823
 dissoc,5720
 comp,5305
 not=,5286
@@ -77,7 +70,7 @@ float,5175
 # some,5053
 # every?,4722
 constantly,4707
-last,4524
+# last,4524
 declare,4513
 mapcat,4512
 vector?,4408
@@ -94,7 +87,7 @@ keyword?,3679
 identical?,3548
 vals,3431
 into-array,3406
-assoc-in,3315
+# assoc-in,3315
 reify,3212
 >=,3205
 mapv,3190
@@ -110,7 +103,7 @@ lazy-seq,2562
 condp,2553
 # subs,2548
 print,2522
-select-keys,2470
+# select-keys,2470
 ex-info,2457
 number?,2433
 deref,2355
@@ -131,14 +124,14 @@ boolean,1901
 fn?,1811
 true?,1761
 repeatedly,1708
-interpose,1668
+# interpose,1668
 spit,1667
 rand-int,1625
 future,1600
 bit-and,1562
 alter,1561
 byte-array,1558
-flatten,1515
+# flatten,1515
 ref,1476
 sort-by,1465
 complement,1463
@@ -156,7 +149,7 @@ key,1194
 integer?,1139
 val,1106
 interleave,1105
-min,1104
+# min,1104
 take-while,1100
 sorted-map,1091
 transient,1087

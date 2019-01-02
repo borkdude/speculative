@@ -69,6 +69,7 @@
     into
     flatten
     group-by
+    keep
 
     ;;;; clojure.string
     str/starts-with?
