@@ -124,11 +124,11 @@ If you believe the spec was wrong, please create an
 
     clj -A:test:clj-tests
      
-### ClojureScript
+### ClojureScript (Node)
 
     script/cljs-tests
     
-### Self-Hosted ClojureScript
+### Self-hosted ClojureScript (Planck)
    
     plk -A:test:plk-tests
 
@@ -145,9 +145,13 @@ overriden by setting the environment variable `NUM_TESTS`:
 
     clojure -A:test:clj-test-runner -v speculative.core-test/assoc-in-test
 
-#### ClojureScript
+#### ClojureScript (Node)
 
     clojure -A:test:cljs-test-runner -v speculative.core-test/assoc-in-test
+
+#### Self-hosted ClojureScript (Planck)
+
+    clojure -A:test:cljs-test-runner -x planck -v speculative.core-test/assoc-in-test
 
 Running `script/clean` before running tests is recommended, especially for
 ClojureScript on Node. The script `script/test` automatically calls

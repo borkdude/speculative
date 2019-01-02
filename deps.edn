@@ -42,7 +42,9 @@
   ;; we use the test runner because vanilla cljs.main + node doesn't exit
   ;; properly
   :cljs-test-runner
-  {:extra-deps {olical/cljs-test-runner {:mvn/version "3.3.0"}}
+  {:extra-deps {olical/cljs-test-runner {:git/url "https://github.com/borkdude/cljs-test-runner"
+                                         :sha "6627c970315ca5cbb836221f6d0d400afbc87290"}}
+   :extra-paths ["test" "cljs-test-runner-out/gen"]
    :main-opts ["-m" "cljs-test-runner.main"]}
   :plk-tests
   {:main-opts ["-m" "speculative.test-runner"]}
