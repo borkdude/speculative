@@ -22,8 +22,8 @@
   {:main-opts ["-m" "speculative.test-runner"]}
   :clj-test-runner
   {:extra-deps {com.cognitect/test-runner
-                {:git/url "https://github.com/cognitect-labs/test-runner"
-                 :sha "76568540e7f40268ad2b646110f237a60295fa3c"}}
+                {:git/url "https://github.com/borkdude/test-runner"
+                 :sha "fe83104e9feb48e43673b31f23f131b3849a3776"}}
    :main-opts ["-m" "cognitect.test-runner"
                "-d" "test"]}
   :cljs-repl {:main-opts ["-m" "cljs.main" "-re" "node"
@@ -42,7 +42,7 @@
   ;; we use the test runner because vanilla cljs.main + node doesn't exit
   ;; properly
   :cljs-test-runner
-  {:extra-deps {olical/cljs-test-runner {:mvn/version "3.1.0"}}
+  {:extra-deps {olical/cljs-test-runner {:mvn/version "3.3.0"}}
    :main-opts ["-m" "cljs-test-runner.main"]}
   :plk-tests
   {:main-opts ["-m" "speculative.test-runner"]}

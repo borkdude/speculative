@@ -132,6 +132,27 @@ If you believe the spec was wrong, please create an
    
     plk -A:test:plk-tests
 
+### Number of generative tests
+
+By default the number of generative tests is set to `50`, but this can be
+overriden by setting the environment variable `NUM_TESTS`:
+
+    NUM_TESTS=1001 clj -A:test:clj-tests
+
+### Run a single test
+
+#### Clojure
+
+    clojure -A:test:clj-test-runner -v speculative.core-test/assoc-in-test
+
+#### ClojureScript
+
+    clojure -A:test:cljs-test-runner -v speculative.core-test/assoc-in-test
+
+Running `script/clean` before running tests is recommended, especially for
+ClojureScript on Node. The script `script/test` automatically calls
+`script/clean` and runs all tests for all environments.
+
 ## Try online
 
 [KLIPSE REPL](http://bit.ly/speculative-repl) with speculative and
