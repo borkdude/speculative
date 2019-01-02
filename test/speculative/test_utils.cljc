@@ -16,15 +16,16 @@
   #?(:clj (Integer/parseInt s)
      :cljs (js/parseInt s)))
 
-(def num-tests (or
-                (when-let
-                    [nt
-                     #?(:clj (System/getenv "NUM_TESTS")
-                        :cljs (if (planck-env?)
-                                (gobj/get (js/PLANCK_GETENV) "NUM_TESTS")
-                                (.. js/process -env -NUM_TESTS)))]
-                  (parse-int nt))
-                50))
+(def num-tests
+  (or
+   (when-let
+       [nt
+        #?(:clj (System/getenv "NUM_TESTS")
+           :cljs (if (planck-env?)
+                   (gobj/get (js/PLANCK_GETENV) "NUM_TESTS")
+                   (.. js/process -env -NUM_TESTS)))]
+     (parse-int nt))
+   50))
 
 (deftime
   (defmacro check

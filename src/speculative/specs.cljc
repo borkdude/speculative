@@ -28,21 +28,9 @@
 
 ;; workaround for https://dev.clojure.org/jira/browse/CLJ-1966
 (s/def ::any
-  (reify
-    s/Specize
-    (specize* [s] s)
-    (specize* [s _] s)
-
-    s/Spec
-    (conform* [_ x] (if (s/invalid? x) ::invalid x))
-    (unform* [_ x] x)
-
-    (explain* [_ path via in x]
-      nil)
-    (gen* [_ overrides path rmap]
-      (gen/any-printable))
-    (with-gen* [_ gfn] nil)
-    (describe* [_] nil)))
+  (s/with-gen
+    (s/conformer #(if (s/invalid? %) ::invalid %))
+    #(s/gen any?)))
 
 (s/def ::boolean boolean?)
 (s/def ::counted counted?)
