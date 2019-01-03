@@ -131,6 +131,29 @@
   (with-instrumentation `count
     (is (caught? `count (apply count [1])))))
 
+;; 889
+(deftest nth-test
+  (is (nil? (check-call `nth [nil 0])))
+  (is (check-call `nth ["abc" 0]))
+  (is (check-call `nth [(int-array [5 6 7]) 0]))
+  #?(:clj (is (= "5" (let [m (re-matcher #"(\d)" "abcd5")]
+                       (re-find m)
+                       (check-call `nth [m 0])))))
+  (is (check-call `nth [(first {:k :v}) 1]))
+  (is (= :ret (check-call `nth [[1 2 :ret 3] 2])))
+  (is (check-call `nth [[1 2] 5 :default]))
+  (check `nth
+         {:gen {::c/nth-args #(gen/bind (s/gen ::ss/nthable)
+                                        (fn [v]
+                                          (gen/tuple (gen/return v)
+                                                     (gen/choose 0 (max 0 (dec (count v)))))))}})
+  (with-instrumentation
+    `nth
+    (testing "wrong coll type"
+      (is (caught? `nth (apply nth [#{1 2 3} 3]))))
+    (testing "wrong index type"
+      (is (caught? `nth (apply nth [[1 2 3] :0]))))))
+
 ;; 922 inc, 1142 dec
 (deftest inc-dec-test
   (is (check-call `inc [0]))

@@ -125,6 +125,33 @@
 (s/def ::sequential-of-not-sequential
   (s/every (complement sequential?) :kind sequential?))
 
+(s/def ::array
+  (s/with-gen #?(:clj #(-> % .getClass .isArray)
+                 :cljs array?)
+              #(gen/one-of [(gen/fmap int-array (gen/vector (gen/int)))
+                            (gen/fmap double-array (gen/vector (gen/double)))
+                            #?(:clj (gen/fmap char-array (gen/string)))
+                            (gen/fmap object-array (gen/vector (gen/any)))])))
+
+(s/def ::indexed
+  indexed?)
+
+(s/def ::nthable
+ (s/with-gen (s/nilable (s/or :index ::indexed
+                              :str #?(:clj ::char-sequence
+                                      :cljs ::string)
+                              :array ::array
+                              #?@(:clj [:random-access #(instance? java.util.RandomAccess %)])
+                              #?@(:clj [:matcher ::matcher])
+                              :map-entry ::map-entry
+                              :sequential ::sequential))
+             #(gen/not-empty (gen/one-of [(s/gen ::indexed)
+                                          #?(:clj (s/gen ::char-sequence)
+                                             :cljs (gen/string))
+                                          (s/gen ::array)
+                                          (s/gen ::map-entry)
+                                          (s/gen ::sequential)]))))
+
 ;;;; Scratch
 
 (comment

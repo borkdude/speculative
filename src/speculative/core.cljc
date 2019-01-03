@@ -70,6 +70,16 @@
   :args (s/cat :coll (s/or :counted ::ss/counted :seqable ::ss/seqable))
   :ret ::ss/int)
 
+;; 889
+(s/def ::nth-args
+  (s/cat :coll ::ss/nthable
+         :index ::ss/nat-int
+         :not-found (s/? ::ss/any)))
+
+(s/fdef clojure.core/nth
+  :args ::nth-args
+  :ret ::ss/any)
+
 ;; 922
 (s/fdef clojure.core/inc
   :args (s/cat :x ::ss/number)

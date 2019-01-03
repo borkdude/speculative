@@ -32,6 +32,7 @@
     ;; apply (not instrumentable for CLJS)
     ;; =
     count
+    nth
     inc
     +
     *
