@@ -62,6 +62,8 @@
     re-matches
     re-find
     subs
+    max-key
+    min-key
     interpose
     assoc-in
     fnil

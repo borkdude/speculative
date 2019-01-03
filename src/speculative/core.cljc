@@ -260,6 +260,16 @@
                    (<= start end (count s)))))
   :ret ::ss/string)
 
+;; 4989
+(s/fdef clojure.core/max-key
+  :args (s/cat :k ::ss/ifn :xs (s/+ ::ss/any))
+  :ret ::ss/any)
+
+;; 5009
+(s/fdef clojure.core/min-key
+  :args (s/cat :k ::ss/ifn :xs (s/+ ::ss/any))
+  :ret ::ss/any)
+
 ;; 5206
 (s/fdef clojure.core/interpose
   :args (s/alt :transducer (s/cat :sep ::ss/any)

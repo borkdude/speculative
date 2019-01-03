@@ -2,7 +2,6 @@
   (:require
    #?(:clj [patch.clj-2443])
    [clojure.test :as t :refer [run-tests]]
-   [clojure.test]
    [speculative.test-utils :refer [planck-env?]]
    [speculative.specs-test]
    [speculative.core-test]

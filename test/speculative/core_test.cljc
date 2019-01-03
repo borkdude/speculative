@@ -440,6 +440,19 @@
     (testing "end before start"
       (is (caught? `subs (subs "foo" 2 0))))))
 
+;; 4989
+(deftest max-min-key-test
+  (is (check-call `max-key [second [:a 1] [:b 2] [:c 1]]))
+  (is (check-call `min-key [second [:a 1] [:b 2] [:c 1]]))
+  (check `max-key {:gen {::ss/ifn #(gen/return (fn [_] (rand-int 10)))}})
+  (check `min-key {:gen {::ss/ifn #(gen/return (fn [_] (rand-int 10)))}})
+  (with-instrumentation `max-key
+    (is (caught? `max-key (max-key 1 1)))
+    (is (caught? `max-key (max-key identity))))
+  (with-instrumentation `min-key
+    (is (caught? `min-key (min-key 1 1)))
+    (is (caught? `min-key (min-key identity)))))
+
 ;; 5206
 (deftest interpose-test
   (is (check-call `interpose [0]))
