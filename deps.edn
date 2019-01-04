@@ -3,12 +3,10 @@
  :aliases
  {:test {:extra-paths ["test"]
          :extra-deps {org.clojure/clojure {:mvn/version "1.10.0"}
-                      org.clojure/clojurescript {:mvn/version "1.10.439"}
-                      mfikes/workarounds-1.10.439 {:git/url "https://github.com/mfikes/workarounds-1.10.439"
-                                                   :sha "a559201602fc6a21701479b83086d76bd5ed09eb"}
+                      org.clojure/clojurescript {:mvn/version "1.10.516"}
                       org.clojure/test.check {:mvn/version "RELEASE"}
                       respeced {:git/url "https://github.com/borkdude/respeced"
-                                :sha "d13e39fc177c514339d32662ed458e7c20868a6a"}}}
+                                :sha "9d9254a7ed4c2800ca01f23b6fa86ff8c17d8ec5"}}}
   :repl ;; works for clj and planck, use :cljs-repl for normal cljs
   {:main-opts
    ["-e" "(require,'[speculative.core])"

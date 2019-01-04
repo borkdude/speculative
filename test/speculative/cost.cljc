@@ -9,7 +9,6 @@
    [speculative.impl :as impl]
    [clojure.spec.alpha :as s]
    [clojure.spec.test.alpha :as stest]
-   [workarounds-1-10-439.core])
   #?(:cljs
      (:require-macros [speculative.cost :refer [cost time]])))
 
