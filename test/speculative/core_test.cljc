@@ -19,6 +19,17 @@
 ;; sorted in order of appearance in
 ;; https://github.com/clojure/clojure/blob/master/src/clj/clojure/core.clj
 
+;; 22
+(deftest cons-test
+  (is (check-call `cons [:x nil]))
+  (is (check-call `cons [:x []]))
+  (is (check-call `cons [1 [1 2 3]]))
+  (check `cons)
+  (with-instrumentation
+    `cons
+    (testing "wrong type"
+      (is (caught? `cons (cons :x :not-a-coll))))))
+
 ;; 49
 (deftest first-test
   (is (nil? (check-call `first [nil])))

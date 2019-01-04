@@ -45,7 +45,7 @@ concat,8334
 set,8071
 # /,8033
 int,7811
-cons,7652
+# cons,7652
 # nth,7628
 second,7565
 contains?,7300

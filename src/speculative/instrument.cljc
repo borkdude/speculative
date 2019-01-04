@@ -21,6 +21,7 @@
   call them with wrong arguments, or they are not instrumentable for
   all enviroments."
   `[;;;; clojure.core
+    cons
     first
     ;; next (not instrumentable for CLJS)
     rest

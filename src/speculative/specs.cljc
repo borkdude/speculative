@@ -54,6 +54,7 @@
 (s/def ::nil nil?)
 (s/def ::number number?)
 (s/def ::reducible reducible?)
+(s/def ::non-empty-seq (s/and seq? not-empty))
 (s/def ::seqable seqable?)
 (s/def ::sequential sequential?)
 (s/def ::some some?)
@@ -122,10 +123,10 @@
    (s/def ::matcher
      #(instance? java.util.regex.Matcher %)))
 
-(s/def ::sequential-of-not-sequential
+(s/def ::sequential-of-non-sequential
   (s/every (complement sequential?) :kind sequential?))
 
-(s/def ::not-empty-sequential
+(s/def ::non-empty-sequential
   (s/coll-of ::any :min-elements 1 :kind sequential?))
 
 (s/def ::array

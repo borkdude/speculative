@@ -8,6 +8,11 @@
 ;; fdefs sorted in order of appearance in
 ;; https://github.com/clojure/clojure/blob/master/src/clj/clojure/core.clj
 
+;; 22
+(s/fdef clojure.core/cons
+  :args (s/cat :x ::ss/any :seq ::ss/seqable)
+  :ret ::ss/non-empty-seq)
+
 ;; 49
 (s/fdef clojure.core/first
   :args (s/cat :coll ::ss/seqable)
@@ -295,14 +300,14 @@
 ;; 6142
 (s/fdef clojure.core/get-in
   :args (s/cat :map (s/nilable ::ss/associative)
-               :keys ::ss/not-empty-sequential)
+               :keys ::ss/non-empty-sequential)
   :ret ::ss/any)
 
 ;; 6152
 ;; defined separately to make overridable generator
 (s/def ::assoc-in-args
   (s/cat :map (s/nilable ::ss/associative)
-         :keys ::ss/not-empty-sequential
+         :keys ::ss/non-empty-sequential
          :val ::ss/any))
 
 (s/fdef clojure.core/assoc-in
@@ -329,7 +334,7 @@
 ;; 7136
 (s/fdef clojure.core/flatten
   :args (s/cat :x (s/nilable ::ss/sequential))
-  :ret ::ss/sequential-of-not-sequential)
+  :ret ::ss/sequential-of-non-sequential)
 
 ;; 7146
 (s/fdef clojure.core/group-by
