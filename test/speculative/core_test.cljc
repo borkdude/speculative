@@ -487,12 +487,29 @@
     (testing "non-coll arg"
       (is (caught? `interpose (interpose 0 0))))))
 
+;; 6142
+(deftest get-in-test
+  (is (nil? (check-call `get-in [[] [0]])))
+  (is (nil? (check-call `get-in [[] '(0)])))
+  (is (nil? (check-call `get-in [{} [:a]])))
+  (is (nil? (check-call `get-in [nil [:a]])))
+  (is (= 1 (check-call `get-in [{:a {:b 1}} [:a :b]])))
+  (is (= 1 (check-call `get-in [[[1]] [0 0]])))
+  (check `get-in)
+  (with-instrumentation `get-in
+    (testing "first arg not an associative/nil"
+      (is (caught? `get-in (get-in '() [0]))))
+    (testing "Provided ks not a sequential"
+      (is (caught? `get-in (get-in [] 0))))))
+
 ;; 6152
 (deftest assoc-in-test
   (is (check-call `assoc-in [[] [0] :val]))
   (is (check-call `assoc-in [[] '(0) :val]))
   (is (check-call `assoc-in [{} [:a] :val]))
   (is (check-call `assoc-in [nil [:a] :val]))
+  (is (= {:a {:b 2}} (check-call `assoc-in [{:a {:b 1}} [:a :b] 2])))
+  (is (= [[2]] (check-call `assoc-in [[[1]] [0 0] 2])))
   (check `assoc-in
          {:gen {::c/assoc-in-args
                 #(gen/one-of

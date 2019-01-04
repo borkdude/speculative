@@ -125,6 +125,9 @@
 (s/def ::sequential-of-not-sequential
   (s/every (complement sequential?) :kind sequential?))
 
+(s/def ::not-empty-sequential
+  (s/coll-of ::any :min-elements 1 :kind sequential?))
+
 (s/def ::array
   (s/with-gen #?(:clj #(-> % .getClass .isArray)
                  :cljs array?)

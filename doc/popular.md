@@ -13,7 +13,6 @@ symbol,count
 # apply,30907
 # assoc,29215
 # count,28660
-and,26442
 not,24785
 nil?,21570
 # +,19170
@@ -32,7 +31,7 @@ instance?,12674
 # into,11580
 # range,11124
 # filter,10851
-get-in,10604
+# get-in,10604
 # merge,10506
 empty?,10495
 list,9523
