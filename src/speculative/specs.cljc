@@ -122,7 +122,7 @@
    (s/def ::matcher
      #(instance? java.util.regex.Matcher %)))
 
-(s/def ::sequential-of-not-sequential
+(s/def ::sequential-of-non-sequential
   (s/every (complement sequential?) :kind sequential?))
 
 ;;;; Scratch

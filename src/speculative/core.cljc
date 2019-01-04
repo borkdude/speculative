@@ -309,7 +309,7 @@
 ;; 7136
 (s/fdef clojure.core/flatten
   :args (s/cat :x (s/nilable ::ss/sequential))
-  :ret ::ss/sequential-of-not-sequential)
+  :ret ::ss/sequential-of-non-sequential)
 
 ;; 7146
 (s/fdef clojure.core/group-by
