@@ -66,6 +66,7 @@
     max-key
     min-key
     interpose
+    get-in
     assoc-in
     fnil
     reduce
