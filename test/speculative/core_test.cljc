@@ -102,6 +102,18 @@
     (testing "wrong type"
       (is (caught? `last (last 1))))))
 
+;; 524
+(deftest not-test
+  (is (check-call `not [nil]))
+  (is (check-call `not [false]))
+  (is (false? (check-call `not [true])))
+  (is (false? (check-call `not [:whatever])))
+  (check `not)
+  (with-instrumentation
+    `not
+    (testing "wrong arity"
+      (is (caught? `not (apply not [true true]))))))
+
 ;; 531
 (deftest some?-test
   (is (check-call `some? [1]))

@@ -13,7 +13,7 @@ symbol,count
 # apply,30907
 # assoc,29215
 # count,28660
-not,24785
+# not,24785
 nil?,21570
 # +,19170
 # get,18547
