@@ -28,6 +28,7 @@
     conj
     assoc
     last
+    not
     ;; some?
     ;; str
     ;; apply (not instrumentable for CLJS)
