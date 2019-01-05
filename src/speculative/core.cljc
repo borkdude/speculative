@@ -131,6 +131,16 @@
   :args (s/+ ::ss/number)
   :ret ::ss/number)
 
+;; 1459
+(s/fdef clojure.core/peek
+  :args (s/cat :coll (s/nilable ::ss/stack))
+  :ret ::ss/any)
+
+;; 1467
+(s/fdef clojure.core/pop
+  :args (s/cat :coll (s/nilable ::ss/non-empty-stack))
+  :ret (s/nilable ::ss/stack))
+
 ;; 1494
 (s/fdef clojure.core/get
   :args (s/cat :map ::ss/any

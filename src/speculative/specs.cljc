@@ -156,6 +156,19 @@
                                           (s/gen ::map-entry)
                                           (s/gen ::sequential)]))))
 
+(s/def ::stack
+  (s/with-gen
+    #?(:cljs #(satisfies? IStack %)
+       :clj #(instance? clojure.lang.IPersistentStack %))
+    (fn []
+      (s/gen (s/or :vector vector?
+                   :list list?)))))
+
+(s/def ::non-empty-stack
+  (s/with-gen
+    (s/and ::stack not-empty)
+    (fn [] (gen/not-empty (s/gen ::stack)))))
+
 ;;;; Scratch
 
 (comment
