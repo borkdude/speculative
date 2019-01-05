@@ -9,133 +9,24 @@
    [speculative.set]
    [speculative.string]
    [speculative.impl :as impl]
+   [speculative.impl.syms :as syms]
    [clojure.spec.test.alpha])
   #?(:cljs
      (:require-macros
       [speculative.instrument :refer [instrument
                                       unstrument]])))
 
-(def instrumentable-syms
-  "instrumentable symbols for both clj and cljs. commented out symbols
-  have no point of being instrumented, since there is almost no way to
-  call them with wrong arguments, or they are not instrumentable for
-  all enviroments."
-  `[;;;; clojure.core
-    cons
-    first
-    ;; next (not instrumentable for CLJS)
-    rest
-    conj
-    assoc
-    last
-    not
-    ;; some?
-    ;; str
-    ;; apply (not instrumentable for CLJS)
-    ;; =
-    count
-    nth
-    inc
-    +
-    *
-    /
-    -
-    dec
-    min
-    max
-    peek
-    pop
-    ;; get
-    find
-    select-keys
-    swap!
-    reset!
-    juxt
-    every?
-    not-every?
-    partial
-    some
-    not-any?
-    map
-    filter
-    remove
-    range
-    merge
-    merge-with
-    re-pattern
-    re-seq
-    re-matches
-    re-find
-    subs
-    max-key
-    min-key
-    interpose
-    get-in
-    assoc-in
-    fnil
-    reduce
-    into
-    flatten
-    group-by
-    keep
-
-    ;;;; clojure.string
-    str/starts-with?
-    str/ends-with?
-
-    ;;;; clojure.set
-    set/union
-    set/intersection
-    set/difference
-    set/select
-    set/project
-    set/rename-keys
-    set/rename
-    set/index
-    set/map-invert
-    set/join
-    set/subset?
-    set/superset?])
-
-(def instrumentable-syms-clj
-  (into instrumentable-syms `[next
-                              apply
-                              re-matcher
-                              re-groups]))
-
-(def instrumentable-syms-cljs
-  instrumentable-syms)
-
 (impl/deftime
 
   (defmacro instrument []
-    (let [instrumentable-syms
-          (impl/? :clj instrumentable-syms-clj :cljs instrumentable-syms-cljs)
-          syms (mapv
-                (fn [sym]
-                  (let [ns (namespace sym)
-                        ns (impl/? :cljs
-                                   (str/replace ns #"^clojure\.core" "cljs.core")
-                                   :clj ns)
-                        sym (symbol ns (name sym))]
-                    (list 'quote sym)))
-                instrumentable-syms)]
-      `(impl/instrument* ~syms)))
+    `(impl/instrument* ~(impl/?
+                         :clj 'speculative.impl.syms/instrumentable-syms-clj
+                         :cljs 'speculative.impl.syms/instrumentable-syms-cljs)))
 
   (defmacro unstrument []
-    (let [instrumentable-syms
-          (impl/? :clj instrumentable-syms-clj :cljs instrumentable-syms-cljs)
-          syms (mapv
-                (fn [sym]
-                  [sym]
-                  (let [ns (namespace sym)
-                        ns (impl/? :cljs
-                                   (str/replace ns #"^clojure\.core" "cljs.core")
-                                   :clj ns)
-                        sym (symbol ns (name sym))]
-                    (list 'quote sym)))
-                instrumentable-syms)]
-      `(impl/unstrument* ~syms))))
+    `(impl/unstrument* ~(impl/?
+                         :clj 'speculative.impl.syms/instrumentable-syms-clj
+                         :cljs 'speculative.impl.syms/instrumentable-syms-cljs))))
 
 (defn fixture
   "Fixture that can be used with clojure.test"

@@ -1,6 +1,4 @@
-# Speculative style guide
-
-All of these are style recommendations, no hard rules.
+# Speculative contributor guidelines
 
 ## Spec
 
@@ -69,6 +67,21 @@ Example:
     (testing "non-coll arg"
       (is (caught? `interpose (interpose 0 0))))))
 ```
+
+## Instrumentable syms
+
+After writing a new spec, for it to be instrumentable using
+`speculative.instrument/instrument`, run:
+
+    clj -A:test -m speculative.update-syms
+
+This will update the file `src/speculative/impl/syms.cljc`.  Next, update the
+number of instrumentable symbols in
+`speculative.instrument-test/instrument-test`.
+
+Some functions will not instrumentable on all environments or have no point in
+being instrumented (e.g. `some?`, `str`). In that case you can update the
+blacklist(s) in `test/speculative/update_syms.clj`.
 
 ## Commit style
 
