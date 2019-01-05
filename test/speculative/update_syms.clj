@@ -4,6 +4,7 @@
    [clojure.spec.test.alpha :as stest]
    [clojure.string :as str]
    [speculative.core]
+   [speculative.impl.syms :as prev-syms]
    [speculative.set]
    [speculative.string]))
 
@@ -35,21 +36,56 @@
 (def all-syms (stest/instrumentable-syms))
 (def all-syms-clj all-syms)
 (def all-syms-cljs (cljsify (disj all-syms `re-matcher `re-groups)))
-(def blacklist `[not some? str = get])
+(def blacklist (set `[not some? str = get]))
 (def blacklist-clj blacklist)
 (def blacklist-cljs (cljsify (into blacklist `[next str apply =])))
 (def instrumentable-syms-clj (set/difference all-syms-clj blacklist-clj))
 (def instrumentable-syms-cljs (set/difference all-syms-cljs blacklist-cljs))
 
 (defn -main [& args]
-  (spit "src/speculative/impl/syms.cljc" (format template
-                                                 all-syms-clj
-                                                 all-syms-cljs
-                                                 blacklist-clj
-                                                 blacklist-cljs
-                                                 instrumentable-syms-clj
-                                                 instrumentable-syms-cljs))
-  (println "Update instrumentable-sym-counts in test/speculative/update_syms.clj with"
-           (zipmap [:clj :cljs]
-                   (map count [instrumentable-syms-clj
-                               instrumentable-syms-cljs]))))
+  (println "==== Changes")
+  (println "all-syms-clj"
+           "added"
+           (set/difference all-syms-clj prev-syms/all-syms-clj)
+           "removed"
+           (set/difference prev-syms/all-syms-clj all-syms-clj))
+  (println "all-syms-cljs"
+           "added"
+           (set/difference all-syms-cljs prev-syms/all-syms-cljs)
+           "removed"
+           (set/difference prev-syms/all-syms-cljs all-syms-cljs))
+  (println "blacklist-clj"
+           "added"
+           (set/difference blacklist-clj prev-syms/blacklist-clj)
+           "removed"
+           (set/difference prev-syms/blacklist-clj blacklist-clj))
+  (println "blacklist-cljs"
+           "added"
+           (set/difference blacklist-cljs prev-syms/blacklist-cljs)
+           "removed"
+           (set/difference prev-syms/blacklist-cljs blacklist-cljs))
+  (println "instrumentable-syms-clj"
+           "added"
+           (set/difference instrumentable-syms-clj prev-syms/instrumentable-syms-clj)
+           "removed"
+           (set/difference prev-syms/instrumentable-syms-clj instrumentable-syms-clj))
+  (println "instrumentable-syms-cljs"
+           "added"
+           (set/difference instrumentable-syms-cljs prev-syms/instrumentable-syms-cljs)
+           "removed"
+           (set/difference prev-syms/instrumentable-syms-cljs instrumentable-syms-cljs))
+  (println "=====")
+  (println "Update src/speculative/impl/syms.cljc with changes? Y/n")
+  (let [s (read-line)]
+    (when (= "Y" s)
+      (spit "src/speculative/impl/syms.cljc" (format template
+                                                     all-syms-clj
+                                                     all-syms-cljs
+                                                     blacklist-clj
+                                                     blacklist-cljs
+                                                     instrumentable-syms-clj
+                                                     instrumentable-syms-cljs))
+      (println "Update instrumentable-sym-counts in test/speculative/update_syms.clj with"
+               (zipmap [:clj :cljs]
+                       (map count [instrumentable-syms-clj
+                                   instrumentable-syms-cljs]))))))
