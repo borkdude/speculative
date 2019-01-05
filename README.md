@@ -197,7 +197,8 @@ any contributer to this repo needs to have a [Contributor
 Agreement](https://clojure.org/community/contributing) for Clojure so that any
 code in speculative can be used in either Clojure or Clojurescript.
 
-Please have look at the [style guide](doc/style.md) before submitting a PR.
+Please have look at the [contributor guidelines](CONTRIBUTING.md) before
+submitting a PR.
 
 ## License
 

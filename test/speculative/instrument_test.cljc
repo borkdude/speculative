@@ -7,10 +7,12 @@
    ;; included for self-hosted cljs
    [workarounds-1-10-439.core]))
 
+(def instrumentable-sym-counts {:clj 68 :cljs 64})
 
 (deftest instrument-test
   (testing "speculative specs should be instrumentable and unstrumentable"
-    (let [spec-count #?(:clj 69 :cljs 65)
+    (let [spec-count #?(:clj (:clj instrumentable-sym-counts)
+                        :cljs (:cljs instrumentable-sym-counts))
           instrumented (instrument/instrument)
           unstrumented (instrument/unstrument)]
       (is (= spec-count (count instrumented)))
