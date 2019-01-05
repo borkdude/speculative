@@ -239,6 +239,24 @@
   (with-instrumentation `max
     (is (caught? `max (apply max ["0" "1"])))))
 
+;; 1459
+(deftest peek-test
+  (is (nil? (check-call `peek [nil])))
+  (is (check-call `peek [[1 2 3]]))
+  (is (check-call `peek [(list 1 2 3)]))
+  (check `peek)
+  (with-instrumentation `peek
+    (is (caught? `peek (peek 1)))))
+
+;; 1467
+(deftest pop-test
+  (is (nil? (check-call `pop [nil])))
+  (is (check-call `pop [[1 2 3]]))
+  (is (check-call `pop [(list 1 2 3)]))
+  (check `pop)
+  (with-instrumentation `pop
+    (is (caught? `pop (pop 1)))))
+
 ;; 1494
 (deftest get-test
   (is (= 'foo (check-call `get [#{'foo} 'foo 'bar])))

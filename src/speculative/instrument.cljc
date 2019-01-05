@@ -43,6 +43,8 @@
     dec
     min
     max
+    peek
+    pop
     ;; get
     find
     select-keys
