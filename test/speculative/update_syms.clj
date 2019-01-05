@@ -11,13 +11,13 @@
 (def template "(ns speculative.impl.syms
   (:require [clojure.set] [clojure.string]))
 
-(def all-syms-clj '%s)
-(def all-syms-cljs '%s)
-(def blacklist-clj '%s)
-(def blacklist-cljs '%s)
-(def instrumentable-syms-clj '%s)
-(def instrumentable-syms-cljs '%s)
-")
+  (def all-syms-clj '%s)
+  (def all-syms-cljs '%s)
+  (def blacklist-clj '%s)
+  (def blacklist-cljs '%s)
+  (def instrumentable-syms-clj '%s)
+  (def instrumentable-syms-cljs '%s)
+  ")
 
 (defn cljsify [syms]
   (set
@@ -77,15 +77,14 @@
   (println "=====")
   (println "Update src/speculative/impl/syms.cljc with changes? Y/n")
   (let [s (read-line)]
-    (when (= "Y" s)
-      (spit "src/speculative/impl/syms.cljc" (format template
-                                                     all-syms-clj
-                                                     all-syms-cljs
-                                                     blacklist-clj
-                                                     blacklist-cljs
-                                                     instrumentable-syms-clj
-                                                     instrumentable-syms-cljs))
-      (println "Update instrumentable-sym-counts in test/speculative/update_syms.clj with"
-               (zipmap [:clj :cljs]
-                       (map count [instrumentable-syms-clj
-                                   instrumentable-syms-cljs]))))))
+    (if (= "Y" s)
+      (do
+        (spit "src/speculative/impl/syms.cljc" (format template
+                                                       all-syms-clj
+                                                       all-syms-cljs
+                                                       blacklist-clj
+                                                       blacklist-cljs
+                                                       instrumentable-syms-clj
+                                                       instrumentable-syms-cljs))
+        (println "Succesfully wrote file."))
+      (println "Not updated file."))))
