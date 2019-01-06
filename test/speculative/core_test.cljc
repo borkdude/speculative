@@ -84,6 +84,21 @@
   (with-instrumentation `conj
     (is (caught? `conj (conj 1)))))
 
+;; 126
+(deftest seq-test
+  (is (nil? (check-call `seq [nil])))
+  (is (nil? (check-call `seq [[]])))
+  (is (check-call `seq [[1 2]]))
+  (is (check-call `seq ["abc"]))
+  (is (check-call `seq [(int-array [1 2 3])]))
+  (check `seq)
+  #?(:clj (with-instrumentation
+            `seq
+            (testing "wrong arity"
+              (is (caught? `seq (seq [1 2 3] [1 2 3]))))
+            (testing "wrong type"
+              (is (caught? `seq (seq :x)))))))
+
 ;; 181
 (deftest assoc-test
   (is (check-call `assoc [nil 'lol 'lol]))

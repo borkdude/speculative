@@ -58,6 +58,7 @@
     clojure.core/reset!
     clojure.core/rest
     clojure.core/select-keys
+    clojure.core/seq
     clojure.core/some
     clojure.core/some?
     clojure.core/str
@@ -133,6 +134,7 @@
     cljs.core/reset!
     cljs.core/rest
     cljs.core/select-keys
+    cljs.core/seq
     cljs.core/some
     cljs.core/some?
     cljs.core/str
@@ -169,6 +171,7 @@
     cljs.core/list
     cljs.core/next
     cljs.core/not
+    cljs.core/seq
     cljs.core/some?
     cljs.core/str
     cljs.core/nil?})
@@ -226,6 +229,7 @@
     clojure.core/reset!
     clojure.core/rest
     clojure.core/select-keys
+    clojure.core/seq
     clojure.core/some
     clojure.core/subs
     clojure.core/swap!
