@@ -2,7 +2,7 @@
 
 Issues are sorted by date from newest to oldest.
 
-## Open
+## Unfixed or unreleased
 
 - [Instrumenting next gives maximum call stack size exceeded](https://dev.clojure.org/jira/browse/CLJS-3023) (CLJS)
 - [Spec'ed fn doesn't throw when called lazily](https://dev.clojure.org/jira/browse/CLJ-2443) (CLJ)
@@ -11,8 +11,9 @@ Issues are sorted by date from newest to oldest.
 - [stest/unstrument is called at unexpected time when used in finally block](https://dev.clojure.org/jira/browse/CLJS-2949) (CLJS)
 - [Remove useless call to merge](https://github.com/juxt/yada/pull/246) (juxt/yada)
 
-## Fix released
+## Fixed and released
 
+- [+ can't be instrumented in Planck REPL](https://github.com/borkdude/speculative/issues/214) (Planck)
 - [Instrumented self-calling multi-arity fn throws maximum call stack exceeded with optimizations advanced](https://dev.clojure.org/jira/browse/CLJS-2995) (CLJS)
 - [re-seq is relying on undefined behavior of subs](https://dev.clojure.org/jira/browse/CLJS-2979) (CLJS)
 - [unstrument returns symbol of non-instrumented var](https://dev.clojure.org/jira/browse/CLJS-2975) (CLJS)
