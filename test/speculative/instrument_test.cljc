@@ -7,8 +7,6 @@
    ;; included for self-hosted cljs
    [workarounds-1-10-439.core]))
 
-(def instrumentable-sym-counts {:clj 68 :cljs 64})
-
 (deftest instrument-test
   (testing "speculative specs should be instrumentable and unstrumentable"
     (let [instrumented (instrument/instrument)
