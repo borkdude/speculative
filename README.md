@@ -159,7 +159,7 @@ ClojureScript on Node. The script `script/test` automatically calls
 
 ## Try online
 
-[KLIPSE REPL](http://bit.ly/speculative-repl) with speculative and
+[KLIPSE REPL](https://re-find.it/speculative-repl) with speculative and
 [expound](https://github.com/bhb/expound).
 
 ## Origins
