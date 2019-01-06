@@ -38,6 +38,7 @@
     clojure.core/min
     clojure.core/min-key
     clojure.core/next
+    clojure.core/nil?
     clojure.core/not
     clojure.core/not-any?
     clojure.core/not-every?
@@ -114,6 +115,7 @@
     cljs.core/min
     cljs.core/min-key
     cljs.core/next
+    cljs.core/nil?
     cljs.core/not
     cljs.core/not-any?
     cljs.core/not-every?
@@ -157,7 +159,8 @@
     clojure.core/list
     clojure.core/not
     clojure.core/some?
-    clojure.core/str})
+    clojure.core/str
+    clojure.core/nil?})
 (def
  blacklist-cljs
  '#{cljs.core/=
@@ -167,7 +170,8 @@
     cljs.core/next
     cljs.core/not
     cljs.core/some?
-    cljs.core/str})
+    cljs.core/str
+    cljs.core/nil?})
 (def
  instrumentable-syms-clj
  '#{clojure.core/*
@@ -203,6 +207,7 @@
     clojure.core/min
     clojure.core/min-key
     clojure.core/next
+    clojure.core/nil?
     clojure.core/not-any?
     clojure.core/not-every?
     clojure.core/nth
@@ -271,6 +276,7 @@
     cljs.core/merge-with
     cljs.core/min
     cljs.core/min-key
+    cljs.core/nil?
     cljs.core/not-any?
     cljs.core/not-every?
     cljs.core/nth

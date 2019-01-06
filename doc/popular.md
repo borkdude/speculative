@@ -14,7 +14,7 @@ symbol,count
 # assoc,29215
 # count,28660
 # not,24785
-nil?,21570
+# nil?,21570
 # +,19170
 # get,18547
 # *,16945
@@ -34,7 +34,7 @@ instance?,12674
 # get-in,10604
 # merge,10506
 empty?,10495
-list,9523
+# list,9523
 format,9508
 # rest,8766
 <,8618
