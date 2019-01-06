@@ -24,8 +24,8 @@
   (is (check-call `list []))
   (is (check-call `list [1 2 3]))
   (check `list)
-  ;; there's no way to make list crash
-  )
+  (is (with-instrumentation `list "NOTE: no failure possible")))
+
 
 ;; 22
 (deftest cons-test
@@ -109,6 +109,16 @@
   (with-instrumentation `last
     (testing "wrong type"
       (is (caught? `last (last 1))))))
+
+;; 436
+(deftest nil?-test
+  (is (check-call `nil? [nil]))
+  (is (not (check-call `nil? [:whatever])))
+  (check `nil?)
+  (with-instrumentation
+    `nil?
+    (testing "wrong arity"
+      (is (caught? `nil? (apply nil? [:arg-one :arg-two]))))))
 
 ;; 524
 (deftest not-test

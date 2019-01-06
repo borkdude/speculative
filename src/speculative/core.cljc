@@ -54,6 +54,11 @@
   :args (s/cat :coll ::ss/seqable)
   :ret ::ss/any)
 
+;; 436
+(s/fdef clojure.core/nil?
+  :args (s/cat :x ::ss/any)
+  :ret ::ss/boolean)
+
 ;; 524
 (s/fdef clojure.core/not
   :args (s/cat :x ::ss/any)
