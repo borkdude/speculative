@@ -19,6 +19,14 @@
 ;; sorted in order of appearance in
 ;; https://github.com/clojure/clojure/blob/master/src/clj/clojure/core.clj
 
+;; 16
+(deftest list-test
+  (is (check-call `list []))
+  (is (check-call `list [1 2 3]))
+  (check `list)
+  ;; there's no way to make list crash
+  )
+
 ;; 22
 (deftest cons-test
   (is (check-call `cons [:x nil]))

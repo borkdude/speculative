@@ -73,7 +73,7 @@ Example:
 After writing a new spec, for it to be instrumentable using
 `speculative.instrument/instrument`, run:
 
-    clj -A:test -m speculative.update-syms
+    script/update-syms
 
 This will update the file `src/speculative/impl/syms.cljc`.
 

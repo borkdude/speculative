@@ -169,6 +169,8 @@
     (s/and ::stack not-empty)
     (fn [] (gen/not-empty (s/gen ::stack)))))
 
+(s/def ::list list?)
+
 ;;;; Scratch
 
 (comment

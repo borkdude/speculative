@@ -8,6 +8,11 @@
 ;; fdefs sorted in order of appearance in
 ;; https://github.com/clojure/clojure/blob/master/src/clj/clojure/core.clj
 
+;; 16
+(s/fdef clojure.core/list
+  :args (s/cat :items (s/* ::ss/any))
+  :ret ::ss/list)
+
 ;; 22
 (s/fdef clojure.core/cons
   :args (s/cat :x ::ss/any :seq ::ss/seqable)
