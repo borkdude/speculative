@@ -256,6 +256,9 @@
                            :rest-maps (s/* ::ss/seqable-of-map-entry))))
   :ret (s/nilable map?))
 
+;; 3071
+;; zipmap, see https://github.com/borkdude/speculative/issues/216
+
 ;; 4839
 (s/fdef clojure.core/re-pattern
   :args (s/cat :s ::ss/string)
