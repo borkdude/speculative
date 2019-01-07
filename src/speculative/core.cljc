@@ -39,6 +39,11 @@
                :args (s/cat :coll ::ss/conjable :xs (s/* ::ss/any)))
   :ret ::ss/conjable)
 
+;; 126
+(s/fdef clojure.core/seq
+  :args (s/cat :coll ::ss/seqable)
+  :ret (s/nilable ::ss/seq))
+
 ;; 181 assoc
 ;; defined separately to make overridable generator
 (s/def ::assoc-args
