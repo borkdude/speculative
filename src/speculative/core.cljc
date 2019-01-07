@@ -26,12 +26,12 @@
 ;; 57
 (s/fdef clojure.core/next
   :args (s/cat :coll ::ss/seqable)
-  :ret ::ss/seqable)
+  :ret (s/nilable ::ss/seq))
 
 ;; 66
 (s/fdef clojure.core/rest
   :args (s/cat :coll ::ss/seqable)
-  :ret ::ss/seqable)
+  :ret ::ss/seq)
 
 ;; 75
 (s/fdef clojure.core/conj
@@ -216,9 +216,7 @@
 (s/fdef clojure.core/map
   :args (s/alt :transducer (s/cat :xf ::ss/transducer)
                :seqable (s/cat :f ::ss/ifn :colls (s/+ ::ss/seqable)))
-  :ret ::ss/seqable-or-transducer
-  :fn (fn [{:keys [args ret]}]
-        (= (key args) (key ret))))
+  :ret ::ss/seq-or-transducer)
 
 ;; 2793
 (s/def ::filter-fn-args
@@ -227,16 +225,12 @@
 
 (s/fdef clojure.core/filter
   :args ::filter-fn-args
-  :ret ::ss/seqable-or-transducer
-  :fn (fn [{:keys [args ret]}]
-        (= (key args) (key ret))))
+  :ret ::ss/seq-or-transducer)
 
 ;; 2826
 (s/fdef clojure.core/remove
   :args ::filter-fn-args
-  :ret ::ss/seqable-or-transducer
-  :fn (fn [{:keys [args ret]}]
-        (= (key args) (key ret))))
+  :ret ::ss/seq-or-transducer)
 
 ;; 3019
 (s/fdef clojure.core/range
@@ -322,9 +316,7 @@
 (s/fdef clojure.core/interpose
   :args (s/alt :transducer (s/cat :sep ::ss/any)
                :seqable (s/cat :sep ::ss/any :coll ::ss/seqable))
-  :ret ::ss/seqable-or-transducer
-  :fn (fn [{:keys [args ret]}]
-        (= (key args) (key ret))))
+  :ret ::ss/seq-or-transducer)
 
 (s/def ::get-in-args
   (s/cat :map (s/nilable ::ss/associative)
@@ -381,9 +373,7 @@
 ;; 7313
 (s/fdef clojure.core/keep
   :args ::filter-fn-args
-  :ret ::ss/seqable-or-transducer
-  :fn (fn [{:keys [args ret]}]
-        (= (key args) (key ret))))
+  :ret ::ss/seq-or-transducer)
 
 ;;;; Scratch
 
