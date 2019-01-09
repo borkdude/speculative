@@ -329,14 +329,11 @@
   :fn (fn [{:keys [args ret]}]
         (= (key args) (key ret))))
 
-(s/def ::get-in-args
-  (s/cat :map (s/nilable ::ss/associative)
-         :keys (s/coll-of ::ss/any :min-elements 1 :kind sequential?)))
-
 ;; 6142
 (s/fdef clojure.core/get-in
   :args (s/cat :map (s/nilable ::ss/associative)
-               :keys ::ss/non-empty-sequential)
+               :keys (s/nilable ::ss/sequential)
+               :not-found (s/? ::ss/any))
   :ret ::ss/any)
 
 ;; 6152

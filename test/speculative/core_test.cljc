@@ -577,6 +577,9 @@
   (is (nil? (check-call `get-in [nil [:a]])))
   (is (= 1 (check-call `get-in [{:a {:b 1}} [:a :b]])))
   (is (= 1 (check-call `get-in [[[1]] [0 0]])))
+  (is (= {:a 1} (check-call `get-in [{:a 1} []])))
+  (is (= {:a 1} (check-call `get-in [{:a 1} nil])))
+  (is (= :not-found (check-call `get-in [{:a 1} [:b] :not-found])))
   (check `get-in)
   (with-instrumentation `get-in
     (testing "first arg not an associative/nil"
