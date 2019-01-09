@@ -445,6 +445,14 @@
     ;; the following is no longer allowed in CLJS, see CLJS-2943
     (is (caught? `merge-with (merge-with + {:a 1} [[:a 2]])))))
 
+(deftest zipmap-test
+  (is (check-call `zipmap [nil nil]))
+  (is (check-call `zipmap [[:a :b :c] [1 2 3]]))
+  (check `zipmap)
+  (with-instrumentation `zipmap
+    (is (caught? `zipmap (zipmap 1 [:a])))
+    (is (caught? `zipmap (zipmap [:a] 1)))))
+
 ;; 4839
 (deftest re-pattern-test
   (is (check-call `re-pattern ["s"]))
