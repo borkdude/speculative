@@ -262,7 +262,10 @@
   :ret (s/nilable map?))
 
 ;; 3071
-;; zipmap, see https://github.com/borkdude/speculative/issues/216
+(s/fdef clojure.core/zipmap
+  :args (s/cat :keys ::ss/seqable
+               :vals ::ss/seqable)
+  :ret ::ss/map)
 
 ;; 4839
 (s/fdef clojure.core/re-pattern
