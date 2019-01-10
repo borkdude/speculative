@@ -315,6 +315,21 @@
     (is (caught? `select-keys (select-keys 1 [])))
     (is (caught? `select-keys (select-keys {} 1)))))
 
+;; 2327
+(deftest atom-test
+  (is (check-call `atom [(atom :val)]))
+  (is (check-call `atom [(atom 5 :validator int?)]))
+  (is (check-call `atom [(atom 5 :meta {:this-is :meta-data})]))
+  ;; gentest omitted
+  (with-instrumentation
+    `atom
+    (testing "wrong arity"
+      (is (caught? `atom (atom))))
+    (testing "Provided :validator not a function"
+      (is (caught? `atom (atom 5 :validator 123))))
+    (testing "Provided meta not a map"
+      (is (caught? `atom (atom 5 :meta 123))))))
+
 ;; 2345
 (deftest swap!-test
   (is (nil? (check-call `swap! [(atom nil) identity])))

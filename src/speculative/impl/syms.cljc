@@ -10,6 +10,7 @@
     clojure.core/apply
     clojure.core/assoc
     clojure.core/assoc-in
+    clojure.core/atom
     clojure.core/conj
     clojure.core/cons
     clojure.core/count
@@ -64,6 +65,7 @@
     clojure.core/str
     clojure.core/subs
     clojure.core/swap!
+    clojure.core/zipmap
     clojure.set/difference
     clojure.set/index
     clojure.set/intersection
@@ -88,6 +90,7 @@
     cljs.core/apply
     cljs.core/assoc
     cljs.core/assoc-in
+    cljs.core/atom
     cljs.core/conj
     cljs.core/cons
     cljs.core/count
@@ -140,6 +143,7 @@
     cljs.core/str
     cljs.core/subs
     cljs.core/swap!
+    cljs.core/zipmap
     clojure.set/difference
     clojure.set/index
     clojure.set/intersection
@@ -184,6 +188,7 @@
     clojure.core/apply
     clojure.core/assoc
     clojure.core/assoc-in
+    clojure.core/atom
     clojure.core/conj
     clojure.core/cons
     clojure.core/count
@@ -233,6 +238,7 @@
     clojure.core/some
     clojure.core/subs
     clojure.core/swap!
+    clojure.core/zipmap
     clojure.set/difference
     clojure.set/index
     clojure.set/intersection
@@ -255,6 +261,7 @@
     cljs.core//
     cljs.core/assoc
     cljs.core/assoc-in
+    cljs.core/atom
     cljs.core/conj
     cljs.core/cons
     cljs.core/count
@@ -300,6 +307,7 @@
     cljs.core/some
     cljs.core/subs
     cljs.core/swap!
+    cljs.core/zipmap
     clojure.set/difference
     clojure.set/index
     clojure.set/intersection

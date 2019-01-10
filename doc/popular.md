@@ -19,8 +19,8 @@ symbol,count
 # get,18547
 # *,16945
 println,16419
-seq,15683
-atom,14024
+# seq,15683
+# atom,14024
 # reduce,13785
 # -,13236
 name,12880
