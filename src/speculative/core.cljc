@@ -385,6 +385,11 @@
           (= (count coll)
              (reduce + (map count (vals ret)))))))
 
+;; 7160
+(s/fdef clojure.core/partition-by
+  :args ::filter-fn-args
+  :ret ::ss/seq-or-transducer)
+
 ;; 7313
 (s/fdef clojure.core/keep
   :args ::filter-fn-args
