@@ -174,6 +174,13 @@
                :keyseq ::ss/seqable)
   :ret ::ss/map)
 
+;; 2327
+(s/def :atom/validator ::ss/ifn)
+(s/def :atom/meta ::ss/map)
+(s/fdef clojure.core/atom
+  :args (s/cat :x ::ss/any :options (s/keys* :opt-un [:atom/validator :atom/meta]))
+  :ret ::ss/atom)
+
 ;; 2345
 (s/fdef clojure.core/swap!
   :args (s/cat :atom ::ss/atom :f ::ss/ifn :args (s/* ::ss/any)))
