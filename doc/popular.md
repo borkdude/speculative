@@ -18,7 +18,6 @@ symbol,count
 # +,19170
 # get,18547
 # *,16945
-println,16419
 # seq,15683
 # atom,14024
 # reduce,13785
@@ -114,7 +113,7 @@ vector,2298
 with-out-str,2282
 seq?,2189
 drop,2181
-zipmap,2057
+# zipmap,2057
 reverse,2034
 satisfies?,1939
 # re-matches,1909
