@@ -12,15 +12,12 @@
 
 (defn cljsify [syms]
   (map
-   (fn [sym]
-     (let [ns (namespace sym)
-           ns (str/replace ns #"^clojure\.core" "cljs.core")
-           sym (symbol ns (name sym))]
-       sym))
-   syms))
-
-(defn ->sorted-set [coll]
-  (apply sorted-set coll))
+    (fn [sym]
+      (let [ns (namespace sym)
+            ns (str/replace ns #"^clojure\.core" "cljs.core")
+            sym (symbol ns (name sym))]
+        sym))
+    syms))
 
 (defn diff [s1 s2]
   (let [[s1 s2]  (data/diff s1 s2)]
@@ -36,18 +33,27 @@
                             (when (not-empty s2)
                               (str "removed" s2))]))))
 
-;; Symbols on blacklist have no point of being instrumented, since there is
-;; almost no way to call them with wrong arguments, or they are not
-;; instrumentable for the enviroment.
+(defn set-missing-ns [ns coll]
+  (map #(if (namespace %)
+          %
+          (symbol ns (str %)))
+       coll))
+
+(let [{:keys [cljs clj base]} (clojure.edn/read-string (slurp "blacklist.edn"))]
+  (def blacklist-clj (->> (into clj base)
+                          (set-missing-ns "clojure.core")
+                          (into (sorted-set))))
+  (def blacklist-cljs (->> (into cljs base)
+                           (set-missing-ns "cljs.core")
+                           (into (sorted-set)))))
 
 (def all-syms (stest/instrumentable-syms))
-(def all-syms-clj (->sorted-set all-syms))
-(def all-syms-cljs (->sorted-set (cljsify (disj all-syms `re-matcher `re-groups))))
-(def blacklist (->sorted-set `[list not some? str = get nil?]))
-(def blacklist-clj (->sorted-set blacklist))
-(def blacklist-cljs (->sorted-set (cljsify (into blacklist `[next str apply = seq]))))
-(def instrumentable-syms-clj (->sorted-set (set/difference all-syms-clj blacklist-clj)))
-(def instrumentable-syms-cljs (->sorted-set (set/difference all-syms-cljs blacklist-cljs)))
+(def all-syms-clj (into (sorted-set) all-syms))
+(def all-syms-cljs (->> (disj all-syms `re-matcher `re-groups) ;; remove symbols missing from cljs
+                        cljsify
+                        (into (sorted-set))))
+(def instrumentable-syms-clj (set/difference all-syms-clj blacklist-clj))
+(def instrumentable-syms-cljs (set/difference all-syms-cljs blacklist-cljs))
 
 (defn -main [& args]
   (println "==== Changes")

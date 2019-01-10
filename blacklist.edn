@@ -1,0 +1,3 @@
+{:base #{list not some? str = get nil?}
+ :clj #{}
+ :cljs #{next apply seq}}
