@@ -43,9 +43,9 @@
 (def all-syms (stest/instrumentable-syms))
 (def all-syms-clj (->sorted-set all-syms))
 (def all-syms-cljs (->sorted-set (cljsify (disj all-syms `re-matcher `re-groups))))
-(def blacklist (->sorted-set `[list not some? str = get]))
+(def blacklist (->sorted-set `[list not some? str = get nil?]))
 (def blacklist-clj (->sorted-set blacklist))
-(def blacklist-cljs (->sorted-set (cljsify (into blacklist `[next str apply =]))))
+(def blacklist-cljs (->sorted-set (cljsify (into blacklist `[next str apply = seq]))))
 (def instrumentable-syms-clj (->sorted-set (set/difference all-syms-clj blacklist-clj)))
 (def instrumentable-syms-cljs (->sorted-set (set/difference all-syms-cljs blacklist-cljs)))
 
