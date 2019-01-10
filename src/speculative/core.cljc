@@ -332,7 +332,7 @@
 ;; 6142
 (s/fdef clojure.core/get-in
   :args (s/cat :map (s/nilable ::ss/associative)
-               :keys (s/nilable ::ss/sequential)
+               :keys ::ss/seqable
                :not-found (s/? ::ss/any))
   :ret ::ss/any)
 
@@ -340,7 +340,7 @@
 ;; defined separately to make overridable generator
 (s/def ::assoc-in-args
   (s/cat :map (s/nilable ::ss/associative)
-         :keys ::ss/non-empty-sequential
+         :keys ::ss/non-empty-seqable
          :val ::ss/any))
 
 (s/fdef clojure.core/assoc-in
