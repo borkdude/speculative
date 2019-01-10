@@ -45,6 +45,7 @@
     clojure.core/not-every?
     clojure.core/nth
     clojure.core/partial
+    clojure.core/partition-by
     clojure.core/peek
     clojure.core/pop
     clojure.core/range
@@ -125,6 +126,7 @@
     cljs.core/not-every?
     cljs.core/nth
     cljs.core/partial
+    cljs.core/partition-by
     cljs.core/peek
     cljs.core/pop
     cljs.core/range
@@ -219,6 +221,7 @@
     clojure.core/not-every?
     clojure.core/nth
     clojure.core/partial
+    clojure.core/partition-by
     clojure.core/peek
     clojure.core/pop
     clojure.core/range
@@ -290,6 +293,7 @@
     cljs.core/not-every?
     cljs.core/nth
     cljs.core/partial
+    cljs.core/partition-by
     cljs.core/peek
     cljs.core/pop
     cljs.core/range

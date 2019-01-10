@@ -688,15 +688,25 @@
     (is (caught? `group-by (group-by 1 (range 10))))
     (is (caught? `group-by (group-by odd? 1)))))
 
+;; 7160
+(deftest partition-by-test
+  (is (check-call `partition-by [odd?]))
+  (is (check-call `partition-by [odd? nil]))
+  (is (check-call `partition-by [odd? (range 5)]))
+  (check `partition-by {:gen {::ss/ifn #(gen/return (fn [x] (rand-nth [true false])))}})
+  (with-instrumentation `partition-by
+    (is (caught? `partition-by (partition-by 1)))
+    (is (caught? `partition-by (partition-by odd? 1)))))
+
 ;; 7313
 (deftest keep-test
   (is (check-call `keep [seq]))
   (is (check-call `keep [seq nil]))
   (is (= '[[1 2 3]] (check-call `keep [seq [[] [1 2 3]]])))
-  (check `keep {:gen {::ss/transducer #(gen/return (map identity))
-                      ::ss/ifn #(gen/return (fn [x] (rand-nth [x nil])))}})
+  (check `keep {:gen {::ss/ifn #(gen/return (fn [x] (rand-nth [x nil])))}})
   (with-instrumentation `keep
-    (is (caught? `keep (keep 1)))))
+    (is (caught? `keep (keep 1)))
+    (is (caught? `keep (keep identity 1)))))
 
 ;;;; Scratch
 
