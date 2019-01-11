@@ -274,6 +274,14 @@
                :vals ::ss/seqable)
   :ret ::ss/map)
 
+;; 3184
+(s/fdef clojure.core/partition
+  :args (s/alt :no-overlap (s/cat :n ::ss/pos-int :coll ::ss/seqable)
+               :step (s/cat :n ::ss/pos-int :step ::ss/pos-int :coll ::ss/seqable)
+               :pad (s/cat :n ::ss/pos-int :step ::ss/pos-int
+                           :pad ::ss/seqable :coll ::ss/seqable))
+  :ret ::ss/seq)
+
 ;; 4839
 (s/fdef clojure.core/re-pattern
   :args (s/cat :s ::ss/string)

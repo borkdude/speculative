@@ -37,6 +37,7 @@
 (s/def ::ifn ifn?)
 (s/def ::int int?)
 (s/def ::nat-int nat-int?)
+(s/def ::pos-int pos-int?)
 (s/def ::iterable iterable?)
 (s/def ::map map?)
 #?(:clj (s/def ::java-map
