@@ -100,8 +100,8 @@
                       (fn []
                         (gen/return (map identity)))))
 
-(s/def ::seq-or-transducer
-  (s/or :seq ::seq
+(s/def ::seqable-or-transducer
+  (s/or :seqable ::seqable
         :transducer ::transducer))
 
 (s/def ::atom
