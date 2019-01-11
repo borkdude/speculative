@@ -94,7 +94,7 @@ contains,2978
 pos?,2948
 aset,2946
 gensym,2798
-partition,2788
+# partition,2788
 symbol?,2738
 long,2620
 lazy-seq,2562

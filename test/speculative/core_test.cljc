@@ -460,6 +460,7 @@
     ;; the following is no longer allowed in CLJS, see CLJS-2943
     (is (caught? `merge-with (merge-with + {:a 1} [[:a 2]])))))
 
+;; 3071
 (deftest zipmap-test
   (is (check-call `zipmap [nil nil]))
   (is (check-call `zipmap [[:a :b :c] [1 2 3]]))
@@ -467,6 +468,20 @@
   (with-instrumentation `zipmap
     (is (caught? `zipmap (zipmap 1 [:a])))
     (is (caught? `zipmap (zipmap [:a] 1)))))
+
+;; 3184
+(deftest partition-test
+  (is (check-call `partition [1 nil]))
+  (is (check-call `partition [1 [1 2 3]]))
+  (is (check-call `partition [2 [1 2 3]]))
+  (is (check-call `partition [2 1 [1 2 3]]))
+  (is (check-call `partition [2 1 (repeat 1) [1 2 3]]))
+  (check `partition)
+  (with-instrumentation `partition
+    (is (caught? `partition (partition [1 2 3] [1 2 3])))
+    (is (caught? `partition (partition 1 1)))
+    (is (caught? `partition (partition 1 [1 2 3] [1 2 3])))
+    (is (caught? `partition (partition 1 1 3 [1 2 3])))))
 
 ;; 4839
 (deftest re-pattern-test
