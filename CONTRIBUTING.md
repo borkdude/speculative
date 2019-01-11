@@ -79,7 +79,7 @@ This will update the file `src/speculative/impl/syms.cljc`.
 
 Some functions will not instrumentable on all environments or have no point in
 being instrumented (e.g. `some?`, `str`). In that case you can update the
-blacklist(s) in `test/speculative/update_syms.clj`.
+blacklist(s) in `blacklist.edn`.
 
 ## Commit style
 
