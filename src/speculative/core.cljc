@@ -174,6 +174,16 @@
                :keyseq ::ss/seqable)
   :ret ::ss/map)
 
+;; 1555
+(s/fdef clojure.core/keys
+  :args (s/cat :map (s/nilable ::ss/map+))
+  :ret ::ss/seqable)
+
+;; 1561
+(s/fdef clojure.core/vals
+  :args (s/cat :map (s/nilable ::ss/map+))
+  :ret ::ss/seqable)
+
 ;; 2327
 (s/def :atom/validator ::ss/ifn)
 (s/def :atom/meta ::ss/map)
