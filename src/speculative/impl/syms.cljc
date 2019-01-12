@@ -29,6 +29,7 @@
     clojure.core/into
     clojure.core/juxt
     clojure.core/keep
+    clojure.core/keys
     clojure.core/last
     clojure.core/list
     clojure.core/map
@@ -67,6 +68,7 @@
     clojure.core/str
     clojure.core/subs
     clojure.core/swap!
+    clojure.core/vals
     clojure.core/zipmap
     clojure.set/difference
     clojure.set/index
@@ -111,6 +113,7 @@
     cljs.core/into
     cljs.core/juxt
     cljs.core/keep
+    cljs.core/keys
     cljs.core/last
     cljs.core/list
     cljs.core/map
@@ -147,6 +150,7 @@
     cljs.core/str
     cljs.core/subs
     cljs.core/swap!
+    cljs.core/vals
     cljs.core/zipmap
     clojure.set/difference
     clojure.set/index
@@ -210,6 +214,7 @@
     clojure.core/into
     clojure.core/juxt
     clojure.core/keep
+    clojure.core/keys
     clojure.core/last
     clojure.core/map
     clojure.core/max
@@ -243,6 +248,7 @@
     clojure.core/some
     clojure.core/subs
     clojure.core/swap!
+    clojure.core/vals
     clojure.core/zipmap
     clojure.set/difference
     clojure.set/index
@@ -284,6 +290,7 @@
     cljs.core/into
     cljs.core/juxt
     cljs.core/keep
+    cljs.core/keys
     cljs.core/last
     cljs.core/map
     cljs.core/max
@@ -313,6 +320,7 @@
     cljs.core/some
     cljs.core/subs
     cljs.core/swap!
+    cljs.core/vals
     cljs.core/zipmap
     clojure.set/difference
     clojure.set/index

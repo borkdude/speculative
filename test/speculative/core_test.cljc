@@ -310,10 +310,29 @@
 (deftest select-keys-test
   (is (check-call `select-keys [nil nil]))
   (is (check-call `select-keys [{:a 1} [:a]]))
+  #?(:clj (is (check-call `select-keys [(java.util.HashMap. {:a 1}) [:a]])))
   (check `select-keys)
   (with-instrumentation `select-keys
     (is (caught? `select-keys (select-keys 1 [])))
     (is (caught? `select-keys (select-keys {} 1)))))
+
+;; 1555
+(deftest keys-test
+  (is (empty? (check-call `keys [nil])))
+  (is (check-call `keys [{:a 1}]))
+  #?(:clj (is (check-call `keys [(java.util.HashMap. {:a 1})])))
+  (check `keys)
+  (with-instrumentation `keys
+    (is (caught? `keys (keys 1)))))
+
+;; 1561
+(deftest vals-test
+  (is (empty? (check-call `vals [nil])))
+  (is (check-call `vals [{:a 1}]))
+  #?(:clj (is (check-call `vals [(java.util.HashMap. {:a 1})])))
+  (check `vals)
+  (with-instrumentation `vals
+    (is (caught? `vals (vals 1)))))
 
 ;; 2327
 (deftest atom-test
