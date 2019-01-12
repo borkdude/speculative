@@ -228,19 +228,17 @@
         (= (key args) (key ret))))
 
 ;; 2793
-(s/def ::filter-fn-args
-  (s/alt :transducer (s/cat :f ::ss/ifn)
-         :seqable (s/cat :f ::ss/ifn :coll ::ss/seqable)))
-
 (s/fdef clojure.core/filter
-  :args ::filter-fn-args
+  :args (s/alt :transducer (s/cat :f ::ss/ifn)
+               :seqable (s/cat :f ::ss/ifn :coll ::ss/seqable))
   :ret ::ss/seqable-or-transducer
   :fn (fn [{:keys [args ret]}]
         (= (key args) (key ret))))
 
 ;; 2826
 (s/fdef clojure.core/remove
-  :args ::filter-fn-args
+  :args (s/alt :transducer (s/cat :f ::ss/ifn)
+               :seqable (s/cat :f ::ss/ifn :coll ::ss/seqable))
   :ret ::ss/seqable-or-transducer
   :fn (fn [{:keys [args ret]}]
         (= (key args) (key ret))))
@@ -280,7 +278,7 @@
                :step (s/cat :n ::ss/pos-int :step ::ss/pos-int :coll ::ss/seqable)
                :pad (s/cat :n ::ss/pos-int :step ::ss/pos-int
                            :pad ::ss/seqable :coll ::ss/seqable))
-  :ret ::ss/seq)
+  :ret ::ss/seqable)
 
 ;; 4839
 (s/fdef clojure.core/re-pattern
@@ -395,12 +393,14 @@
 
 ;; 7160
 (s/fdef clojure.core/partition-by
-  :args ::filter-fn-args
+  :args (s/alt :transducer (s/cat :f ::ss/ifn)
+               :seqable (s/cat :f ::ss/ifn :coll ::ss/seqable))
   :ret ::ss/seqable-or-transducer)
 
 ;; 7313
 (s/fdef clojure.core/keep
-  :args ::filter-fn-args
+  :args (s/alt :transducer (s/cat :f ::ss/ifn)
+               :seqable (s/cat :f ::ss/ifn :coll ::ss/seqable))
   :ret ::ss/seqable-or-transducer
   :fn (fn [{:keys [args ret]}]
         (= (key args) (key ret))))
@@ -411,3 +411,5 @@
   (require '[clojure.spec.test.alpha :as stest])
   (stest/instrument)
   (stest/unstrument))
+
+;;;;
