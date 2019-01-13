@@ -297,6 +297,19 @@
   (with-instrumentation `get
     (is (caught? `get (get)))))
 
+;; 1504
+(deftest dissoc-test
+  (is (empty? (check-call `dissoc [nil])))
+  (is (empty? (check-call `dissoc [{}])))
+  (is (empty? (check-call `dissoc [{} :a])))
+  (is (empty? (check-call `dissoc [{:a 1} :a])))
+  (is (check-call `dissoc [{:a 1 :b 1} :a]))
+  (is (check-call `dissoc [{:a 1 :b 1 :c 1} :a :b]))
+  (is (check-call `dissoc [{"a" 1 "b" 1} "a"]))
+  (check `dissoc)
+  (with-instrumentation `dissoc
+    (is (caught? `dissoc (dissoc [1 2 3] 0)))))
+
 ;; 1534
 (deftest find-test
   (is (nil? (check-call `find [nil nil])))

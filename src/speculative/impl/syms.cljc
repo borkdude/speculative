@@ -15,6 +15,7 @@
     clojure.core/cons
     clojure.core/count
     clojure.core/dec
+    clojure.core/dissoc
     clojure.core/every?
     clojure.core/filter
     clojure.core/find
@@ -99,6 +100,7 @@
     cljs.core/cons
     cljs.core/count
     cljs.core/dec
+    cljs.core/dissoc
     cljs.core/every?
     cljs.core/filter
     cljs.core/find
@@ -201,6 +203,7 @@
     clojure.core/cons
     clojure.core/count
     clojure.core/dec
+    clojure.core/dissoc
     clojure.core/every?
     clojure.core/filter
     clojure.core/find
@@ -277,6 +280,7 @@
     cljs.core/cons
     cljs.core/count
     cljs.core/dec
+    cljs.core/dissoc
     cljs.core/every?
     cljs.core/filter
     cljs.core/find

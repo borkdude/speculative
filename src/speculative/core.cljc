@@ -163,6 +163,11 @@
                :default (s/? ::ss/any))
   :ret ::ss/any)
 
+;; 1504
+(s/fdef clojure.core/dissoc
+  :args (s/cat :map (s/nilable ::ss/map) :keys (s/* ::ss/any))
+  :ret (s/nilable ::ss/map))
+
 ;; 1534
 (s/fdef clojure.core/find
   :args (s/cat :map (s/nilable ::ss/map+) :key ::ss/any)
