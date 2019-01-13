@@ -181,12 +181,12 @@
 
 ;; 1555
 (s/fdef clojure.core/keys
-  :args (s/cat :map (s/nilable ::ss/map+))
+  :args (s/cat :map ::ss/seqable-of-map-entry)
   :ret ::ss/seqable)
 
 ;; 1561
 (s/fdef clojure.core/vals
-  :args (s/cat :map (s/nilable ::ss/map+))
+  :args (s/cat :map ::ss/seqable-of-map-entry)
   :ret ::ss/seqable)
 
 ;; 2327

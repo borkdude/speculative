@@ -72,11 +72,17 @@
                                 #(java.nio.CharBuffer/wrap %)
                                 #(String. %)]))))))
 
+(defn seqable-of
+  "Prevents generating strings and therefore Exceptions during generation"
+  [elt-spec]
+  (s/with-gen (s/coll-of elt-spec :kind seqable?)
+    #(s/gen (s/coll-of elt-spec :kind vector?))))
+
 (s/def ::seqable-of-map-entry
-  (s/coll-of ::map-entry :kind seqable?))
+  (seqable-of ::map-entry))
 
 (s/def ::seqable-of-string
-  (s/coll-of ::string :kind seqable?))
+  (seqable-of ::string))
 
 (s/def ::string-or-seqable-of-string
   (s/or :string ::string

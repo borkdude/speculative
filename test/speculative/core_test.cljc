@@ -333,6 +333,7 @@
 (deftest keys-test
   (is (empty? (check-call `keys [nil])))
   (is (check-call `keys [{:a 1}]))
+  (is (check-call `keys [(seq {:a 1 :b 2})]))
   #?(:clj (is (check-call `keys [(java.util.HashMap. {:a 1})])))
   (check `keys)
   (with-instrumentation `keys
@@ -342,6 +343,7 @@
 (deftest vals-test
   (is (empty? (check-call `vals [nil])))
   (is (check-call `vals [{:a 1}]))
+  (is (check-call `vals [(seq {:a 1 :b 2})]))
   #?(:clj (is (check-call `vals [(java.util.HashMap. {:a 1})])))
   (check `vals)
   (with-instrumentation `vals
