@@ -73,16 +73,17 @@
                                 #(String. %)]))))))
 
 (defn seqable-of
-  "Prevents generating strings and therefore Exceptions during generation"
-  [elt-spec]
-  (s/with-gen (s/coll-of elt-spec :kind seqable?)
-    #(s/gen (s/coll-of elt-spec :kind vector?))))
+  "every is not designed to deal with seqable?, this is a way around it"
+  [spec]
+  (s/with-gen (s/and seqable?
+                     (s/or :empty empty?
+                           :seq (s/and (s/conformer seq)
+                                       (s/every spec))))
+    #(s/gen (s/nilable (s/every spec :kind coll?)))))
 
-(s/def ::seqable-of-map-entry
-  (seqable-of ::map-entry))
+(s/def ::seqable-of-map-entry (seqable-of ::map-entry))
 
-(s/def ::seqable-of-string
-  (seqable-of ::string))
+(s/def ::seqable-of-string (seqable-of ::string))
 
 (s/def ::string-or-seqable-of-string
   (s/or :string ::string
