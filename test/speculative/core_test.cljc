@@ -483,6 +483,7 @@
 (deftest zipmap-test
   (is (check-call `zipmap [nil nil]))
   (is (check-call `zipmap [[:a :b :c] [1 2 3]]))
+  (is (check-call `zipmap [#{"Alex" "Rich" "Stu"} (repeat 0)]))
   (check `zipmap)
   (with-instrumentation `zipmap
     (is (caught? `zipmap (zipmap 1 [:a])))

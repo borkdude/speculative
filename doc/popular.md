@@ -52,7 +52,7 @@ update-in,7266
 >,7223
 meta,6737
 ==,6720
-keys,6616
+# keys,6616
 # next,6535
 map?,6528
 string?,6468
@@ -83,7 +83,7 @@ read-string,3739
 slurp,3732
 keyword?,3679
 identical?,3548
-vals,3431
+# vals,3431
 into-array,3406
 # assoc-in,3315
 reify,3212
