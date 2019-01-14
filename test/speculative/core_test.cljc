@@ -697,8 +697,8 @@
   (is (= {:a {:b 2}} (check-call `update-in [{:a {:b 1}} [:a :b] inc])))
   (is (= [[2]] (check-call `update-in [[[1]] [0 0] inc])))
   (is (= {:a {:b 2}} (check-call `update-in [{:a {:b 1}}
-                                            (into-array [:a :b])
-                                            inc])))
+                                             (into-array [:a :b])
+                                             inc])))
   (check `update-in
          {:gen {::c/update-in-args
                 #(gen/one-of
@@ -711,6 +711,34 @@
                                (gen/tuple (gen/return v)
                                           (gen/bind (gen/choose 0 (max 0 (dec (count v))))
                                                     (fn [i] (gen/return [i])))
+                                          (gen/return (fnil + 1)))))])}})
+  (with-instrumentation `update-in
+    (testing "first arg not an associative/nil"
+      (is (caught? `update-in (update-in '() [0] identity))))
+    (testing "Provided ks not a sequential"
+      (is (caught? `update-in (update-in [] 0 identity))))
+    (testing "Not a ifn?"
+      (is (caught? `update-in (update-in [0] [0] 1))))))
+
+;; 6188
+(deftest update-test
+  (is (check-call `update [[] 0 (fnil + 1)]))
+  (is (check-call `update [{} :a (fnil + 1)]))
+  (is (check-call `update [nil :a (fnil + 1)]))
+  (check `update
+         {:gen {::c/update-args
+                #(gen/one-of
+                  [(gen/bind (gen/map (gen/any) (s/gen number?))
+                             (fn [m]
+                               (let [ks (keys m)]
+                                 (gen/tuple (gen/return m)
+                                            (gen/elements (conj ks :a))
+                                            (gen/return (fnil + 1))))))
+                   (gen/bind (gen/vector (gen/choose 0 10))
+                             (fn [v]
+                               (gen/tuple (gen/return v)
+                                          (gen/bind (gen/choose 0 (max 0 (dec (count v))))
+                                                    (fn [i] (gen/return i)))
                                           (gen/return (fnil + 1)))))])}})
   (with-instrumentation `update-in
     (testing "first arg not an associative/nil"

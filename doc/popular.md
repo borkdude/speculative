@@ -48,7 +48,7 @@ int,7811
 # nth,7628
 second,7565
 contains?,7300
-update-in,7266
+# update-in,7266
 >,7223
 meta,6737
 ==,6720
@@ -139,7 +139,7 @@ prn,1323
 max,1316
 mod,1306
 resolve,1264
-update,1258
+# update,1258
 make-array,1229
 read,1210
 list*,1209
