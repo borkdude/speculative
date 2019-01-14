@@ -375,6 +375,28 @@
   :args ::assoc-in-args
   :ret ::ss/associative)
 
+;; 6172
+(s/def ::update-in-args
+  (s/cat :map (s/nilable ::ss/associative)
+         :keys ::ss/non-empty-seqable
+         :f ::ss/ifn
+         :args (s/* ::ss/any)))
+
+(s/fdef clojure.core/update-in
+  :args ::update-in-args
+  :ret ::ss/associative)
+
+;; 6188
+(s/def ::update-args
+  (s/cat :map (s/nilable ::ss/associative)
+         :key ::ss/any
+         :f ::ss/ifn
+         :args (s/* ::ss/any)))
+
+(s/fdef clojure.core/update
+  :args ::update-args
+  :ret ::ss/associative)
+
 ;; 6536
 (s/fdef clojure.core/fnil
   :args (s/cat :f ::ss/ifn :xs (s/+ ::ss/any))

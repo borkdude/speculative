@@ -69,6 +69,8 @@
     clojure.core/str
     clojure.core/subs
     clojure.core/swap!
+    clojure.core/update
+    clojure.core/update-in
     clojure.core/vals
     clojure.core/zipmap
     clojure.set/difference
@@ -152,6 +154,8 @@
     cljs.core/str
     cljs.core/subs
     cljs.core/swap!
+    cljs.core/update
+    cljs.core/update-in
     cljs.core/vals
     cljs.core/zipmap
     clojure.set/difference
@@ -251,6 +255,8 @@
     clojure.core/some
     clojure.core/subs
     clojure.core/swap!
+    clojure.core/update
+    clojure.core/update-in
     clojure.core/vals
     clojure.core/zipmap
     clojure.set/difference
@@ -324,6 +330,8 @@
     cljs.core/some
     cljs.core/subs
     cljs.core/swap!
+    cljs.core/update
+    cljs.core/update-in
     cljs.core/vals
     cljs.core/zipmap
     clojure.set/difference
