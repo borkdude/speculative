@@ -23,3 +23,10 @@
                      :cljs ::ss/string)
                :substr ::ss/string)
   :ret ::ss/boolean)
+
+(s/fdef str/includes?
+  :args (s/cat :cs #?(:clj  ::ss/char-sequence
+                      :cljs ::ss/string)
+               :s #?(:clj  ::ss/char-sequence
+                     :cljs ::ss/string))
+  :ret ::ss/boolean)
