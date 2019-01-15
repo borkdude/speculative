@@ -58,6 +58,7 @@
 (s/def ::seq seq?)
 (s/def ::non-empty-seq (s/and ::seq not-empty))
 (s/def ::seqable seqable?)
+(s/def ::vector vector?)
 (s/def ::sequential sequential?)
 (s/def ::some some?)
 (s/def ::string string?)

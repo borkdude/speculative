@@ -59,6 +59,16 @@
   :args (s/cat :coll ::ss/seqable)
   :ret ::ss/any)
 
+;; 353
+(s/fdef clojure.core/vector
+  :args (s/* ::ss/any)
+  :ret ::ss/vector)
+
+;; 367
+(s/fdef clojure.core/vec
+  :args (s/cat :coll ::ss/reducible-coll)
+  :ret ::ss/vector)
+
 ;; 436
 (s/fdef clojure.core/nil?
   :args (s/cat :x ::ss/any)
