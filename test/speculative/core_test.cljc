@@ -125,6 +125,26 @@
     (testing "wrong type"
       (is (caught? `last (last 1))))))
 
+;; 353
+(deftest vector-test
+  (is (check-call `vector []))
+  (is (check-call `vector [1 2 3]))
+  (check `vector)
+  (with-instrumentation `vector
+    (testing "instrumentation works"
+      (is (vector)))))
+
+;; 367
+(deftest vec-test
+  (is (check-call `vec [[1 2 3]]))
+  (is (check-call `vec [(into-array [1 2 3])]))
+  (is (check-call `vec ["foo"]))
+  (is (check-call `vec [(eduction (map inc) (range 10))]))
+  (check `vec)
+  (with-instrumentation `vec
+    (testing "not a reducible coll"
+      (is (caught? `vec (vec 1))))))
+
 ;; 436
 (deftest nil?-test
   (is (check-call `nil? [nil]))
