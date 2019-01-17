@@ -11,6 +11,7 @@
     clojure.core/assoc
     clojure.core/assoc-in
     clojure.core/atom
+    clojure.core/comp
     clojure.core/conj
     clojure.core/cons
     clojure.core/count
@@ -72,6 +73,8 @@
     clojure.core/update
     clojure.core/update-in
     clojure.core/vals
+    clojure.core/vec
+    clojure.core/vector
     clojure.core/zipmap
     clojure.set/difference
     clojure.set/index
@@ -98,6 +101,7 @@
     cljs.core/assoc
     cljs.core/assoc-in
     cljs.core/atom
+    cljs.core/comp
     cljs.core/conj
     cljs.core/cons
     cljs.core/count
@@ -157,6 +161,8 @@
     cljs.core/update
     cljs.core/update-in
     cljs.core/vals
+    cljs.core/vec
+    cljs.core/vector
     cljs.core/zipmap
     clojure.set/difference
     clojure.set/index
@@ -203,6 +209,7 @@
     clojure.core/assoc
     clojure.core/assoc-in
     clojure.core/atom
+    clojure.core/comp
     clojure.core/conj
     clojure.core/cons
     clojure.core/count
@@ -258,6 +265,8 @@
     clojure.core/update
     clojure.core/update-in
     clojure.core/vals
+    clojure.core/vec
+    clojure.core/vector
     clojure.core/zipmap
     clojure.set/difference
     clojure.set/index
@@ -282,6 +291,7 @@
     cljs.core/assoc
     cljs.core/assoc-in
     cljs.core/atom
+    cljs.core/comp
     cljs.core/conj
     cljs.core/cons
     cljs.core/count
@@ -333,6 +343,8 @@
     cljs.core/update
     cljs.core/update-in
     cljs.core/vals
+    cljs.core/vec
+    cljs.core/vector
     cljs.core/zipmap
     clojure.set/difference
     clojure.set/index

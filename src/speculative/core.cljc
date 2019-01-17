@@ -212,7 +212,13 @@
 
 ;; 2376
 (s/fdef clojure.core/reset!
-  :args (s/cat :atom ::ss/atom :v ::ss/any))
+  :args (s/cat :atom ::ss/atom :v ::ss/any)
+  :ret ::ss/any)
+
+;; 2557
+(s/fdef clojure.core/comp
+  :args (s/* ::ss/ifn)
+  :ret ::ss/ifn)
 
 ;; 2576
 (s/fdef clojure.core/juxt

@@ -62,7 +62,7 @@ keyword,6338
 symbol,5839
 # dec,5823
 # dissoc,5720
-comp,5305
+# comp,5305
 not=,5286
 float,5175
 # some,5053
