@@ -8,7 +8,7 @@
                                                    :sha "a559201602fc6a21701479b83086d76bd5ed09eb"}
                       org.clojure/test.check {:mvn/version "RELEASE"}
                       respeced {:git/url "https://github.com/borkdude/respeced"
-                                :sha "4e2100d67e7a0d782917102d2362e3ebe0d5e957"}}}
+                                :sha "d13e39fc177c514339d32662ed458e7c20868a6a"}}}
   :repl ;; works for clj and planck, use :cljs-repl for normal cljs
   {:main-opts
    ["-e" "(require,'[speculative.core])"
@@ -49,14 +49,13 @@
   :plk-tests
   {:main-opts ["-m" "speculative.test-runner"]}
   :cost
-  {:main-opts ["-m" "speculative.cost"]
-   :extra-deps {com.taoensso/tufte {:mvn/version "1.4.0"}}}
+  {:main-opts ["-m" "speculative.cost"]}
   :cljs-cost
   {:main-opts ["-m" "cljs.main" "-re" "node" "-m" "speculative.cost"]}
   :coal-mine-clj
   {:extra-deps {github-mfikes/coal-mine
                 {:git/url "https://github.com/mfikes/coal-mine"
-                 :sha "a2012a6d0638caab9ceea40ea839e114564ca1d0"}}
+                 :sha "4ef887f6707ffbce94f05cd6876997290c399665"}}
    :jvm-opts ["-XX:CompressedClassSpaceSize=2g"]
    :main-opts ["-e" "(require,'[patch.clj-2443])"
                "-e" "(require,'[speculative.instrument,:refer,[instrument]])"
@@ -65,7 +64,7 @@
   :coal-mine-cljs
   {:extra-deps {github-mfikes/coal-mine
                 {:git/url "https://github.com/mfikes/coal-mine"
-                 :sha "a2012a6d0638caab9ceea40ea839e114564ca1d0"}}
+                 :sha "4ef887f6707ffbce94f05cd6876997290c399665"}}
    :jvm-opts ["-Xmx6g"]
    :main-opts ["-m" "cljs.main"
                "-co" "{:parallel-build,true}"
@@ -76,7 +75,7 @@
   :coal-mine-runner-clj
   {:extra-deps {github-mfikes/coal-mine
                 {:git/url "https://github.com/mfikes/coal-mine"
-                 :sha "a2012a6d0638caab9ceea40ea839e114564ca1d0"}}
+                 :sha "4ef887f6707ffbce94f05cd6876997290c399665"}}
    :jvm-opts ["-Xmx6g"]
    :main-opts ["-e" "(require,'[speculative.instrument,:refer,[instrument]])"
                "-e" "(instrument)"
@@ -84,7 +83,7 @@
   :coal-mine-runner-cljs
   {:extra-deps {github-mfikes/coal-mine
                 {:git/url "https://github.com/mfikes/coal-mine"
-                 :sha "a2012a6d0638caab9ceea40ea839e114564ca1d0"}}
+                 :sha "4ef887f6707ffbce94f05cd6876997290c399665"}}
    :jvm-opts ["-Xmx6g"]
    :main-opts ["-m" "cljs.main"
                "-co" "{:parallel-build,true}"
