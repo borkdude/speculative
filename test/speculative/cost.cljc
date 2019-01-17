@@ -1,49 +1,55 @@
 (ns speculative.cost
   "Performance cost estimations"
+  (:refer-clojure :exclude [time simple-benchmark])
   (:require
    [speculative.core]
    [speculative.cost.popularity :refer [popularity-map]]
    [respeced.test :as t]
    [clojure.pprint :as pprint]
+   [speculative.impl :as impl]
    [clojure.spec.alpha :as s]
    [clojure.spec.test.alpha :as stest]
-   [workarounds-1-10-439.core]
-   #?(:clj [taoensso.tufte :as tufte :refer [defnp p profiled profile]]
-      :cljs [taoensso.tufte :as tufte :refer-macros [defnp p profiled profile]])
-   #?(:clj [net.cgrand.macrovich :as macros]))
+   [workarounds-1-10-439.core])
   #?(:cljs
-     (:require-macros
-      [net.cgrand.macrovich :as macros]
-      [speculative.cost :refer [cost]])))
-
-(defn mean [res]
-  (-> res second :id-stats-map :cost :mean))
+     (:require-macros [speculative.cost :refer [cost time]])))
 
 (def ^:dynamic *iterations* 100000)
 
 (defn unqualify [sym]
   (symbol (name sym)))
 
-(macros/deftime
+(impl/deftime
+
+  (defmacro time
+    [expr]
+    (impl/? :clj
+       `(let [start# (. System (nanoTime))
+              ret# ~expr]
+          {:ret ret#
+           :ms (/ (double (- (. System (nanoTime)) start#)) 1000000.0)})
+       :cljs
+       `(let [start# (cljs.core/system-time)
+              ret# ~expr]
+          {:ret ret#
+           :ms (- (cljs.core/system-time) start#)})))
+
   (defmacro cost [symbol args]
     `(let [f# (resolve ~symbol)
            args# ~args
            unstrumented#
-           (profiled {}
-                     (dotimes [_# *iterations*]
-                       (p :cost (apply f# args#))))
+           (:ms (time (dotimes [i# *iterations*]
+                        (apply f# args#))))
            instrumented#
            (t/with-instrumentation ~symbol
-             (profiled {}
-                       (dotimes [_# 100000]
-                         (p :cost (apply f# args#)))))
-           cost# (int (/ (mean instrumented#)
-                         (mean unstrumented#)))
+             (:ms (time (dotimes [i# *iterations*]
+                          (apply f# args#)))))
+           slowdown# (int (/ instrumented#
+                         unstrumented#))
            popularity# (get popularity-map (unqualify ~symbol))]
        {:fdef ~symbol
-        :cost cost#
+        :slowdown slowdown#
         :popularity popularity#
-        :penalty (and cost# popularity# (* cost# popularity#))})))
+        :penalty (and slowdown# popularity# (* slowdown# popularity#))})))
 
 (defn costs []
   [(cost `count [(list 1 2 3 4)])]
@@ -60,7 +66,7 @@
    (cost `juxt [:a :b])])
 
 (defn print-cost-table []
-  (pprint/print-table [:fdef :penalty :cost :popularity]
+  (pprint/print-table [:fdef :slowdown :popularity :penalty]
                       (sort-by (comp (fnil - 0) :penalty)
                                (costs))))
 
