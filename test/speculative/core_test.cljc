@@ -400,6 +400,15 @@
   (with-instrumentation `reset!
     (is (caught? `reset! (reset! 1 (atom nil))))))
 
+;; 2557
+(deftest comp-test
+  (is (check-call `comp []))
+  (is (check-call `comp [inc]))
+  (is (check-call `comp [inc inc]))
+  (check `comp {:gen {::ss/ifn #(gen/return inc)}})
+  (with-instrumentation `comp
+    (is (caught? `comp (comp 1 2 3)))))
+
 ;; 2576
 (deftest juxt-text
   (is (= [1 2] ((check-call `juxt [:a :b]) {:a 1 :b 2})))
