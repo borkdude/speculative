@@ -839,6 +839,19 @@
     (is (caught? `partition-by (partition-by 1)))
     (is (caught? `partition-by (partition-by odd? 1)))))
 
+;; 7240
+(deftest partition-all-test
+  (is (check-call `partition-all [2]))
+  (is (check-call `partition-all [2 nil]))
+  (is (check-call `partition-all [2 (range 5)]))
+  (is (check-call `partition-all [2 1 (range 5)]))
+  (check `partition-all)
+  (with-instrumentation `partition-all
+    ;; on Clojure this call doesn't work, because of CLJ-1941
+    #?(:cljs (is (caught? `partition-all (partition-all -1))))
+    (is (caught? `partition-all (partition-all 2 1)))
+    (is (caught? `partition-all (partition-all 2 1 1)))))
+
 ;; 7313
 (deftest keep-test
   (is (check-call `keep [seq]))

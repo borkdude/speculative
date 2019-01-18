@@ -1,3 +1,11 @@
-{:base #{list not some? str = get nil?}
- :clj #{}
- :cljs #{next apply seq}}
+{:base
+ ;; not helpful to instrument
+ #{list not some? str = get nil?}
+ :clj #{;; CLJ-1941
+        partition-all}
+ :cljs #{;; CLJS-3023
+         next
+         ;; same as CLJS-3023
+         apply
+         ;; same as CLJS-3023
+         seq}}

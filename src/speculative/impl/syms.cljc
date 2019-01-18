@@ -49,6 +49,7 @@
     clojure.core/nth
     clojure.core/partial
     clojure.core/partition
+    clojure.core/partition-all
     clojure.core/partition-by
     clojure.core/peek
     clojure.core/pop
@@ -139,6 +140,7 @@
     cljs.core/nth
     cljs.core/partial
     cljs.core/partition
+    cljs.core/partition-all
     cljs.core/partition-by
     cljs.core/peek
     cljs.core/pop
@@ -185,6 +187,7 @@
     clojure.core/list
     clojure.core/nil?
     clojure.core/not
+    clojure.core/partition-all
     clojure.core/some?
     clojure.core/str})
 (def
@@ -324,6 +327,7 @@
     cljs.core/nth
     cljs.core/partial
     cljs.core/partition
+    cljs.core/partition-all
     cljs.core/partition-by
     cljs.core/peek
     cljs.core/pop
