@@ -180,6 +180,7 @@
 
 ;; 1534
 (s/fdef clojure.core/find
+  ;; TODO: find works for vectors too?
   :args (s/cat :map (s/nilable ::ss/map+) :key ::ss/any)
   :ret (s/nilable ::ss/map-entry))
 
@@ -448,6 +449,13 @@
 (s/fdef clojure.core/partition-by
   :args (s/alt :transducer (s/cat :f ::ss/ifn)
                :seqable (s/cat :f ::ss/ifn :coll ::ss/seqable))
+  :ret ::ss/seqable-or-transducer)
+
+;; 7240
+(s/fdef clojure.core/partition-all
+  :args (s/alt :transducer (s/cat :n ::ss/pos-int)
+               :no-overlap (s/cat :n ::ss/pos-int :coll ::ss/seqable)
+               :step (s/cat :n ::ss/pos-int :step ::ss/pos-int :coll ::ss/seqable))
   :ret ::ss/seqable-or-transducer)
 
 ;; 7313
