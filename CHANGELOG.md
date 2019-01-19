@@ -1,20 +1,27 @@
 ## 0.0.3-SNAPSHOT
 
-* Spec for `subs`
+* Specs for the entire `clojure.set` namespace, contributed by <a
+  href="https://github.com/eerohele">@eerohele</a>
 
-* Namespace `speculative.instrument`: requiring it instruments fns spec'ed by
-  speculative.
+* Specs for `inc`, `dec`, `rest`, `next`, `last`, `group-by`, `interpose`,
+  `re-pattern`, `re-matcher`, `re-groups`, `re-seq`, `re-matches`, `re-find` and
+  `subs`.
 
-* Moved specs that are not likely to find errors while instrumented to
-  `speculative.core.extra`. Not requiring this namespace before instrumenting has
-  significant performance benefit.
+* Namespace `speculative.instrument`: loads all speculative specs. Provides
+  functions to only instrument and unstruments specs provided by speculative,
+  with the exception of functions that are either pointless to instrument
+  (e.g. `str`) or in some cases not without throwing errors on CLJS
+  (e.g. `apply` which throws a callstack error).
 
-Running the first 20 coal-mine test sets in cljs+node, compare
+To illustrate why not instrumenting some functions that wouldn't catch important
+errors anyway is beneficial for permance, compare running the first 20 coal-mine
+test sets in CLJS on node:
 
+Without instrumentation of `some?`, `str`, `=` and `get`:
 ``` shell
 "Elapsed time: 3198.731217 msecs"
 ```
-to
+With instrumentation of said functions:
 ``` shell
 "Elapsed time: 21343.952922 msecs"
 ```
@@ -36,7 +43,7 @@ Evaluation error - invalid arguments to clojure.core/merge-with at (NO_SOURCE_FI
 ```
 
 * `speculative.test` macros `gentest` and `check` renamed to `check` and `check-call` to closer resemble naming in `clojure.spec.test.alpha`
-* `speculative.test` no longer needs require to `clojure.spec.test.alpha` in CLJS ([#95](https://github.com/slipset/speculative/issues/95))
+* `speculative.test` no longer needs require to `clojure.spec.test.alpha` in CLJS ([#95](https://github.com/borkdude/speculative/issues/95))
 
 ## 0.0.2 (2018-11-09)
 

@@ -1,5 +1,5 @@
 # speculative
-[![CircleCI](https://circleci.com/gh/slipset/speculative/tree/master.svg?style=svg)](https://circleci.com/gh/slipset/speculative/tree/master)
+[![CircleCI](https://circleci.com/gh/borkdude/speculative/tree/master.svg?style=svg)](https://circleci.com/gh/borkdude/speculative/tree/master)
 [![Clojars Project](https://img.shields.io/clojars/v/speculative.svg)](https://clojars.org/speculative)
 
 speculative is a collection of specs for the functions in `clojure.core`. While
@@ -48,24 +48,75 @@ lein
 
 ## Usage
 
-```clojure
-user=> (require 'speculative.core)
-nil
-user=> (require '[clojure.spec.test.alpha :as stest])
-nil
-user=> (stest/instrument `map)
-[clojure.core/map]
-user=> (map 1 'lol)
-Evaluation error - invalid arguments to clojure.core/map at (NO_SOURCE_FILE:4).
-1 - failed: ifn? at: [:f]
-user=>
+Speculative specs correspond to the namespaces in Clojure:
 
+``` clojure
+speculative.core -> clojure.core
+speculative.set  -> clojure.set
+...
 ```
 
-## Test tools
+To load all specs at once, you can require `speculative.instrument` which also
+provides functions to only instrument speculative specs. This namespace is
+alpha, so use with caution.
 
-Namespace `speculative.test` provides various tools around
-`clojure.spec.test.alpha`. More info [here](doc/test.md).
+```clojure
+$ clj
+Clojure 1.10.0-beta6
+user=> (require '[speculative.instrument :refer [instrument unstrument]])
+nil
+user=> (instrument)
+[clojure.core/first clojure.core/apply clojure.core/assoc ...]
+
+user=> (merge-with 1 {:a 2} {:a 3})
+Execution error - invalid arguments to clojure.core/merge-with at (REPL:1).
+1 - failed: ifn? at: [:f] spec: :speculative.specs/ifn
+
+user=> (unstrument)
+...
+user=> (merge-with 1 {:a 2} {:a 3})
+Execution error (ClassCastException) at user$eval344/invokeStatic (REPL:1).
+java.lang.Long cannot be cast to clojure.lang.IFn
+```
+
+## Managing expectations
+
+These specs try to be as accurate as possible, given what we know about the
+newest releases of Clojure and ClojureScript. However, we cannot guarantee that
+these specs are The Answer, once and for all. Our specs may be inaccurate and we
+may change them based on new insights. Functions in future versions of Clojure
+may allow different arguments and arities or return different values than we
+account for at this time of writing. These specs have no official status, are
+not endorsed by Cognitect and are provided without warranty.
+
+## Speculative broke my project
+
+Speculative specs find, when instrumented, incorrect or undefined usage of
+Clojure core functions. If code is under your control, you can fix it. If the
+call was made in a library not under your control, you can unstrument the spec
+using `clojure.spec.test.alpha/unstrument` or disable it within the scope of a
+body using `respeced.test/with-unstrumentation` (see
+[respeced](https://github.com/borkdude/respeced)):
+
+``` clojure
+$ clj
+Clojure 1.10.0-beta6
+user=> (require '[respeced.test :refer [with-unstrumentation]])
+nil
+user=> (require '[speculative.instrument :refer [instrument]])
+nil
+user=> (instrument)
+[clojure.core/first clojure.core/apply clojure.core/assoc ...]
+user=> (merge #{1 2 3} 4)
+Execution error - invalid arguments to clojure.core/merge at (REPL:1).
+#{1 3 2} - failed: map? at: [:maps :init-map :clojure.spec.alpha/pred]
+#{1 3 2} - failed: nil? at: [:maps :init-map :clojure.spec.alpha/nil]
+user=> (respeced.test/with-unstrumentation `merge (merge #{1 2 3} 4))
+#{1 4 3 2}
+```
+
+If you believe the spec was wrong, please create an
+[issue](https://github.com/borkdude/speculative/issues).
 
 ## Tests
 
@@ -73,17 +124,42 @@ Namespace `speculative.test` provides various tools around
 
     clj -A:test:clj-tests
      
-### ClojureScript
+### ClojureScript (Node)
 
     script/cljs-tests
     
-### Self-Hosted ClojureScript
+### Self-hosted ClojureScript (Planck)
    
     plk -A:test:plk-tests
 
+### Number of generative tests
+
+By default the number of generative tests is set to `50`, but this can be
+overriden by setting the environment variable `NUM_TESTS`:
+
+    NUM_TESTS=1001 clj -A:test:clj-tests
+
+### Run a single test
+
+#### Clojure
+
+    clojure -A:test:clj-test-runner -v speculative.core-test/assoc-in-test
+
+#### ClojureScript (Node)
+
+    clojure -A:test:cljs-test-runner -v speculative.core-test/assoc-in-test
+
+#### Self-hosted ClojureScript (Planck)
+
+    clojure -A:test:cljs-test-runner -x planck -v speculative.core-test/assoc-in-test
+
+Running `script/clean` before running tests is recommended, especially for
+ClojureScript on Node. The script `script/test` automatically calls
+`script/clean` and runs all tests for all environments.
+
 ## Try online
 
-[KLIPSE REPL](http://bit.ly/speculative-repl) with speculative and
+[KLIPSE REPL](https://re-find.it/speculative-repl) with speculative and
 [expound](https://github.com/bhb/expound).
 
 ## Origins
@@ -110,6 +186,10 @@ href="https://twitter.com/borkdude/status/1053404362062606336?ref_src=twsrc%5Etf
 
 [These issues](doc/issues.md) were found while developing and using speculative.
 
+## Users
+
+[These projects](doc/users.md) are known to use speculative.
+
 ## Contributing
 
 In the hope that the code in this project would be useful for `clojure.core`,
@@ -117,11 +197,12 @@ any contributer to this repo needs to have a [Contributor
 Agreement](https://clojure.org/community/contributing) for Clojure so that any
 code in speculative can be used in either Clojure or Clojurescript.
 
-Please have look at the [style guide](doc/style.md) before submiting a PR.
+Please have look at the [contributor guidelines](CONTRIBUTING.md) before
+submitting a PR.
 
 ## License
 
-Copyright © 2018 Erik Assum
+Copyright © 2018 Erik Assum, Michiel Borkent, Mike Fikes and contributors.
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.

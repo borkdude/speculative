@@ -161,12 +161,15 @@
     `(~'ns speculative.coal-mine-runner
        (:require
         ~@require-syms
-        [speculative.instrument]
+        ~(reader-conditional '(:clj patch.clj-2443) false)
+        [speculative.instrument :refer [~'instrument]]
         [clojure.test]))))
 
 (defn run-tests-form [problems]
   (let [syms (map #(list 'quote %) problems)]
     `(defn ~'run-tests []
+       (println "Instrumenting with speculative specs")
+       (~'instrument)
        (println "Running tests for" ~@syms)
        (clojure.test/run-tests ~@syms))))
 

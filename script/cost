@@ -1,14 +1,14 @@
 #!/bin/sh
 
 echo "=== Running clj cost calculations"
-clojure -A:test:cost
+clojure -A:test:cost $1
 
 echo "\n=== Running cljs node cost calculations"
-clojure -A:test:cost:cljs-cost
+clojure -A:test:cost:cljs-cost $1
 
 # Tufte doesn't work on self-hosted yet
 # echo "\n=== Running plk cost calculations"
 # plk -A:test:cost
-# if [ $? -eq 1 ]; then
+# if [ $? != 0 ]; then
 #     exit_code=1
 # fi
