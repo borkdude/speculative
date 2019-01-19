@@ -1,6 +1,6 @@
 {:paths ["resources" "src"]
  :deps {clojure/spec-alpha2 {:git/url "https://github.com/clojure/spec-alpha2"
-                             :sha "639767ebe1491536ec7404d8b478628ecfe9200b"}}
+                             :sha "50ff9ba32cca0ddc87df2d01d4ff424a747c6270"}}
  :aliases
  {:test {:extra-paths ["test"]
          ;; why is this again?
