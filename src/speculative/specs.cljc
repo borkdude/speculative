@@ -83,6 +83,7 @@
                                 #(String. %)]))))))
 
 ;; "every is not designed to deal with seqable?, this is a way around it"
+;; FIXME: spec-alpha2
 (defmethod s/create-spec 'seqable-of
   [[_ spec]]
   (println "SPEC" spec)
