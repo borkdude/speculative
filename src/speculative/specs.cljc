@@ -44,7 +44,10 @@
 (s/def ::pos-int pos-int?)
 (s/def ::iterable iterable?)
 (s/def ::map map?)
-#?(:clj (s/def ::java-map
+
+(s/def ::java-map ::any)
+;; FIXME: this doesn't work in spec-alpha2
+#_#?(:clj (s/def ::java-map
           (s/with-gen #(instance? java.util.Map %)
             (fn [] (gen/fmap #(java.util.HashMap. %)
                              (s/gen ::map))))))
@@ -66,7 +69,9 @@
 (s/def ::sequential sequential?)
 (s/def ::some some?)
 (s/def ::string string?)
-#?(:clj (s/def ::char-sequence
+(s/def ::char-sequence ::any)
+;; FIXME: this doesn't work in spec-alpha2
+#_#?(:clj (s/def ::char-sequence
           (s/with-gen
             #(instance? java.lang.CharSequence %)
             (fn []
@@ -77,9 +82,10 @@
                                 #(java.nio.CharBuffer/wrap %)
                                 #(String. %)]))))))
 
-(defn seqable-of
-  "every is not designed to deal with seqable?, this is a way around it"
-  [spec]
+;; "every is not designed to deal with seqable?, this is a way around it"
+(defmethod s/create-spec 'seqable-of
+  [[_ spec]]
+  (println "SPEC" spec)
   (s/with-gen (s/and seqable?
                      (s/or :empty empty?
                            :seq (s/and (s/conformer seq)
@@ -94,7 +100,9 @@
   (s/or :string ::string
         :seqable ::seqable-of-string))
 
-(s/def ::reducible-coll
+(s/def ::reducible-coll ::any)
+;; FIXME: spec-alpha2
+#_(s/def ::reducible-coll
   (s/with-gen
     (s/or
      :seqable    ::seqable
@@ -116,7 +124,9 @@
   (s/or :seqable ::seqable
         :transducer ::transducer))
 
-(s/def ::atom
+;; FIXME: spec-alpha2
+(s/def ::atom ::any)
+#_(s/def ::atom
   (fn [a]
     #?(:clj (instance? clojure.lang.IAtom a)
        :cljs (satisfies? IAtom a))))
@@ -133,7 +143,9 @@
       (gen/fmap re-pattern
                 (s/gen ::string)))))
 
-#?(:clj
+;; FIXME: spec-alpha2
+(s/def ::matcher ::any)
+#_#?(:clj
    (s/def ::matcher
      #(instance? java.util.regex.Matcher %)))
 
@@ -154,7 +166,9 @@
 (s/def ::indexed
   indexed?)
 
-(s/def ::nthable
+;; FIXME: spec-alpha2
+(s/def ::nthable ::any)
+#_(s/def ::nthable
   (s/with-gen (s/nilable (s/or :index ::indexed
                                :str #?(:clj ::char-sequence
                                        :cljs ::string)
@@ -170,7 +184,9 @@
                                  (s/gen ::map-entry)
                                  (s/gen ::sequential)]))))
 
-(s/def ::stack
+;; FIXME: spec-alpha2
+(s/def ::stack ::any)
+#_(s/def ::stack
   (s/with-gen
     #?(:cljs #(satisfies? IStack %)
        :clj #(instance? clojure.lang.IPersistentStack %))
