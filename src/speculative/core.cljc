@@ -458,6 +458,19 @@
                :step (s/cat :n ::ss/pos-int :step ::ss/pos-int :coll ::ss/seqable))
   :ret ::ss/seqable-or-transducer)
 
+;; 7274
+(s/fdef clojure.core/shuffle
+  :args (s/cat :coll
+               ;; NOTE: the difference between clj and cljs gives rise to a JIRA
+               ;; ticket with proposal: support arrays in CLJ and discuss if nil
+               ;; should be supported in both, and if so, the return value
+               ;; should probably be nil
+               #?(:clj ::ss/java-coll
+                  :cljs (s/nilable
+                         (s/or :coll ::ss/coll
+                               :array ::ss/array))))
+  :ret ::ss/coll)
+
 ;; 7313
 (s/fdef clojure.core/keep
   :args (s/alt :transducer (s/cat :f ::ss/ifn)

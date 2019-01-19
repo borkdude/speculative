@@ -852,6 +852,16 @@
     (is (caught? `partition-all (partition-all 2 1)))
     (is (caught? `partition-all (partition-all 2 1 1)))))
 
+;; 7274
+(deftest shuffle-test
+  (is (check-call `shuffle [[1 2 3]]))
+  (is (check-call `shuffle [#?(:clj (java.util.ArrayList. [1 2 3])
+                               :cljs (into-array [1 2 3]))]))
+  #?(:cljs (is (check-call `shuffle [nil])))
+  (check `shuffle)
+  (with-instrumentation `shuffle
+    (is (caught? `shuffle (shuffle 1)))))
+
 ;; 7313
 (deftest keep-test
   (is (check-call `keep [seq]))
