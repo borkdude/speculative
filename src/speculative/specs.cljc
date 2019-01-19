@@ -101,6 +101,13 @@
 (s/def ::coll coll?)
 (s/def ::conjable (s/nilable ::coll))
 
+(s/def ::java-coll
+  (s/with-gen
+    #(instance? java.util.Collection %)
+    (fn []
+      (gen/fmap #(java.util.ArrayList. %)
+                (s/gen vector?)))))
+
 (s/def ::predicate ::ifn)
 
 (s/def ::transducer (s/with-gen
