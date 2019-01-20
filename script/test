@@ -1,23 +1,22 @@
-#!/bin/sh
+#!/bin/bash
 
 script/clean
 
-set $exit_code=0
+exit_code=0
 
 echo "=== Running clj-tests"
-clojure -A:test:clj-tests
-if [ $? != 0 ]; then
+
+if ! clojure -A:test:clj-tests; then
     exit_code=1
 fi
 
-script/cljs-tests
-if [ $? != 0 ]; then
+if ! script/cljs-tests; then
     exit_code=1
 fi
 
-echo "\n=== Running plk-tests"
-plk -A:test:plk-tests
-if [ $? != 0 ]; then
+echo -e "\n=== Running plk-tests"
+
+if ! plk -A:test:plk-tests; then
     exit_code=1
 fi
 
