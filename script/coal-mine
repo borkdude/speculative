@@ -38,7 +38,7 @@ if [ $CI ]; then
         problem=$(cat out/output.txt | grep Testing | head -n 1 | sed 's/Testing //')
         msg="found speculative spec errors with problem $problem"
         curl -X POST -H "Content-Type: application/json" \
-             -d '{"username":"speculative coal-mine test", "channel":"#_test", "text":'"\"$msg\""'}' \
+             -d '{"username":"speculative coal-mine test", "channel":"#speculative", "text":'"\"$msg\""'}' \
              "$SPECULATIVE_SLACK_HOOK"
     fi
 fi
