@@ -11,15 +11,13 @@ Be as general as possible, while still being correct.
 
       :args (s/alt :infinite (s/cat ...) :finite (s/cat ...))
 
-## Sequences
+## Sequence functions
 
-* Sequence functions generally accept and return `seqable?`,, not
-  `seq?`. Sequence functions compose because they call `seq` on their `seqable?`
-  argument, not because they receive or return a `seq?`.
-* Don't spec the difference between `()` and `nil`: with sequences `nil` puns as
-  an empty sequence.
-
-See [(#45)](https://github.com/borkdude/speculative/issues/45).
+* Sequence conceptually accept and return `seqable?`, not `seq?`. Sequence
+  functions compose because they call `seq` on their `seqable?` argument, not
+  because they receive or return a `seq?`. Don't spec implementation details
+  such as the difference between `()` and `nil` in return values. See
+  [(#45)](https://github.com/borkdude/speculative/issues/45).
 
 ### Names
 
