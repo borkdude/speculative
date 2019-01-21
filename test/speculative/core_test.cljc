@@ -333,6 +333,7 @@
 ;; 1534
 (deftest find-test
   (is (nil? (check-call `find [nil nil])))
+  (is (check-call `find [[:e :e :e] 0]))
   (is (check-call `find [{:a 1} :a]))
   #?(:clj (is (check-call `find [(java.util.HashMap. {:a 1}) :a])))
   (check `find)
@@ -343,6 +344,7 @@
 (deftest select-keys-test
   (is (check-call `select-keys [nil nil]))
   (is (check-call `select-keys [{:a 1} [:a]]))
+  (is (check-call `select-keys [[:e :e :e :e :e :e] [0 1 2]]))
   #?(:clj (is (check-call `select-keys [(java.util.HashMap. {:a 1}) [:a]])))
   (check `select-keys)
   (with-instrumentation `select-keys
