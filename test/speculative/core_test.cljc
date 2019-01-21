@@ -732,8 +732,13 @@
          {:gen {::c/update-in-args
                 #(gen/one-of
                   [(gen/tuple (g/recursive-gen (fn [inner] (g/map g/keyword inner))
-                                               (gen/choose 0 10))
-                              (gen/not-empty (gen/vector (gen/keyword)))
+                                               (gen/fmap (fn [i]
+                                                           {:num i})
+                                                         (gen/choose 0 10)))
+                              (gen/fmap
+                               (fn [vec]
+                                 (conj vec :num))
+                               (gen/not-empty (gen/vector (gen/keyword))))
                               (gen/return (fnil + 1)))
                    (gen/bind (gen/vector (gen/choose 0 10))
                              (fn [v]
