@@ -1,14 +1,14 @@
 (ns speculative.update-syms
   (:require
+   [clojure.data :as data]
+   [clojure.pprint :refer [pprint]]
    [clojure.set :as set]
    [clojure.spec.test.alpha :as stest]
    [clojure.string :as str]
-   [clojure.data :as data]
    [speculative.core]
    [speculative.impl.syms :as prev-syms]
    [speculative.set]
-   [speculative.string]
-   [clojure.pprint :refer [pprint]]))
+   [speculative.string]))
 
 (defn cljsify [syms]
   (map
