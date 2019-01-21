@@ -180,13 +180,17 @@
 
 ;; 1534
 (s/fdef clojure.core/find
-  ;; TODO: find works for vectors too?
-  :args (s/cat :map (s/nilable ::ss/map+) :key ::ss/any)
+  :args (s/cat :map
+               (s/nilable (s/or :associative ::ss/associative
+                                #?@(:clj [:java-map ::ss/java-map])))
+               :key ::ss/any)
   :ret (s/nilable ::ss/map-entry))
 
 ;; 1540
 (s/fdef clojure.core/select-keys
-  :args (s/cat :map (s/nilable ::ss/map+)
+  :args (s/cat :map
+               (s/nilable (s/or :associative ::ss/associative
+                                #?@(:clj [:java-map ::ss/java-map])))
                :keyseq ::ss/seqable)
   :ret ::ss/map)
 
