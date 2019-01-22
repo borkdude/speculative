@@ -6,7 +6,7 @@
 
 ;; 180
 (s/fdef str/join
-  :args (s/cat :separator ::ss/any
+  :args (s/cat :separator (s/? ::ss/any)
                :coll ::ss/seqable)
   :ret ::ss/string)
 
