@@ -37,7 +37,7 @@ empty?,10495
 format,9508
 # rest,8766
 <,8618
-vec,8601
+# vec,8601
 # partial,8595
 concat,8334
 # reset!,8122
@@ -105,11 +105,11 @@ print,2522
 ex-info,2457
 number?,2433
 deref,2355
-join,2320
+# join,2320
 sequential?,2316
 double,2305
 coll?,2299
-vector,2298
+# vector,2298
 with-out-str,2282
 seq?,2189
 drop,2181
