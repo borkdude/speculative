@@ -66,6 +66,7 @@
     clojure.core/rest
     clojure.core/select-keys
     clojure.core/seq
+    clojure.core/shuffle
     clojure.core/some
     clojure.core/some?
     clojure.core/str
@@ -90,6 +91,7 @@
     clojure.set/superset?
     clojure.set/union
     clojure.string/ends-with?
+    clojure.string/join
     clojure.string/starts-with?})
 (def
  all-syms-cljs
@@ -155,6 +157,7 @@
     cljs.core/rest
     cljs.core/select-keys
     cljs.core/seq
+    cljs.core/shuffle
     cljs.core/some
     cljs.core/some?
     cljs.core/str
@@ -179,6 +182,7 @@
     clojure.set/superset?
     clojure.set/union
     clojure.string/ends-with?
+    clojure.string/join
     clojure.string/starts-with?})
 (def
  blacklist-clj
@@ -262,6 +266,7 @@
     clojure.core/rest
     clojure.core/select-keys
     clojure.core/seq
+    clojure.core/shuffle
     clojure.core/some
     clojure.core/subs
     clojure.core/swap!
@@ -284,6 +289,7 @@
     clojure.set/superset?
     clojure.set/union
     clojure.string/ends-with?
+    clojure.string/join
     clojure.string/starts-with?})
 (def
  instrumentable-syms-cljs
@@ -341,6 +347,7 @@
     cljs.core/reset!
     cljs.core/rest
     cljs.core/select-keys
+    cljs.core/shuffle
     cljs.core/some
     cljs.core/subs
     cljs.core/swap!
@@ -363,4 +370,5 @@
     clojure.set/superset?
     clojure.set/union
     clojure.string/ends-with?
+    clojure.string/join
     clojure.string/starts-with?})
