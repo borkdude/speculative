@@ -13,10 +13,12 @@
 
 ;; 180
 (deftest join-test
+  (is (check-call `str/join [(range 9)]))
   (is (check-call `str/join ["," (range 9)]))
   (is (check-call `str/join [::foo (range 9)]))
   (check `str/join)
   (with-instrumentation `str/join
+    (is (caught? `str/join (str/join 1)))
     (is (caught? `str/join (str/join "," 1)))))
 
 ;; 360
