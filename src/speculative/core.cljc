@@ -163,6 +163,7 @@
 
 ;; 1467
 (s/fdef clojure.core/pop
+  ;; TODO: pop on empty queue doesn't throw. Fix spec?
   :args (s/cat :coll (s/nilable ::ss/non-empty-stack))
   :ret (s/nilable ::ss/stack))
 
