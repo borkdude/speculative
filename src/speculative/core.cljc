@@ -318,7 +318,7 @@
 
 ;; 4839
 (s/fdef clojure.core/re-pattern
-  :args (s/cat :s ::ss/string)
+  :args (s/alt :re ::ss/regexp :s ::ss/string)
   :ret ::ss/regexp)
 
 ;; 4849
