@@ -181,11 +181,6 @@
       (s/gen (s/or :vector vector?
                    :list list?)))))
 
-(s/def ::non-empty-stack
-  (s/with-gen
-    (s/and ::stack not-empty)
-    (fn [] (gen/not-empty (s/gen ::stack)))))
-
 (s/def ::list list?)
 
 ;;;; Scratch

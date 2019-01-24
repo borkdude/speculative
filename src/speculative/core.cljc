@@ -163,7 +163,7 @@
 
 ;; 1467
 (s/fdef clojure.core/pop
-  :args (s/cat :coll (s/nilable ::ss/non-empty-stack))
+  :args (s/cat :coll (s/nilable ::ss/stack))
   :ret (s/nilable ::ss/stack))
 
 ;; 1494
