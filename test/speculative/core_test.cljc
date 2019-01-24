@@ -306,7 +306,13 @@
   (is (nil? (check-call `pop [nil])))
   (is (check-call `pop [[1 2 3]]))
   (is (check-call `pop [(list 1 2 3)]))
-  (check `pop)
+  (is (check-call `pop [#?(:clj (clojure.lang.PersistentQueue/EMPTY)
+                           :cljs #queue [])]))
+  (check `pop {:gen {::ss/stack
+                     ;; pop throws when given an empty coll, except for queues
+                     ;; I've decided not to spec this, since the exceptions are
+                     ;; clear
+                     (fn [] (gen/not-empty (s/gen ::ss/stack)))}})
   (with-instrumentation `pop
     (is (caught? `pop (pop 1)))))
 
