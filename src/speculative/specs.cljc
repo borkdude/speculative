@@ -82,11 +82,9 @@
                                 #(java.nio.CharBuffer/wrap %)
                                 #(String. %)]))))))
 
-;; "every is not designed to deal with seqable?, this is a way around it"
-;; FIXME: spec-alpha2
-(defmethod s/create-spec 'seqable-of
-  [[_ spec]]
-  (println "SPEC" spec)
+(defn seqable-of
+  "every is not designed to deal with seqable?, this is a way around it"
+  [spec]
   (s/with-gen (s/and seqable?
                      (s/or :empty empty?
                            :seq (s/and (s/conformer seq)
