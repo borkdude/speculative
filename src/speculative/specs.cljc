@@ -82,7 +82,7 @@
                                 #(java.nio.CharBuffer/wrap %)
                                 #(String. %)]))))))
 
-(defn seqable-of
+#_(defn seqable-of
   "every is not designed to deal with seqable?, this is a way around it"
   [spec]
   (s/with-gen (s/and seqable?
@@ -91,9 +91,9 @@
                                        (s/every spec))))
     #(s/gen (s/nilable (s/every spec :kind coll?)))))
 
-(s/def ::seqable-of-map-entry (seqable-of ::map-entry))
+(s/def ::seqable-of-map-entry ::any #_(seqable-of ::map-entry))
 
-(s/def ::seqable-of-string (seqable-of ::string))
+(s/def ::seqable-of-string ::any #_(seqable-of ::string))
 
 (s/def ::string-or-seqable-of-string
   (s/or :string ::string
@@ -101,7 +101,7 @@
 
 (s/def ::reducible-coll ::any)
 ;; FIXME: spec-alpha2
-#_(s/def ::reducible-coll
+(s/def ::reducible-coll
   (s/with-gen
     (s/or
      :seqable    ::seqable
