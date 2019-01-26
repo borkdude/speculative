@@ -4,6 +4,7 @@ Issues are sorted by date from newest to oldest.
 
 ## Unfixed or unreleased
 
+- [Unify behavior of shuffle in CLJ and CLJS](https://dev.clojure.org/jira/browse/CLJ-2470) (CLJ)
 - [Instrumenting next gives maximum call stack size exceeded](https://dev.clojure.org/jira/browse/CLJS-3023) (CLJS)
 - [Spec'ed fn doesn't throw when called lazily](https://dev.clojure.org/jira/browse/CLJ-2443) (CLJ)
 - [Requiring clojure.spec.test.alpha loads clojure.test.check](https://dev.clojure.org/jira/browse/CLJS-2964) (CLJS)
