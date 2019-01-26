@@ -55,7 +55,7 @@
   :coal-mine
   {:extra-deps {github-mfikes/coal-mine
                 {:git/url "https://github.com/mfikes/coal-mine"
-                 :sha "09eda810c5be109c1e4881fc9d5a2a5af70e88e0"}}}
+                 :sha "a4cc904b1797839919fce25bf91f03de1e576aa2"}}}
   :coal-mine-clj
   {:jvm-opts ["-XX:CompressedClassSpaceSize=2g"]
    :main-opts ["-e" "(require,'[patch.clj-2443])"
