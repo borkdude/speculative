@@ -26,6 +26,7 @@
     clojure.core/get
     clojure.core/get-in
     clojure.core/group-by
+    clojure.core/hash-map
     clojure.core/inc
     clojure.core/interpose
     clojure.core/into
@@ -119,6 +120,7 @@
     cljs.core/get
     cljs.core/get-in
     cljs.core/group-by
+    cljs.core/hash-map
     cljs.core/inc
     cljs.core/interpose
     cljs.core/into
@@ -188,6 +190,7 @@
  blacklist-clj
  '#{clojure.core/=
     clojure.core/get
+    clojure.core/hash-map
     clojure.core/list
     clojure.core/nil?
     clojure.core/not
@@ -314,6 +317,7 @@
     cljs.core/fnil
     cljs.core/get-in
     cljs.core/group-by
+    cljs.core/hash-map
     cljs.core/inc
     cljs.core/interpose
     cljs.core/into

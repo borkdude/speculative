@@ -2,7 +2,9 @@
  ;; not helpful to instrument
  #{list not some? str = get nil?}
  :clj #{;; CLJ-1941
-        partition-all}
+        partition-all
+        ;; https://github.com/borkdude/speculative/issues/264
+        hash-map}
  :cljs #{;; CLJS-3023
          next
          ;; same as CLJS-3023

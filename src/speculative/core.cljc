@@ -69,6 +69,11 @@
   :args (s/cat :coll ::ss/reducible-coll)
   :ret ::ss/vector)
 
+;; 379
+(s/fdef clojure.core/hash-map
+  :args (s/cat :pairs (s/* (s/cat :k ::ss/any :v ::ss/any)))
+  :ret ::ss/map)
+
 ;; 436
 (s/fdef clojure.core/nil?
   :args (s/cat :x ::ss/any)
