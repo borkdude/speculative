@@ -145,6 +145,16 @@
     (testing "not a reducible coll"
       (is (caught? `vec (vec 1))))))
 
+;; 379
+(deftest hash-map-test
+  (is (check-call `hash-map []))
+  (is (check-call `hash-map [1 2]))
+  (check `hash-map)
+  (with-instrumentation `hash-map
+    ;; See https://github.com/borkdude/speculative/issues/264
+    ;; hash-map is a macro-function in CLJS
+    #?(:cljs (is (caught? `hash-map (apply hash-map [1]))))))
+
 ;; 436
 (deftest nil?-test
   (is (check-call `nil? [nil]))
