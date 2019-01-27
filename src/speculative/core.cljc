@@ -380,6 +380,14 @@
   :args (s/cat :k ::ss/ifn :xs (s/+ ::ss/any))
   :ret ::ss/any)
 
+;; 5029
+(s/fdef clojure.core/distinct
+  :args (s/alt :transducer (s/cat)
+               :seqable (s/cat :coll ::ss/reducible-coll))
+  :ret ::ss/seqable-or-transducer
+  :fn (fn [{:keys [args ret]}]
+        (= (key args) (key ret))))
+
 ;; 5206
 (s/fdef clojure.core/interpose
   :args (s/alt :transducer (s/cat :sep ::ss/any)

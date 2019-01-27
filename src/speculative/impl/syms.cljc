@@ -18,6 +18,7 @@
     clojure.core/dec
     clojure.core/dedupe
     clojure.core/dissoc
+    clojure.core/distinct
     clojure.core/every?
     clojure.core/filter
     clojure.core/find
@@ -114,6 +115,7 @@
     cljs.core/dec
     cljs.core/dedupe
     cljs.core/dissoc
+    cljs.core/distinct
     cljs.core/every?
     cljs.core/filter
     cljs.core/find
@@ -230,6 +232,7 @@
     clojure.core/dec
     clojure.core/dedupe
     clojure.core/dissoc
+    clojure.core/distinct
     clojure.core/every?
     clojure.core/filter
     clojure.core/find
@@ -316,6 +319,7 @@
     cljs.core/dec
     cljs.core/dedupe
     cljs.core/dissoc
+    cljs.core/distinct
     cljs.core/every?
     cljs.core/filter
     cljs.core/find
