@@ -682,6 +682,17 @@
     (is (caught? `min-key (min-key 1 1)))
     (is (caught? `min-key (min-key identity)))))
 
+;; 5029
+(deftest distinct-test
+  (is (check-call `distinct []))
+  (is (= 3 (count (check-call `distinct [[1 1 2 1 3]]))))
+  (is (= 3 (count (check-call `distinct
+                              [(eduction (map inc)
+                                         [1 1 2 2 3 3 1 1])]))))
+  (check `distinct)
+  (with-instrumentation `distinct
+    (is (caught? `distinct (distinct 1)))))
+
 ;; 5206
 (deftest interpose-test
   (is (check-call `interpose [0]))
@@ -908,8 +919,10 @@
 ;; 7655
 (deftest dedupe-test
   (is (check-call `dedupe []))
-  (is (= 3 (count (check-call `dedupe [[1 1 2 3]]))))
-  (is (= 3 (count (check-call `dedupe [(eduction (map inc) [1 1 2 2 3 3])]))))
+  (is (= 4 (count (check-call `dedupe [[1 1 2 3 1]]))))
+  (is (= 4 (count (check-call `dedupe
+                              [(eduction (map inc)
+                                         [1 1 2 2 3 3 1 1])]))))
   (check `dedupe)
   (with-instrumentation `dedupe
     (is (caught? `dedupe (dedupe 1)))))
