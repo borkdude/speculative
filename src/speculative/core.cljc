@@ -493,6 +493,14 @@
   :fn (fn [{:keys [args ret]}]
         (= (key args) (key ret))))
 
+;; 7655
+(s/fdef clojure.core/dedupe
+  :args (s/alt :transducer (s/cat)
+               :seqable (s/cat :coll ::ss/reducible-coll))
+  :ret ::ss/seqable-or-transducer
+  :fn (fn [{:keys [args ret]}]
+        (= (key args) (key ret))))
+
 ;;;; Scratch
 
 (comment

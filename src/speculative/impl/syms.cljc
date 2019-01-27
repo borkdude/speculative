@@ -16,6 +16,7 @@
     clojure.core/cons
     clojure.core/count
     clojure.core/dec
+    clojure.core/dedupe
     clojure.core/dissoc
     clojure.core/every?
     clojure.core/filter
@@ -27,6 +28,7 @@
     clojure.core/get-in
     clojure.core/group-by
     clojure.core/hash-map
+    clojure.core/hash-set
     clojure.core/inc
     clojure.core/interpose
     clojure.core/into
@@ -110,6 +112,7 @@
     cljs.core/cons
     cljs.core/count
     cljs.core/dec
+    cljs.core/dedupe
     cljs.core/dissoc
     cljs.core/every?
     cljs.core/filter
@@ -121,6 +124,7 @@
     cljs.core/get-in
     cljs.core/group-by
     cljs.core/hash-map
+    cljs.core/hash-set
     cljs.core/inc
     cljs.core/interpose
     cljs.core/into
@@ -224,6 +228,7 @@
     clojure.core/cons
     clojure.core/count
     clojure.core/dec
+    clojure.core/dedupe
     clojure.core/dissoc
     clojure.core/every?
     clojure.core/filter
@@ -233,6 +238,7 @@
     clojure.core/fnil
     clojure.core/get-in
     clojure.core/group-by
+    clojure.core/hash-set
     clojure.core/inc
     clojure.core/interpose
     clojure.core/into
@@ -308,6 +314,7 @@
     cljs.core/cons
     cljs.core/count
     cljs.core/dec
+    cljs.core/dedupe
     cljs.core/dissoc
     cljs.core/every?
     cljs.core/filter
@@ -318,6 +325,7 @@
     cljs.core/get-in
     cljs.core/group-by
     cljs.core/hash-map
+    cljs.core/hash-set
     cljs.core/inc
     cljs.core/interpose
     cljs.core/into
