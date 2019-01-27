@@ -905,6 +905,15 @@
     (is (caught? `keep (keep 1)))
     (is (caught? `keep (keep identity 1)))))
 
+;; 7655
+(deftest dedupe-test
+  (is (check-call `dedupe []))
+  (is (= 3 (count (check-call `dedupe [[1 1 2 3]]))))
+  (is (= 3 (count (check-call `dedupe [(eduction (map inc) [1 1 2 2 3 3])]))))
+  (check `dedupe)
+  (with-instrumentation `dedupe
+    (is (caught? `dedupe (dedupe 1)))))
+
 ;;;; Scratch
 
 (comment
