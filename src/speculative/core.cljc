@@ -74,6 +74,11 @@
   :args (s/cat :pairs (s/* (s/cat :k ::ss/any :v ::ss/any)))
   :ret ::ss/map)
 
+;; 389
+(s/fdef clojure.core/hash-set
+  :args (s/cat :keys (s/* ::ss/any))
+  :ret ::ss/set)
+
 ;; 436
 (s/fdef clojure.core/nil?
   :args (s/cat :x ::ss/any)

@@ -155,6 +155,15 @@
     ;; hash-map is a macro-function in CLJS
     #?(:cljs (is (caught? `hash-map (apply hash-map [1]))))))
 
+;; 389
+(deftest hash-set-test
+  (is (check-call `hash-set []))
+  (is (check-call `hash-set [1 2]))
+  (check `hash-set)
+  (testing "hash-set can be instrumented"
+    (with-instrumentation `hash-set
+      (is (set? (hash-set 1 2 3))))))
+
 ;; 436
 (deftest nil?-test
   (is (check-call `nil? [nil]))
