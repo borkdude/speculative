@@ -71,3 +71,4 @@ flycheck_*.el
 /nashorn_code_cache
 /issues/nashorn_code_cache
 /out
+.DS_Store
