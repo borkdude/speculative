@@ -25,6 +25,7 @@
     clojure.core/first
     clojure.core/flatten
     clojure.core/fnil
+    clojure.core/frequencies
     clojure.core/get
     clojure.core/get-in
     clojure.core/group-by
@@ -122,6 +123,7 @@
     cljs.core/first
     cljs.core/flatten
     cljs.core/fnil
+    cljs.core/frequencies
     cljs.core/get
     cljs.core/get-in
     cljs.core/group-by
@@ -239,6 +241,7 @@
     clojure.core/first
     clojure.core/flatten
     clojure.core/fnil
+    clojure.core/frequencies
     clojure.core/get-in
     clojure.core/group-by
     clojure.core/hash-set
@@ -326,6 +329,7 @@
     cljs.core/first
     cljs.core/flatten
     cljs.core/fnil
+    cljs.core/frequencies
     cljs.core/get-in
     cljs.core/group-by
     cljs.core/hash-map
