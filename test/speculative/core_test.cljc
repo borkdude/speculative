@@ -883,6 +883,14 @@
     (is (caught? `partition-by (partition-by 1)))
     (is (caught? `partition-by (partition-by odd? 1)))))
 
+;; 7203
+(deftest frequencies-test
+  (is (check-call `frequencies [[]]))
+  (is (check-call `frequencies [["foo" "bar" :a :a]]))
+  (check `frequencies)
+  (with-instrumentation `frequencies
+    (is (caught? `frequencies (frequencies 1)))))
+
 ;; 7240
 (deftest partition-all-test
   (is (check-call `partition-all [2]))

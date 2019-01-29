@@ -473,6 +473,11 @@
                :seqable (s/cat :f ::ss/ifn :coll ::ss/seqable))
   :ret ::ss/seqable-or-transducer)
 
+;; 7203
+(s/fdef clojure.core/frequencies
+  :args (s/cat :coll ::ss/reducible-coll)
+  :ret (s/map-of ::ss/any nat-int?))
+
 ;; 7240
 (s/fdef clojure.core/partition-all
   :args (s/alt :transducer (s/cat :n ::ss/pos-int)
