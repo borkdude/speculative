@@ -237,6 +237,7 @@
   (is (check-call `nth [(first {:k :v}) 1]))
   (is (= :ret (check-call `nth [[1 2 :ret 3] 2])))
   (is (check-call `nth [[1 2] 5 :default]))
+  (is (check-call `nth [[1 2] -1 :default]))
   (check `nth
          {:gen {::c/nth-args #(gen/bind (s/gen ::ss/nthable)
                                         (fn [v]
