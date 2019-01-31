@@ -118,7 +118,7 @@
 ;; 889
 (s/def ::nth-args
   (s/cat :coll ::ss/nthable
-         :index ::ss/nat-int
+         :index ::ss/int
          :not-found (s/? ::ss/any)))
 
 (s/fdef clojure.core/nth
