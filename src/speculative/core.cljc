@@ -488,10 +488,7 @@
 ;; 7274
 (s/fdef clojure.core/shuffle
   :args (s/cat :coll
-               ;; NOTE: the difference between clj and cljs gives rise to a JIRA
-               ;; ticket with proposal: support arrays in CLJ and discuss if nil
-               ;; should be supported in both, and if so, the return value
-               ;; should probably be nil
+               ;; See https://dev.clojure.org/jira/browse/CLJ-2470
                #?(:clj ::ss/java-coll
                   :cljs (s/nilable
                          (s/or :coll ::ss/coll
@@ -505,6 +502,16 @@
   :ret ::ss/seqable-or-transducer
   :fn (fn [{:keys [args ret]}]
         (= (key args) (key ret))))
+
+;; 7396
+(s/fdef clojure.core/every-pred
+  :args (s/cat :pred (s/+ ::ss/ifn))
+  :ret ::ss/ifn)
+
+;; 7436
+(s/fdef clojure.core/some-fn
+  :args (s/cat :pred (s/+ ::ss/ifn))
+  :ret ::ss/ifn)
 
 ;; 7655
 (s/fdef clojure.core/dedupe
