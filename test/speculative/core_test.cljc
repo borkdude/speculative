@@ -924,6 +924,18 @@
     (is (caught? `keep (keep 1)))
     (is (caught? `keep (keep identity 1)))))
 
+;; 7396
+(deftest every-pred-test
+  (is (check-call `every-pred [number? odd?]))
+  (with-instrumentation `every-pred
+    (is (caught? `every-pred (every-pred 1)))))
+
+;; 7436
+(deftest some-fn-test
+  (is (check-call `some-fn [number? string?]))
+  (with-instrumentation `some-fn
+    (is (caught? `some-fn (some-fn 1)))))
+
 ;; 7655
 (deftest dedupe-test
   (is (check-call `dedupe []))

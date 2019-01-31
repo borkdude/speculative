@@ -19,6 +19,7 @@
     clojure.core/dedupe
     clojure.core/dissoc
     clojure.core/distinct
+    clojure.core/every-pred
     clojure.core/every?
     clojure.core/filter
     clojure.core/find
@@ -73,6 +74,7 @@
     clojure.core/seq
     clojure.core/shuffle
     clojure.core/some
+    clojure.core/some-fn
     clojure.core/some?
     clojure.core/str
     clojure.core/subs
@@ -117,6 +119,7 @@
     cljs.core/dedupe
     cljs.core/dissoc
     cljs.core/distinct
+    cljs.core/every-pred
     cljs.core/every?
     cljs.core/filter
     cljs.core/find
@@ -169,6 +172,7 @@
     cljs.core/seq
     cljs.core/shuffle
     cljs.core/some
+    cljs.core/some-fn
     cljs.core/some?
     cljs.core/str
     cljs.core/subs
@@ -235,6 +239,7 @@
     clojure.core/dedupe
     clojure.core/dissoc
     clojure.core/distinct
+    clojure.core/every-pred
     clojure.core/every?
     clojure.core/filter
     clojure.core/find
@@ -283,6 +288,7 @@
     clojure.core/seq
     clojure.core/shuffle
     clojure.core/some
+    clojure.core/some-fn
     clojure.core/subs
     clojure.core/swap!
     clojure.core/update
@@ -323,6 +329,7 @@
     cljs.core/dedupe
     cljs.core/dissoc
     cljs.core/distinct
+    cljs.core/every-pred
     cljs.core/every?
     cljs.core/filter
     cljs.core/find
@@ -369,6 +376,7 @@
     cljs.core/select-keys
     cljs.core/shuffle
     cljs.core/some
+    cljs.core/some-fn
     cljs.core/subs
     cljs.core/swap!
     cljs.core/update
