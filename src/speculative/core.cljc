@@ -328,37 +328,37 @@
 
 ;; 4839
 (s/fdef clojure.core/re-pattern
-  :args (s/alt :re ::ss/regexp :s ::ss/string)
-  :ret ::ss/regexp)
+  :args (s/alt :re ::ss/regex :s ::ss/string)
+  :ret ::ss/regex)
 
 ;; 4849
 #?(:clj
    (s/fdef clojure.core/re-matcher
-     :args (s/cat :re ::ss/regexp :s ::ss/string)
+     :args (s/cat :re ::ss/regex :s ::ss/string)
      :ret ::ss/matcher))
 
 ;; 4858
 #?(:clj
    (s/fdef clojure.core/re-groups
      :args (s/cat :m ::ss/matcher)
-     :ret ::ss/string-or-seqable-of-string))
+     :ret ::ss/regex-match))
 
 ;; 4874
 (s/fdef clojure.core/re-seq
-  :args (s/cat :re ::ss/regexp :s ::ss/string)
-  :ret ::ss/seqable-of-string)
+  :args (s/cat :re ::ss/regex :s ::ss/string)
+  :ret ::ss/regex-matches)
 
 ;; 4886
 (s/fdef clojure.core/re-matches
-  :args (s/cat :re ::ss/regexp :s ::ss/string)
-  :ret ::ss/string-or-seqable-of-string)
+  :args (s/cat :re ::ss/regex :s ::ss/string)
+  :ret ::ss/regex-match)
 
 ;; 4898
 (s/fdef clojure.core/re-find
   :args #?(:clj (s/alt :matcher (s/cat :m ::ss/matcher)
-                       :re-s (s/cat :re ::ss/regexp :s ::ss/string))
-           :cljs (s/cat :re ::ss/regexp :s ::ss/string))
-  :ret ::ss/string-or-seqable-of-string)
+                       :re-s (s/cat :re ::ss/regex :s ::ss/string))
+           :cljs (s/cat :re ::ss/regex :s ::ss/string))
+  :ret ::ss/regex-match)
 
 ;; 4981
 (s/fdef clojure.core/subs
