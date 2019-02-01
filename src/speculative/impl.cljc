@@ -1,6 +1,6 @@
-(ns speculative.impl
+(ns ^:no-doc speculative.impl
   #?(:cljs (:require-macros
-            [speculative.impl :refer [deftime ? instrument* unstrument*]])))
+            [speculative.impl :refer [deftime usetime ? instrument* unstrument*]])))
 
 (defmacro deftime
   "Private. deftime macro from https://github.com/cgrand/macrovich"
@@ -11,6 +11,12 @@
     `(do ~@body)))
 
 (deftime
+  (defmacro usetime
+    "Private. usetime macro from https://github.com/cgrand/macrovich"
+    [& body]
+    (when #?(:clj true :cljs (not (re-matches #".*\$macros" (name (ns-name *ns*)))))
+      `(do ~@body)))
+
   (defmacro ?
     "Private. case macro from https://github.com/cgrand/macrovich"
     [& {:keys [cljs clj]}]

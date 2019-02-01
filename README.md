@@ -58,12 +58,11 @@ speculative.set  -> clojure.set
 ```
 
 To load all specs at once, you can require `speculative.instrument` which also
-provides functions to only instrument speculative specs. This namespace is
-alpha, so use with caution.
+provides functions to only instrument speculative specs.
 
 ```clojure
 $ clj
-Clojure 1.10.0-beta6
+Clojure 1.10.0
 user=> (require '[speculative.instrument :refer [instrument unstrument]])
 nil
 user=> (instrument)
@@ -95,13 +94,14 @@ not endorsed by Cognitect and are provided without warranty.
 Speculative specs find, when instrumented, incorrect or undefined usage of
 Clojure core functions. If code is under your control, you can fix it. If the
 call was made in a library not under your control, you can unstrument the spec
-using `clojure.spec.test.alpha/unstrument` or disable it within the scope of a
-body using `respeced.test/with-unstrumentation` (see
+using `clojure.spec.test.alpha/unstrument`, unload it using `(s/def spec-symbol
+nil)` or disable it within the scope of a body using
+`respeced.test/with-unstrumentation` (see
 [respeced](https://github.com/borkdude/respeced)):
 
 ``` clojure
 $ clj
-Clojure 1.10.0-beta6
+Clojure 1.10.0
 user=> (require '[respeced.test :refer [with-unstrumentation]])
 nil
 user=> (require '[speculative.instrument :refer [instrument]])
