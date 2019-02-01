@@ -1,6 +1,7 @@
 #!/bin/bash
 
 script/clean
+export SPECULATIVE_NO_UNLOAD_BLACKLIST=true
 
 exit_code=0
 

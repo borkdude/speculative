@@ -22,3 +22,11 @@
     (is (caught? `fnil
                  (instrument/fixture
                   #(fnil 1 1))))))
+
+(deftest unload-test
+  (testing "it should be safe to call (stest/instrument) after calling
+  speculative instrument"
+    (instrument/unload-blacklist true)
+    (let [stest-instrumented (stest/instrument)]
+      (println "stest-instrumented:" (count stest-instrumented)))
+    (instrument/unstrument)))
