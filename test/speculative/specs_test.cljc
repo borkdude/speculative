@@ -16,10 +16,10 @@
     (is (seq mes))
     (is (every? #(= 2 (count %)) mes))))
 
-(deftest regexp-test
-  (let [res (gen/sample (s/gen ::ss/regexp))]
+(deftest regex-test
+  (let [res (gen/sample (s/gen ::ss/regex))]
     (is (seq res))
-    (is (every? ss/regexp? res))))
+    (is (every? ss/regex? res))))
 
 (deftest any-test
   (is (s/valid? ::ss/any :clojure.spec.alpha/invalid)))

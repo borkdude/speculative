@@ -91,11 +91,13 @@
 
 (s/def ::seqable-of-map-entry (seqable-of ::map-entry))
 
-(s/def ::seqable-of-string (seqable-of ::string))
+(s/def ::seqable-of-nilable-string (seqable-of (s/nilable ::string)))
 
-(s/def ::string-or-seqable-of-string
-  (s/or :string ::string
-        :seqable ::seqable-of-string))
+(s/def ::regex-match (s/nilable
+                      (s/or :string ::string
+                            :seqable ::seqable-of-nilable-string)))
+
+(s/def ::regex-matches (seqable-of ::regex-match))
 
 (s/def ::reducible-coll
   (s/with-gen
@@ -132,13 +134,13 @@
        :cljs (satisfies? IAtom a))))
 
 #?(:clj
-   (defn regexp? [r]
+   (defn regex? [r]
      (instance? java.util.regex.Pattern r))
-   :cljs (def regexp? cljs.core/regexp?))
+   :cljs (def regex? cljs.core/regexp?))
 
-(s/def ::regexp
+(s/def ::regex
   (s/with-gen
-    regexp?
+    regex?
     (fn []
       (gen/fmap re-pattern
                 (s/gen ::string)))))

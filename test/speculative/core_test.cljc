@@ -598,9 +598,11 @@
    (deftest re-groups-test
      (let [non-matching-matcher (re-matcher #"(a)(a)(a)" "bbb")
            single-matching-matcher (re-matcher #"aaa" "aaa")
-           groups-matching-matcher (re-matcher #"(a)(a)(a)" "aaa")]
+           groups-matching-matcher (re-matcher #"(a)(a)(a)" "aaa")
+           with-empty-group-matcher (re-matcher #"(a)?(b)" "b")]
        (.find single-matching-matcher)
        (.find groups-matching-matcher)
+       (.find with-empty-group-matcher)
        (.find non-matching-matcher)
        (is (thrown? java.lang.IllegalStateException
                     (check-call `re-groups [non-matching-matcher])))
@@ -608,6 +610,8 @@
          (is (check-call `re-groups [single-matching-matcher])))
        (testing "returning seqable of strings"
          (is (check-call `re-groups [groups-matching-matcher])))
+       (testing "returning seqable of nilable strings"
+         (is (check-call `re-groups [with-empty-group-matcher])))
        (with-instrumentation `re-groups
          (is (caught? `re-groups (re-groups 1)))))))
 
@@ -617,6 +621,8 @@
     (is (nil? (check-call `re-seq [#"a" "b"]))))
   (testing "one match"
     (is (check-call `re-seq [#"s" "s"])))
+  (testing "returns seqable of matches"
+    (is (check-call `re-seq [#"(a)?(b)" "b"])))
   (with-instrumentation `re-seq
     (is (caught? `re-seq (re-seq 1 "s")))
     (is (caught? `re-seq (re-seq #"s" 1))))
@@ -628,8 +634,9 @@
     (is (nil? (check-call `re-matches [#"a" "b"]))))
   (testing "returning string"
     (is (check-call `re-matches [#"hello.*" "hello there"])))
-  (testing "returning seqable of string"
-    (is (check-call `re-matches [#"(hello.*)" "hello there"])))
+  (testing "returning seqable of nilable strings"
+    (is (check-call `re-matches [#"(hello.*)" "hello there"]))
+    (is (= ["b" nil "b"] (check-call `re-matches [#"(a)?(b)" "b"]))))
   (with-instrumentation `re-matches
     (is (caught? `re-matches (re-matches 1 "s")))
     (is (caught? `re-matches (re-matches #"s" 1))))
@@ -643,8 +650,9 @@
     (is (nil? (check-call `re-find [#"a" "b"]))))
   (testing "returning string"
     (is (check-call `re-find [#"hello.*" "hello there"])))
-  (testing "returning seqable of string"
-    (is (check-call `re-find [#"(hello.*)" "hello there"])))
+  (testing "returning seqable of nilable strings"
+    (is (check-call `re-find [#"(hello.*)" "hello there"]))
+    (is (= ["b" nil "b"] (check-call `re-find [#"(a)?(b)" "b"]))))
   (with-instrumentation `re-find
     #?(:clj (caught? `re-find (re-find 1)))
     (is (caught? `re-find (re-find 1 "s")))
