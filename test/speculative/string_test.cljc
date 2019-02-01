@@ -7,9 +7,7 @@
                           with-unstrumentation
                           caught?
                           check-call]]
-   [speculative.test-utils :refer [check]]
-   ;; included for self-hosted cljs
-   [workarounds-1-10-439.core]))
+   [speculative.test-utils :refer [check]]))
 
 ;; 180
 (deftest join-test

@@ -3,9 +3,7 @@
    [clojure.spec.test.alpha :as stest]
    [clojure.test :as t :refer [deftest is testing]]
    [respeced.test :refer [caught?]]
-   [speculative.instrument :as instrument]
-   ;; included for self-hosted cljs
-   [workarounds-1-10-439.core]))
+   [speculative.instrument :as instrument]))
 
 (deftest instrument-test
   (testing "speculative specs should be instrumentable and unstrumentable"

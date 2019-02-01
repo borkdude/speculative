@@ -9,9 +9,7 @@
                                  with-unstrumentation
                                  caught?
                                  check-call]]
-   [speculative.test-utils :refer [check]]
-   ;; included for self-hosted cljs
-   [workarounds-1-10-439.core]))
+   [speculative.test-utils :refer [check]]))
 
 (deftest map-entry-test
   (let [mes (gen/sample (s/gen ::ss/map-entry))]

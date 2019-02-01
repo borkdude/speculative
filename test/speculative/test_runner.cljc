@@ -2,12 +2,13 @@
   (:require
    #?(:clj [patch.clj-2443])
    [clojure.test :as t :refer [run-tests]]
-   [speculative.test-utils :refer [planck-env?]]
-   [speculative.specs-test]
+   [clojure.test.check]
    [speculative.core-test]
+   [speculative.instrument-test]
    [speculative.set-test]
+   [speculative.specs-test]
    [speculative.string-test]
-   [speculative.instrument-test]))
+   [speculative.test-utils :refer [planck-env?]]))
 
 (defn exit
   "Exit with the given status."

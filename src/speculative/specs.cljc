@@ -1,19 +1,27 @@
 (ns speculative.specs
   "Primitive specs"
   (:refer-clojure :exclude [seqable? reduceable? regexp?])
-  (:require [clojure.spec.alpha :as s]
-            [clojure.spec.gen.alpha :as gen]
-            #?(:cljs [goog.string])))
+  (:require
+   [clojure.spec.alpha :as s]
+   [clojure.spec.gen.alpha :as gen]
+   #?(:cljs [goog.string])))
+
+#?(:cljs (def before-1_10_439?
+           (and *clojurescript-version*
+                (pos? (goog.string/compareVersions "1.10.439"
+                                                   *clojurescript-version*)))))
 
 #?(:cljs
-   (if (and *clojurescript-version*
-            (pos? (goog.string/compareVersions "1.10.439"
-                                               *clojurescript-version*)))
+   (if before-1_10_439?
      (defn seqable? [v]
        (or (nil? v)
            (clojure.core/seqable? v)))
      (def seqable? clojure.core/seqable?))
    :clj (def seqable? clojure.core/seqable?))
+
+(s/def ::seqable
+  (s/with-gen seqable?
+    (fn [] (s/gen clojure.core/seqable?))))
 
 (defn reducible? [x]
   #?(:clj
@@ -57,7 +65,6 @@
 (s/def ::reducible reducible?)
 (s/def ::seq seq?)
 (s/def ::non-empty-seq (s/and ::seq not-empty))
-(s/def ::seqable seqable?)
 (s/def ::vector vector?)
 (s/def ::sequential sequential?)
 (s/def ::some some?)
