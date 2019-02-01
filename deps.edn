@@ -6,7 +6,7 @@
                       org.clojure/clojurescript {:mvn/version "1.10.516"}
                       org.clojure/test.check {:mvn/version "RELEASE"}
                       respeced {:git/url "https://github.com/borkdude/respeced"
-                                :sha "9d9254a7ed4c2800ca01f23b6fa86ff8c17d8ec5"}}}
+                                :sha "e7fb5e776f576f640a8676d3be0ff4ed45233ec2"}}}
   :repl ;; works for clj and planck, use :cljs-repl for normal cljs
   {:main-opts
    ["-e" "(require,'[speculative.core])"
