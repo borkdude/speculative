@@ -34,7 +34,7 @@ if [ "$SKIP_CLJS" != true ]; then
         | tee -a out/output.txt
 fi
 
-if [ "$CI" = true ]; then
+if [ "$CI" = true ] && [ -n "$SPECULATIVE_SLACK_HOOK" ]; then
     errors=$(grep -c ERROR out/output.txt)
     if [ "$errors" -gt 0 ]; then
         problem=$(grep Testing out/output.txt | head -n 1 | sed 's/Testing //')
