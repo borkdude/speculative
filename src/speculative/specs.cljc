@@ -53,8 +53,7 @@
 (s/def ::map map?)
 
 (s/def ::java-map ::any)
-;; FIXME: this doesn't work in spec-alpha2
-#_#?(:clj (s/def ::java-map
+#?(:clj (s/def ::java-map
           (s/with-gen #(instance? java.util.Map %)
             (fn [] (gen/fmap #(java.util.HashMap. %)
                              (s/gen ::map))))))
@@ -76,8 +75,8 @@
 (s/def ::some some?)
 (s/def ::string string?)
 (s/def ::char-sequence ::any)
-;; FIXME: this doesn't work in spec-alpha2
-#_#?(:clj (s/def ::char-sequence
+
+#?(:clj (s/def ::char-sequence
           (s/with-gen
             #(instance? java.lang.CharSequence %)
             (fn []
@@ -88,7 +87,7 @@
                                 #(java.nio.CharBuffer/wrap %)
                                 #(String. %)]))))))
 
-#_(defn seqable-of
+(defn seqable-of
   "every is not designed to deal with seqable?, this is a way around it"
   [spec]
   (s/with-gen (s/and seqable?
@@ -97,7 +96,13 @@
                                        (s/every spec))))
     #(s/gen (s/nilable (s/every spec :kind coll?)))))
 
-(s/def ::seqable-of-map-entry ::any #_(seqable-of ::map-entry))
+(s/def ::seqable-of-map-entry
+  ;; ERROR:
+  ;; (s/valid? ::ss/seqable-of-map-entry {:a 1})
+  ;; Execution error (IllegalStateException) at clojure.spec-alpha2/spec* (spec_alpha2.clj:195).
+  ;; Symbolic spec must be fully-qualified: spec
+  ;; TODO: probably using this blogpost I can fix it: https://github.com/clojure/spec-alpha2/wiki/Differences-from-spec.alpha
+  (seqable-of ::map-entry))
 
 
 (s/def ::seqable-of-string ::any #_(seqable-of ::string))
