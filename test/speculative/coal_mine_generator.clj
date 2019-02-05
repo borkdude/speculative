@@ -50,4 +50,4 @@
     (io/make-parents out)
     (emit-program out problems)))
 
-;; NOTE: problem 82 takes an insane amount of time to run
+;; NOTE: problems 82, 101 takes an insane amount of time to run
