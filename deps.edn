@@ -6,12 +6,10 @@
          ;; why is this again?
          :jvm-opts ["-Dclojure.spec.skip-macros"]
          :extra-deps {org.clojure/clojure {:mvn/version "1.10.0"}
-                      org.clojure/clojurescript {:mvn/version "1.10.439"}
-                      mfikes/workarounds-1.10.439 {:git/url "https://github.com/mfikes/workarounds-1.10.439"
-                                                   :sha "a559201602fc6a21701479b83086d76bd5ed09eb"}
+                      org.clojure/clojurescript {:mvn/version "1.10.516"}
                       org.clojure/test.check {:mvn/version "RELEASE"}
                       respeced {:git/url "https://github.com/borkdude/respeced"
-                                :sha "d13e39fc177c514339d32662ed458e7c20868a6a"}}}
+                                :sha "e7fb5e776f576f640a8676d3be0ff4ed45233ec2"}}}
   :repl ;; works for clj and planck, use :cljs-repl for normal cljs
   {:main-opts
    ["-e" "(require,'[speculative.core])"
@@ -55,20 +53,18 @@
   {:main-opts ["-m" "speculative.cost"]}
   :cljs-cost
   {:main-opts ["-m" "cljs.main" "-re" "node" "-m" "speculative.cost"]}
-  :coal-mine-clj
+  :coal-mine
   {:extra-deps {github-mfikes/coal-mine
                 {:git/url "https://github.com/mfikes/coal-mine"
-                 :sha "4ef887f6707ffbce94f05cd6876997290c399665"}}
-   :jvm-opts ["-XX:CompressedClassSpaceSize=2g"]
+                 :sha "a8bf06e4ba7fc37222c8255d80a8c08f2e099247"}}}
+  :coal-mine-clj
+  {:jvm-opts ["-XX:CompressedClassSpaceSize=2g"]
    :main-opts ["-e" "(require,'[patch.clj-2443])"
                "-e" "(require,'[speculative.instrument,:refer,[instrument]])"
                "-e" "(instrument)"
                "-m" "coal-mine.test-runner"]}
   :coal-mine-cljs
-  {:extra-deps {github-mfikes/coal-mine
-                {:git/url "https://github.com/mfikes/coal-mine"
-                 :sha "4ef887f6707ffbce94f05cd6876997290c399665"}}
-   :jvm-opts ["-Xmx6g"]
+  {:jvm-opts ["-Xmx6g"]
    :main-opts ["-m" "cljs.main"
                "-co" "{:parallel-build,true}"
                "-re" "node"
@@ -76,18 +72,12 @@
                "-e" "(instrument)"
                "-m" "coal-mine.test-runner"]}
   :coal-mine-runner-clj
-  {:extra-deps {github-mfikes/coal-mine
-                {:git/url "https://github.com/mfikes/coal-mine"
-                 :sha "4ef887f6707ffbce94f05cd6876997290c399665"}}
-   :jvm-opts ["-Xmx6g"]
+  {:jvm-opts ["-Xmx6g"]
    :main-opts ["-e" "(require,'[speculative.instrument,:refer,[instrument]])"
                "-e" "(instrument)"
                "-m" "speculative.coal-mine-runner"]}
   :coal-mine-runner-cljs
-  {:extra-deps {github-mfikes/coal-mine
-                {:git/url "https://github.com/mfikes/coal-mine"
-                 :sha "4ef887f6707ffbce94f05cd6876997290c399665"}}
-   :jvm-opts ["-Xmx6g"]
+  {:jvm-opts ["-Xmx6g"]
    :main-opts ["-m" "cljs.main"
                "-co" "{:parallel-build,true}"
                "-re" "node"

@@ -9,19 +9,17 @@
                                  with-unstrumentation
                                  caught?
                                  check-call]]
-   [speculative.test-utils :refer [check]]
-   ;; included for self-hosted cljs
-   [workarounds-1-10-439.core]))
+   [speculative.test-utils :refer [check]]))
 
 (deftest map-entry-test
   (let [mes (gen/sample (s/gen ::ss/map-entry))]
     (is (seq mes))
     (is (every? #(= 2 (count %)) mes))))
 
-(deftest regexp-test
-  (let [res (gen/sample (s/gen ::ss/regexp))]
+(deftest regex-test
+  (let [res (gen/sample (s/gen ::ss/regex))]
     (is (seq res))
-    (is (every? ss/regexp? res))))
+    (is (every? ss/regex? res))))
 
 (deftest any-test
   (is (s/valid? ::ss/any :clojure.spec.alpha/invalid)))

@@ -7,10 +7,19 @@
                           with-unstrumentation
                           caught?
                           check-call]]
-   [speculative.test-utils :refer [check]]
-   ;; included for self-hosted cljs
-   [workarounds-1-10-439.core]))
+   [speculative.test-utils :refer [check]]))
 
+;; 180
+(deftest join-test
+  (is (check-call `str/join [(range 9)]))
+  (is (check-call `str/join ["," (range 9)]))
+  (is (check-call `str/join [::foo (range 9)]))
+  (check `str/join)
+  (with-instrumentation `str/join
+    (is (caught? `str/join (str/join 1)))
+    (is (caught? `str/join (str/join "," 1)))))
+
+;; 360
 (deftest starts-with?-test
   (is (true? (check-call `str/starts-with? ["foo" "fo"])))
   #?(:clj (is (true? (check-call `str/starts-with?
@@ -23,6 +32,7 @@
                  (str/starts-with? "foo" #"bar"))))
   (check `str/starts-with?))
 
+;; 366
 (deftest ends-with?-test
   (is (true? (check-call `str/ends-with? ["foo" "oo"])))
   #?(:clj (is (true? (check-call `str/ends-with?

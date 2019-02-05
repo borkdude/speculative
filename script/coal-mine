@@ -1,35 +1,47 @@
-#!/bin/sh
+#!/bin/bash
 
-if [ ! -z $COAL_MINE_TIMEOUT ]; then
+if [ -n "$COAL_MINE_TIMEOUT" ]; then
     timeout=$(command -v timeout)
-    if [ -z $timeout ]; then
+    if [ -z "$timeout" ]; then
         timeout=$(command -v gtimeout)
     fi
 
-    if [ -z $timeout ]; then
-        echo "WARNING: timeout program not found, running without it\n"
+    if [ -z "$timeout" ]; then
+        echo -e "WARNING: timeout program not found, running without it\n"
     else
         timeout_cmd="$timeout $COAL_MINE_TIMEOUT"
     fi
 fi
 
-op=$1
-if [ -z $op ]; then
-   op="random"
+from=$1
+to=$2
+
+echo -e "=== Generating coal-mine-runner"
+
+rm -rf out
+clojure -A:test:coal-mine:coal-mine-generator out/out.cljc \
+        ${from:+"$from"} ${to:+"$to"}
+
+if [ "$SKIP_CLJ" != true ]; then
+    echo -e "\n=== Running clj coal-mine tests"
+    $timeout_cmd clojure -R:test:coal-mine:coal-mine-clj -i out/out.cljc \
+        | tee -a out/output.txt
 fi
 
-max_or_nth=$2
-if [ -z $max_or_nth ]; then
-    max_or_nth="1"
+if [ "$SKIP_CLJS" != true ]; then
+    echo -e "\n=== Running cljs node coal-mine tests"
+    $timeout_cmd clojure -R:test:coal-mine:coal-mine-cljs -m cljs.main -re node -i out/out.cljc \
+        | tee -a out/output.txt
 fi
 
-echo "=== Generating coal-mine-runner"
-clojure -A:test:coal-mine-generator out/out.cljc $op $max_or_nth
-
-echo "\n=== Running clj coal-mine tests"
-$timeout_cmd clojure -R:test:coal-mine-clj -i out/out.cljc
-
-echo "\n=== Running cljs node coal-mine tests"
-$timeout_cmd clojure -R:test:coal-mine-cljs -m cljs.main -re node -i out/out.cljc
-
+if [ "$CI" = true ] && [ -n "$SPECULATIVE_SLACK_HOOK" ]; then
+    errors=$(grep -c ERROR out/output.txt)
+    if [ "$errors" -gt 0 ]; then
+        problem=$(grep Testing out/output.txt | head -n 1 | sed 's/Testing //')
+        msg="found speculative spec errors with problem $problem"
+        curl -X POST -H "Content-Type: application/json" \
+             -d '{"username":"speculative coal-mine test", "channel":"#speculative", "text":'"\"$msg\""'}' \
+             "$SPECULATIVE_SLACK_HOOK"
+    fi
+fi
 exit 0

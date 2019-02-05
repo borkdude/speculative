@@ -26,9 +26,9 @@ jobs:
       - run:
           name: Install Clojure
           command: |
-            curl -O https://download.clojure.org/install/linux-install-1.9.0.397.sh
-            chmod +x linux-install-1.9.0.397.sh
-            sudo ./linux-install-1.9.0.397.sh
+            curl -O https://download.clojure.org/install/linux-install-1.10.0.411.sh
+            chmod +x linux-install-1.10.0.411.sh
+            sudo ./linux-install-1.10.0.411.sh
       - run:
           name: Clojure CA Check
           command: |
@@ -40,8 +40,8 @@ jobs:
           name: Install Planck
           command: |
             sudo apt-get install javascriptcoregtk-4.0 libzip4
-            curl -O http://planck-repl.org/releases/2.19.0-debian-9.0/planck
-            curl -O http://planck-repl.org/releases/2.19.0-debian-9.0/plk
+            curl -O http://planck-repl.org/releases/2.20.0-debian-9.0/planck
+            curl -O http://planck-repl.org/releases/2.20.0-debian-9.0/plk
             chmod +x planck
             chmod +x plk
             sudo mv planck /usr/bin

@@ -8,6 +8,7 @@
    #?(:clj [clojure.spec-alpha2.gen :as gen]
       :cljs [clojure.spec.gen.alpha :as gen])
    [clojure.test :as t :refer [is deftest testing]]
+   [clojure.test.check]
    [clojure.test.check.generators :as g]
    [respeced.test :as rt :refer [with-instrumentation
                                  with-unstrumentation
@@ -15,9 +16,7 @@
                                  check-call]]
    [speculative.core :as c]
    [speculative.specs :as ss]
-   [speculative.test-utils :refer [check planck-env?]]
-   ;; included for self-hosted cljs
-   #?(:cljs [workarounds-1-10-439.core])))
+   [speculative.test-utils :refer [check planck-env?]]))
 
 ;; sorted in order of appearance in
 ;; https://github.com/clojure/clojure/blob/master/src/clj/clojure/core.clj
@@ -148,6 +147,25 @@
     (testing "not a reducible coll"
       (is (caught? `vec (vec 1))))))
 
+;; 379
+(deftest hash-map-test
+  (is (check-call `hash-map []))
+  (is (check-call `hash-map [1 2]))
+  (check `hash-map)
+  (with-instrumentation `hash-map
+    ;; See https://github.com/borkdude/speculative/issues/264
+    ;; hash-map is a macro-function in CLJS
+    #?(:cljs (is (caught? `hash-map (apply hash-map [1]))))))
+
+;; 389
+(deftest hash-set-test
+  (is (check-call `hash-set []))
+  (is (check-call `hash-set [1 2]))
+  (check `hash-set)
+  (testing "hash-set can be instrumented"
+    (with-instrumentation `hash-set
+      (is (set? (hash-set 1 2 3))))))
+
 ;; 436
 (deftest nil?-test
   (is (check-call `nil? [nil]))
@@ -221,6 +239,7 @@
   (is (check-call `nth [(first {:k :v}) 1]))
   (is (= :ret (check-call `nth [[1 2 :ret 3] 2])))
   (is (check-call `nth [[1 2] 5 :default]))
+  (is (check-call `nth [[1 2] -1 :default]))
   (check `nth
          {:gen {::c/nth-args #(gen/bind (s/gen ::ss/nthable)
                                         (fn [v]
@@ -309,7 +328,13 @@
   (is (nil? (check-call `pop [nil])))
   (is (check-call `pop [[1 2 3]]))
   (is (check-call `pop [(list 1 2 3)]))
-  (check `pop)
+  (is (check-call `pop [#?(:clj (clojure.lang.PersistentQueue/EMPTY)
+                           :cljs #queue [])]))
+  (check `pop {:gen {::ss/stack
+                     ;; pop throws when given an empty coll, except for queues
+                     ;; I've decided not to spec this, since the exceptions are
+                     ;; clear
+                     (fn [] (gen/not-empty (s/gen ::ss/stack)))}})
   (with-instrumentation `pop
     (is (caught? `pop (pop 1)))))
 
@@ -336,6 +361,7 @@
 ;; 1534
 (deftest find-test
   (is (nil? (check-call `find [nil nil])))
+  (is (check-call `find [[:e :e :e] 0]))
   (is (check-call `find [{:a 1} :a]))
   #?(:clj (is (check-call `find [(java.util.HashMap. {:a 1}) :a])))
   (check `find)
@@ -346,6 +372,7 @@
 (deftest select-keys-test
   (is (check-call `select-keys [nil nil]))
   (is (check-call `select-keys [{:a 1} [:a]]))
+  (is (check-call `select-keys [[:e :e :e :e :e :e] [0 1 2]]))
   #?(:clj (is (check-call `select-keys [(java.util.HashMap. {:a 1}) [:a]])))
   (check `select-keys)
   (with-instrumentation `select-keys
@@ -555,6 +582,7 @@
 ;; 4839
 (deftest re-pattern-test
   (is (check-call `re-pattern ["s"]))
+  (is (check-call `re-pattern [#"s"]))
   (check `re-pattern)
   (with-instrumentation `re-pattern
     (is (caught? `re-pattern (re-pattern 1)))))
@@ -573,9 +601,11 @@
    (deftest re-groups-test
      (let [non-matching-matcher (re-matcher #"(a)(a)(a)" "bbb")
            single-matching-matcher (re-matcher #"aaa" "aaa")
-           groups-matching-matcher (re-matcher #"(a)(a)(a)" "aaa")]
+           groups-matching-matcher (re-matcher #"(a)(a)(a)" "aaa")
+           with-empty-group-matcher (re-matcher #"(a)?(b)" "b")]
        (.find single-matching-matcher)
        (.find groups-matching-matcher)
+       (.find with-empty-group-matcher)
        (.find non-matching-matcher)
        (is (thrown? java.lang.IllegalStateException
                     (check-call `re-groups [non-matching-matcher])))
@@ -583,6 +613,8 @@
          (is (check-call `re-groups [single-matching-matcher])))
        (testing "returning seqable of strings"
          (is (check-call `re-groups [groups-matching-matcher])))
+       (testing "returning seqable of nilable strings"
+         (is (check-call `re-groups [with-empty-group-matcher])))
        (with-instrumentation `re-groups
          (is (caught? `re-groups (re-groups 1)))))))
 
@@ -592,33 +624,26 @@
     (is (nil? (check-call `re-seq [#"a" "b"]))))
   (testing "one match"
     (is (check-call `re-seq [#"s" "s"])))
+  (testing "returns seqable of matches"
+    (is (check-call `re-seq [#"(a)?(b)" "b"])))
   (with-instrumentation `re-seq
     (is (caught? `re-seq (re-seq 1 "s")))
     (is (caught? `re-seq (re-seq #"s" 1))))
   (check `re-seq))
 
-<<<<<<< HEAD
-(deftest str-test
-  (is (= "" (check-call `str [nil])))
-  (is (= "lolfoo" (check-call `str ["lol" "foo"])))
-  ;;(check `str)
-  (with-instrumentation `str
-    ;; there's really no way to make str crash, is there?
-    ))
-=======
 ;; 4886
 (deftest re-matches-test
   (testing "no matches"
     (is (nil? (check-call `re-matches [#"a" "b"]))))
   (testing "returning string"
     (is (check-call `re-matches [#"hello.*" "hello there"])))
-  (testing "returning seqable of string"
-    (is (check-call `re-matches [#"(hello.*)" "hello there"])))
+  (testing "returning seqable of nilable strings"
+    (is (check-call `re-matches [#"(hello.*)" "hello there"]))
+    (is (= ["b" nil "b"] (check-call `re-matches [#"(a)?(b)" "b"]))))
   (with-instrumentation `re-matches
     (is (caught? `re-matches (re-matches 1 "s")))
     (is (caught? `re-matches (re-matches #"s" 1))))
   (check `re-matches))
->>>>>>> master
 
 ;; 4898
 (deftest re-find-test
@@ -628,8 +653,9 @@
     (is (nil? (check-call `re-find [#"a" "b"]))))
   (testing "returning string"
     (is (check-call `re-find [#"hello.*" "hello there"])))
-  (testing "returning seqable of string"
-    (is (check-call `re-find [#"(hello.*)" "hello there"])))
+  (testing "returning seqable of nilable strings"
+    (is (check-call `re-find [#"(hello.*)" "hello there"]))
+    (is (= ["b" nil "b"] (check-call `re-find [#"(a)?(b)" "b"]))))
   (with-instrumentation `re-find
     #?(:clj (caught? `re-find (re-find 1)))
     (is (caught? `re-find (re-find 1 "s")))
@@ -666,6 +692,17 @@
   (with-instrumentation `min-key
     (is (caught? `min-key (min-key 1 1)))
     (is (caught? `min-key (min-key identity)))))
+
+;; 5029
+(deftest distinct-test
+  (is (check-call `distinct []))
+  (is (= 3 (count (check-call `distinct [[1 1 2 1 3]]))))
+  (is (= 3 (count (check-call `distinct
+                              [(eduction (map inc)
+                                         [1 1 2 2 3 3 1 1])]))))
+  (check `distinct)
+  (with-instrumentation `distinct
+    (is (caught? `distinct (distinct 1)))))
 
 ;; 5206
 (deftest interpose-test
@@ -745,8 +782,13 @@
          {:gen {::c/update-in-args
                 #(gen/one-of
                   [(gen/tuple (g/recursive-gen (fn [inner] (g/map g/keyword inner))
-                                               (gen/choose 0 10))
-                              (gen/not-empty (gen/vector (gen/keyword)))
+                                               (gen/fmap (fn [i]
+                                                           {:num i})
+                                                         (gen/choose 0 10)))
+                              (gen/fmap
+                               (fn [vec]
+                                 (conj vec :num))
+                               (gen/not-empty (gen/vector (gen/keyword))))
                               (gen/return (fnil + 1)))
                    (gen/bind (gen/vector (gen/choose 0 10))
                              (fn [v]
@@ -852,6 +894,14 @@
     (is (caught? `partition-by (partition-by 1)))
     (is (caught? `partition-by (partition-by odd? 1)))))
 
+;; 7203
+(deftest frequencies-test
+  (is (check-call `frequencies [[]]))
+  (is (check-call `frequencies [["foo" "bar" :a :a]]))
+  (check `frequencies)
+  (with-instrumentation `frequencies
+    (is (caught? `frequencies (frequencies 1)))))
+
 ;; 7240
 (deftest partition-all-test
   (is (check-call `partition-all [2]))
@@ -865,6 +915,16 @@
     (is (caught? `partition-all (partition-all 2 1)))
     (is (caught? `partition-all (partition-all 2 1 1)))))
 
+;; 7274
+(deftest shuffle-test
+  (is (check-call `shuffle [[1 2 3]]))
+  (is (check-call `shuffle [#?(:clj (java.util.ArrayList. [1 2 3])
+                               :cljs (into-array [1 2 3]))]))
+  #?(:cljs (is (check-call `shuffle [nil])))
+  (check `shuffle)
+  (with-instrumentation `shuffle
+    (is (caught? `shuffle (shuffle 1)))))
+
 ;; 7313
 (deftest keep-test
   (is (check-call `keep [seq]))
@@ -874,6 +934,29 @@
   (with-instrumentation `keep
     (is (caught? `keep (keep 1)))
     (is (caught? `keep (keep identity 1)))))
+
+;; 7396
+(deftest every-pred-test
+  (is (check-call `every-pred [number? odd?]))
+  (with-instrumentation `every-pred
+    (is (caught? `every-pred (every-pred 1)))))
+
+;; 7436
+(deftest some-fn-test
+  (is (check-call `some-fn [number? string?]))
+  (with-instrumentation `some-fn
+    (is (caught? `some-fn (some-fn 1)))))
+
+;; 7655
+(deftest dedupe-test
+  (is (check-call `dedupe []))
+  (is (= 4 (count (check-call `dedupe [[1 1 2 3 1]]))))
+  (is (= 4 (count (check-call `dedupe
+                              [(eduction (map inc)
+                                         [1 1 2 2 3 3 1 1])]))))
+  (check `dedupe)
+  (with-instrumentation `dedupe
+    (is (caught? `dedupe (dedupe 1)))))
 
 ;;;; Scratch
 

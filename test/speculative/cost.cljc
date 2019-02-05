@@ -9,11 +9,7 @@
    [clojure.spec-alpha2 :as s]
    [clojure.spec-alpha2.test :as stest]
    [workarounds-1-10-439.core]
-   #?(:clj [taoensso.tufte :as tufte :refer [defnp p profiled profile]]
-      :cljs [taoensso.tufte :as tufte :refer-macros [defnp p profiled profile]])
-   #?(:clj [net.cgrand.macrovich :as macros])
-   [speculative.impl :as impl]
-   [workarounds-1-10-439.core])
+   [speculative.impl :as impl])
   #?(:cljs
      (:require-macros [speculative.cost :refer [cost time]])))
 

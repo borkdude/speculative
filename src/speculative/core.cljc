@@ -69,6 +69,16 @@
   :args (s/cat :coll ::ss/reducible-coll)
   :ret ::ss/vector)
 
+;; 379
+(s/fdef clojure.core/hash-map
+  :args (s/cat :pairs (s/* (s/cat :k ::ss/any :v ::ss/any)))
+  :ret ::ss/map)
+
+;; 389
+(s/fdef clojure.core/hash-set
+  :args (s/cat :keys (s/* ::ss/any))
+  :ret ::ss/set)
+
 ;; 436
 (s/fdef clojure.core/nil?
   :args (s/cat :x ::ss/any)
@@ -108,7 +118,7 @@
 ;; 889
 (s/def ::nth-args
   (s/cat :coll ::ss/nthable
-         :index ::ss/nat-int
+         :index ::ss/int
          :not-found (s/? ::ss/any)))
 
 (s/fdef clojure.core/nth
@@ -163,7 +173,7 @@
 
 ;; 1467
 (s/fdef clojure.core/pop
-  :args (s/cat :coll (s/nilable ::ss/non-empty-stack))
+  :args (s/cat :coll (s/nilable ::ss/stack))
   :ret (s/nilable ::ss/stack))
 
 ;; 1494
@@ -180,13 +190,17 @@
 
 ;; 1534
 (s/fdef clojure.core/find
-  ;; TODO: find works for vectors too?
-  :args (s/cat :map (s/nilable ::ss/map+) :key ::ss/any)
+  :args (s/cat :map
+               (s/nilable (s/or :associative ::ss/associative
+                                #?@(:clj [:java-map ::ss/java-map])))
+               :key ::ss/any)
   :ret (s/nilable ::ss/map-entry))
 
 ;; 1540
 (s/fdef clojure.core/select-keys
-  :args (s/cat :map (s/nilable ::ss/map+)
+  :args (s/cat :map
+               (s/nilable (s/or :associative ::ss/associative
+                                #?@(:clj [:java-map ::ss/java-map])))
                :keyseq ::ss/seqable)
   :ret ::ss/map)
 
@@ -314,37 +328,37 @@
 
 ;; 4839
 (s/fdef clojure.core/re-pattern
-  :args (s/cat :s ::ss/string)
-  :ret ::ss/regexp)
+  :args (s/alt :re ::ss/regex :s ::ss/string)
+  :ret ::ss/regex)
 
 ;; 4849
 #?(:clj
    (s/fdef clojure.core/re-matcher
-     :args (s/cat :re ::ss/regexp :s ::ss/string)
+     :args (s/cat :re ::ss/regex :s ::ss/string)
      :ret ::ss/matcher))
 
 ;; 4858
 #?(:clj
    (s/fdef clojure.core/re-groups
      :args (s/cat :m ::ss/matcher)
-     :ret ::ss/string-or-seqable-of-string))
+     :ret ::ss/regex-match))
 
 ;; 4874
 (s/fdef clojure.core/re-seq
-  :args (s/cat :re ::ss/regexp :s ::ss/string)
-  :ret ::ss/seqable-of-string)
+  :args (s/cat :re ::ss/regex :s ::ss/string)
+  :ret ::ss/regex-matches)
 
 ;; 4886
 (s/fdef clojure.core/re-matches
-  :args (s/cat :re ::ss/regexp :s ::ss/string)
-  :ret ::ss/string-or-seqable-of-string)
+  :args (s/cat :re ::ss/regex :s ::ss/string)
+  :ret ::ss/regex-match)
 
 ;; 4898
 (s/fdef clojure.core/re-find
   :args #?(:clj (s/alt :matcher (s/cat :m ::ss/matcher)
-                       :re-s (s/cat :re ::ss/regexp :s ::ss/string))
-           :cljs (s/cat :re ::ss/regexp :s ::ss/string))
-  :ret ::ss/string-or-seqable-of-string)
+                       :re-s (s/cat :re ::ss/regex :s ::ss/string))
+           :cljs (s/cat :re ::ss/regex :s ::ss/string))
+  :ret ::ss/regex-match)
 
 ;; 4981
 (s/fdef clojure.core/subs
@@ -365,6 +379,14 @@
 (s/fdef clojure.core/min-key
   :args (s/cat :k ::ss/ifn :xs (s/+ ::ss/any))
   :ret ::ss/any)
+
+;; 5029
+(s/fdef clojure.core/distinct
+  :args (s/alt :transducer (s/cat)
+               :seqable (s/cat :coll ::ss/reducible-coll))
+  :ret ::ss/seqable-or-transducer
+  :fn (fn [{:keys [args ret]}]
+        (= (key args) (key ret))))
 
 ;; 5206
 (s/fdef clojure.core/interpose
@@ -451,6 +473,11 @@
                :seqable (s/cat :f ::ss/ifn :coll ::ss/seqable))
   :ret ::ss/seqable-or-transducer)
 
+;; 7203
+(s/fdef clojure.core/frequencies
+  :args (s/cat :coll ::ss/reducible-coll)
+  :ret (s/map-of ::ss/any nat-int?))
+
 ;; 7240
 (s/fdef clojure.core/partition-all
   :args (s/alt :transducer (s/cat :n ::ss/pos-int)
@@ -458,10 +485,38 @@
                :step (s/cat :n ::ss/pos-int :step ::ss/pos-int :coll ::ss/seqable))
   :ret ::ss/seqable-or-transducer)
 
+;; 7274
+(s/fdef clojure.core/shuffle
+  :args (s/cat :coll
+               ;; See https://dev.clojure.org/jira/browse/CLJ-2470
+               #?(:clj ::ss/java-coll
+                  :cljs (s/nilable
+                         (s/or :coll ::ss/coll
+                               :array ::ss/array))))
+  :ret ::ss/coll)
+
 ;; 7313
 (s/fdef clojure.core/keep
   :args (s/alt :transducer (s/cat :f ::ss/ifn)
                :seqable (s/cat :f ::ss/ifn :coll ::ss/seqable))
+  :ret ::ss/seqable-or-transducer
+  :fn (fn [{:keys [args ret]}]
+        (= (key args) (key ret))))
+
+;; 7396
+(s/fdef clojure.core/every-pred
+  :args (s/cat :pred (s/+ ::ss/ifn))
+  :ret ::ss/ifn)
+
+;; 7436
+(s/fdef clojure.core/some-fn
+  :args (s/cat :pred (s/+ ::ss/ifn))
+  :ret ::ss/ifn)
+
+;; 7655
+(s/fdef clojure.core/dedupe
+  :args (s/alt :transducer (s/cat)
+               :seqable (s/cat :coll ::ss/reducible-coll))
   :ret ::ss/seqable-or-transducer
   :fn (fn [{:keys [args ret]}]
         (= (key args) (key ret))))

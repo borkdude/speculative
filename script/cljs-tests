@@ -1,16 +1,16 @@
-#!/bin/sh
+#!/bin/bash
 
-set $exit_code=0
+exit_code=0
 
-echo "\n=== Compiling node tests"
-clojure -A:test:compile-node-tests
-if [ $? != 0 ]; then
+echo -e "\n=== Compiling node tests"
+
+if ! clojure -A:test:compile-node-tests; then
     exit_code=1
 fi
 
-echo "\n=== Running node tests"
-node out/main.js
-if [ $? != 0 ]; then
+echo -e "\n=== Running node tests"
+
+if ! node out/main.js; then
     exit_code=1
 fi
 
