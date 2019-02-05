@@ -49,3 +49,5 @@
                    (throw (Exception. (str "no problems found in range " (vec problem-range)))))]
     (io/make-parents out)
     (emit-program out problems)))
+
+;; NOTE: problem 82 takes an insane amount of time to run
