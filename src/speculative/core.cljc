@@ -320,9 +320,9 @@
 
 ;; 3184
 (s/fdef clojure.core/partition
-  :args (s/alt :no-overlap (s/cat :n ::ss/pos-int :coll ::ss/seqable)
-               :step (s/cat :n ::ss/pos-int :step ::ss/pos-int :coll ::ss/seqable)
-               :pad (s/cat :n ::ss/pos-int :step ::ss/pos-int
+  :args (s/alt :no-overlap (s/cat :n ::ss/int :coll ::ss/seqable)
+               :step (s/cat :n ::ss/int :step ::ss/int :coll ::ss/seqable)
+               :pad (s/cat :n ::ss/int :step ::ss/int
                            :pad ::ss/seqable :coll ::ss/seqable))
   :ret ::ss/seqable)
 
@@ -480,9 +480,9 @@
 
 ;; 7240
 (s/fdef clojure.core/partition-all
-  :args (s/alt :transducer (s/cat :n ::ss/pos-int)
-               :no-overlap (s/cat :n ::ss/pos-int :coll ::ss/seqable)
-               :step (s/cat :n ::ss/pos-int :step ::ss/pos-int :coll ::ss/seqable))
+  :args (s/alt :transducer (s/cat :n ::ss/int)
+               :no-overlap (s/cat :n ::ss/int :coll ::ss/seqable)
+               :step (s/cat :n ::ss/int :step ::ss/int :coll ::ss/seqable))
   :ret ::ss/seqable-or-transducer)
 
 ;; 7274
