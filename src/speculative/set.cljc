@@ -1,7 +1,9 @@
 (ns speculative.set
-  (:require [clojure.set :as set]
-            [clojure.spec.alpha :as s]
-            [speculative.specs :as ss]))
+  (:require
+   [clojure.set :as set]
+   #?(:clj [clojure.spec-alpha2 :as s]
+      :cljs [clojure.spec.alpha :as s])
+   [speculative.specs :as ss]))
 
 (s/def ::nilable-set
   (s/nilable ::ss/set))

@@ -88,6 +88,15 @@
                                 #(String. %)]))))))
 
 (defn seqable-of
+  [spec]
+  (s/spec*
+   `(s/with-gen (s/and seqable?
+                       (s/or :empty empty?
+                             :seq (s/and (s/conformer seq)
+                                         (s/every ~spec))))
+      #(s/gen (s/nilable (s/every ~spec :kind coll?))))))
+
+#_(defn seqable-of
   "every is not designed to deal with seqable?, this is a way around it"
   [spec]
   (s/with-gen (s/and seqable?

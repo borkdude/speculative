@@ -1,6 +1,7 @@
 (ns speculative.string
   (:require
-   [clojure.spec.alpha :as s]
+   #?(:clj [clojure.spec-alpha2 :as s]
+      :cljs [clojure.spec.alpha :as s])
    [clojure.string :as str]
    [speculative.specs :as ss]))
 

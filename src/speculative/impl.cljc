@@ -30,7 +30,7 @@
     "Private."
     [symbol]
     `(? :clj
-        (clojure.spec.test.alpha/instrument ~symbol)
+        (clojure.spec-alpha2.test/instrument ~symbol)
         :cljs
         (cljs.spec.test.alpha/instrument ~symbol)))
 
@@ -38,7 +38,7 @@
     "Private."
     [symbol]
     `(? :clj
-        (clojure.spec.test.alpha/unstrument ~symbol)
+        (clojure.spec-alpha2.test/unstrument ~symbol)
         :cljs
         (cljs.spec.test.alpha/unstrument ~symbol))))
 
