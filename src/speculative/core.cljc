@@ -70,7 +70,7 @@
   :ret ::ss/vector)
 
 ;; 379
-(s/fdef clojure.core/hash-map
+#_(s/fdef clojure.core/hash-map
   :args (s/cat :pairs (s/* (s/cat :k ::ss/any :v ::ss/any)))
   :ret ::ss/map)
 
@@ -217,6 +217,12 @@
 ;; 2327
 (s/def :atom/validator ::ss/ifn)
 (s/def :atom/meta ::ss/map)
+(s/def :atom/validator ifn?)
+(s/def :atom/meta map?)
+#_(s/fdef clojure.core/atom
+  :args (s/cat :x any? :options (s/keys* :opt-un [:atom/validator :atom/meta]))
+  :ret #(instance? clojure.lang.IAtom %))
+
 ;; FIXME: spec-alpha2
 #_(s/fdef clojure.core/atom
   :args (s/cat :x ::ss/any :options (s/keys* :opt-un [:atom/validator :atom/meta]))
@@ -272,6 +278,13 @@
   :args (s/alt :transducer (s/cat :f ::ss/ifn)
                :seqable (s/cat :f ::ss/ifn :colls (s/+ ::ss/seqable)))
   :ret ::ss/seqable-or-transducer
+  :fn (fn [{:keys [args ret]}]
+        (= (key args) (key ret))))
+
+#_(s/fdef clojure.core/map
+  :args (s/alt :transducer (s/cat :f ifn?)
+               :seqable (s/cat :f ifn? :colls (s/+ seqable?)))
+  :ret (s/or :transducer ifn? :seqable? ifn?)
   :fn (fn [{:keys [args ret]}]
         (= (key args) (key ret))))
 

@@ -48,7 +48,7 @@
                       :cljs speculative.impl.syms/blacklist-cljs)
            defs (for [sym blacklist]
                   (impl/?
-                   :clj `(clojure.spec.alpha/def ~sym nil)
+                   :clj `(clojure.spec-alpha2/def ~sym nil)
                    :cljs `(cljs.spec.alpha/def ~sym nil)))]
        `(when (or ~force? (not (no-unload-blacklist??)))
           ~@defs
