@@ -158,6 +158,34 @@ Running `script/clean` before running tests is recommended, especially for
 ClojureScript on Node. The script `script/test` automatically calls
 `script/clean` and runs all tests for all environments.
 
+### Coal-mine
+
+[Coal-mine](https://github.com/mfikes/coal-mine) is a collection of 4clojure
+solutions. These can be used to verify speculative specs.
+
+Run a random coal-mine problem:
+
+    script/coal-mine
+
+Run a specific coal-mine problem:
+
+    script/coal-mine --problem 77
+
+Run a range of coal-mine problems:
+
+    script/coal-mine --from 10 --to 15
+
+Both `from` and `to` are inclusive.
+
+Run with additional checks on `ret` and `fn` specs via
+[orchestra](https://github.com/jeaye/orchestra) (EXPERIMENTAL):
+
+    script/coal-mine --from 10 --to 15 --ret-spec true
+
+To skip an environment (CLJ or CLJS):
+
+    SKIP_CLJS=true script/coal-mine
+
 ## Try online
 
 [KLIPSE REPL](https://re-find.it/speculative-repl) with speculative and
