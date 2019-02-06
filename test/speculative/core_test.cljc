@@ -569,6 +569,12 @@
   (is (check-call `partition [2 [1 2 3]]))
   (is (check-call `partition [2 1 [1 2 3]]))
   (is (check-call `partition [2 1 (repeat 1) [1 2 3]]))
+  (is (check-call `partition [2 1 (repeat 1) [1 2 3]]))
+  ;; for non-positive arguments:
+  ;; "alexmiller: it’s current supported behavior, so I don’t think you should exclude it"
+  ;; "alexmiller: I don’t know why you’d end up doing this :)"
+  (is (check-call `partition [0 0 (repeat 1) [1 2 3]]))
+  (is (check-call `partition [-1 -1 (repeat 1) [1 2 3]]))
   (check `partition)
   (with-instrumentation `partition
     (is (caught? `partition (partition [1 2 3] [1 2 3])))
@@ -905,10 +911,13 @@
   (is (check-call `partition-all [2 nil]))
   (is (check-call `partition-all [2 (range 5)]))
   (is (check-call `partition-all [2 1 (range 5)]))
+  ;; for non-positive arguments:
+  ;; "alexmiller: it’s current supported behavior, so I don’t think you should exclude it"
+  ;; "alexmiller: I don’t know why you’d end up doing this :)"
+  (is (check-call `partition-all [-1 -1 (range 5)]))
   (check `partition-all)
   (with-instrumentation `partition-all
-    ;; on Clojure this call doesn't work, because of CLJ-1941
-    #?(:cljs (is (caught? `partition-all (partition-all -1))))
+    ;; NOTE: of interest, see CLJ-1941
     (is (caught? `partition-all (partition-all 2 1)))
     (is (caught? `partition-all (partition-all 2 1 1)))))
 
