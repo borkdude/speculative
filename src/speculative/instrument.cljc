@@ -26,7 +26,7 @@
    []
    #?(:clj (= "true" (System/getenv "SPECULATIVE_NO_UNLOAD_BLACKLIST"))
       :cljs (or (= "true" (cond (exists? js/process)
-                                (gobj/get js/process.env
+                                (gobj/get (gobj/get js/process "env")
                                           "SPECULATIVE_NO_UNLOAD_BLACKLIST")
                                 (exists? js/PLANCK_GETENV)
                                 (gobj/get (js/PLANCK_GETENV)
