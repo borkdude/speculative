@@ -1,4 +1,4 @@
-## 0.0.3-SNAPSHOT
+## 0.0.3
 
 ### New specs
 
