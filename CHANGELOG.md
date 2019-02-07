@@ -1,21 +1,43 @@
 ## 0.0.3-SNAPSHOT
 
-* Specs for the entire `clojure.set` namespace, contributed by <a
-  href="https://github.com/eerohele">@eerohele</a>
+### New specs
 
-* Specs for `inc`, `dec`, `rest`, `next`, `last`, `group-by`, `interpose`,
-  `re-pattern`, `re-matcher`, `re-groups`, `re-seq`, `re-matches`, `re-find` and
-  `subs`.
+This release comes with 73 new specs:
 
-* Namespace `speculative.instrument`: loads all speculative specs. Provides
-  functions to only instrument and unstruments specs provided by speculative,
-  with the exception of functions that are either pointless to instrument
-  (e.g. `str`) or in some cases not without throwing errors on CLJS
-  (e.g. `apply` which throws a callstack error).
+``` clojure
+* + - assoc-in atom comp conj cons dec dedupe dissoc distinct every-pred find
+flatten frequencies get-in group-by hash-map hash-set inc interpose into keep
+keys last list max max-key min min-key next nil?  not nth partition
+partition-all partition-by peek pop re-find re-groups re-matcher re-matches
+re-pattern re-seq rest select-keys seq shuffle some-fn subs update update-in
+vals vec vector zipmap set/difference set/index set/intersection set/join
+set/map-invert set/project set/rename set/rename-keys set/select set/subset?
+set/superset?  set/union string/ends-with?  string/join string/starts-with?
+```
 
-To illustrate why not instrumenting some functions that wouldn't catch important
-errors anyway is beneficial for permance, compare running the first 20 coal-mine
-test sets in CLJS on node:
+Several existing specs were improved.
+
+### New logo
+
+Speculative has a shiny new logo. See the [README](README.md) and [logo](logo)
+directory.
+
+### Namespace `speculative.instrument`
+
+Namespace `speculative.instrument` loads `speculative.core`, `speculative.set`
+and `speculative.string`, so you don't have to. When loading this namespace,
+specs that are not suited or useful for instrumentation are undefined. This
+makes calling `(stest/instrument)` safe, since some specs can cause errors when
+instrumented (e.g. `hash-map` on CLJ and `apply` and `seq` on CLJS).
+
+This namespace also provides `instrument` and `unstrument` functions to only
+i/unstrument specs provided by speculative.
+
+To make testing easier, this namespace provides a `clojure.test` `fixture` that
+wraps a test with speculative instrumentation.
+
+Turning off specs that are not useful to instrument is beneficial for
+performance. Compare running the first 20 coal-mine test sets in CLJS on node:
 
 Without instrumentation of `some?`, `str`, `=` and `get`:
 ``` shell
@@ -26,34 +48,39 @@ With instrumentation of said functions:
 "Elapsed time: 21343.952922 msecs"
 ```
 
-* Stricter `merge-with` spec:
+### Library `respeced`
 
-``` clojure
-user=> (merge-with assoc {:a 1} [:a :b])
-Execution error (ClassCastException) at user$eval164/invokeStatic (REPL:1).
-clojure.lang.Keyword cannot be cast to java.util.Map$Entry
-```
-becomes
+The namespace `speculative.test` was promoted to a library called
+[respeced](https://github.com/borkdude/respeced) and therefore removed from
+speculative.
 
-``` clojure
-user=> (merge-with + {:a 1} [:a :b])
-Evaluation error - invalid arguments to clojure.core/merge-with at (NO_SOURCE_FILE:15).
-:a - failed: map-entry? at: [:maps :rest-maps] spec: :speculative.core/map-entry
-:b - failed: map-entry? at: [:maps :rest-maps] spec: :speculative.core/map-entry
-```
+### Contributors
 
-* `speculative.test` macros `gentest` and `check` renamed to `check` and `check-call` to closer resemble naming in `clojure.spec.test.alpha`
-* `speculative.test` no longer needs require to `clojure.spec.test.alpha` in CLJS ([#95](https://github.com/borkdude/speculative/issues/95))
+Thanks to the contributors in this release:
+
+- Andreas Liljeqvist (@bonega): provided several new specs, improvements around
+  blacklisting of specs and testing of individual specs.
+- Eero Helenius (@eerohele): provided specs for the entire `clojure.set` namespace.
+- Nikita Prokopov (@tonsky): provided the logo for speculative.
+
+Additional thanks to Alex Miller (@puredanger) and Andy Fingerhut (@jafingerhut)
+for providing feedback on several issues.
 
 ## 0.0.2 (2018-11-09)
 
-* Specs for `=`, `/`, `apply` (clj only), `assoc`, `count`, `every?`, `filter`,
-  `first`, `get`, `juxt`, `not-any?`, `not-every?`, `range`, `partial`,
-  `remove`, `reset!`, `swap!`, `some`, `some?` and `str`.
-* Namespace `speculative.test` with tools around `clojure.spec.test.alpha`. More
-  info [here](doc/test.md).
+### New specs:
+
+``` clojure
+= / apply assoc count every?  filter first fnil get juxt map merge merge-with
+not-any?  not-every?  range partial reduce remove reset!  some some?  str swap!
+```
+
+### Namespace `speculative.test`
+
+Namespace `speculative.test` with tools around `clojure.spec.test.alpha`. More
+info [here](doc/test.md).
 
 ## 0.0.1 (2018-10-20)
 
-* Initial release with specs for `map`, `filter`, `merge`, `merge-with`, `fnil`
-  and `reduce`.
+Initial release with specs for `map`, `filter`, `merge`, `merge-with`, `fnil`
+and `reduce`.

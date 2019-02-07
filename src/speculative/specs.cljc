@@ -6,7 +6,7 @@
    [clojure.spec.gen.alpha :as gen]
    #?(:cljs [goog.string])))
 
-#?(:cljs (def before-1_10_439?
+#?(:cljs (def ^:private before-1_10_439?
            (and *clojurescript-version*
                 (pos? (goog.string/compareVersions "1.10.439"
                                                    *clojurescript-version*)))))
