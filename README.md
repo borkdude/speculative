@@ -2,6 +2,7 @@
 
 [![CircleCI](https://circleci.com/gh/borkdude/speculative/tree/master.svg?style=svg)](https://circleci.com/gh/borkdude/speculative/tree/master)
 [![Clojars Project](https://img.shields.io/clojars/v/speculative.svg)](https://clojars.org/speculative)
+[![cljdoc badge](https://cljdoc.org/badge/speculative/speculative)](https://cljdoc.org/d/speculative/speculative/CURRENT)
 
 speculative is a collection of specs for the functions in `clojure.core`. While
 its ultimate goal is to be rendered obsolete by these or similar specs being
