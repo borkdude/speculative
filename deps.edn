@@ -54,9 +54,8 @@
   {:extra-deps {github-mfikes/coal-mine
                 {:git/url "https://github.com/mfikes/coal-mine"
                  :sha "42867c122db6aa8e027015eefb49ca6682dd3d73"}
-                github-borkdude/orchestra
-                {:git/url "https://github.com/borkdude/orchestra"
-                 :sha "95787318aa907ba539fe8209680e2f6fe8ea465a"}}}
+                orchestra
+                {:mvn/version "2019.02.06-1"}}}
   :coal-mine-clj
   {:jvm-opts ["-XX:CompressedClassSpaceSize=2g"]
    :main-opts ["-e" "(require,'[patch.clj-2443])"
