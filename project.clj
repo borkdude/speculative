@@ -1,4 +1,4 @@
-(defproject speculative "0.0.3-SNAPSHOT"
+(defproject speculative "0.0.3"
   :description "A collection of specs for clojure.core functions"
   :url "https://github.com/borkdude/speculative"
   :scm {:name "git"
@@ -7,7 +7,7 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.10.0"]]
   :profiles {:dev {:dependencies
-                   [[org.clojure/clojurescript "1.10.439"]
+                   [[org.clojure/clojurescript "1.10.516"]
                     [org.clojure/test.check "0.9.0"]]}}
   :deploy-repositories [["clojars" {:url "https://clojars.org/repo"
                                   :username :env/clojars_user
