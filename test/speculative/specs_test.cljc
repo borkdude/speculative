@@ -1,8 +1,11 @@
 (ns speculative.specs-test
   (:require
-   [clojure.spec.alpha :as s]
-   [clojure.spec.test.alpha :as stest]
-   [clojure.spec.gen.alpha :as gen]
+   #?(:clj [clojure.spec-alpha2 :as s]
+      :cljs [clojure.spec.alpha :as s])
+   #?(:clj [clojure.spec-alpha2.test :as stest]
+      :cljs [clojure.spec.test.alpha :as stest])
+   #?(:clj [clojure.spec-alpha2.gen :as gen]
+      :cljs [clojure.spec.gen.alpha :as gen])
    [clojure.test :as t :refer [is deftest testing]]
    [speculative.specs :as ss]
    [respeced.test :as rt :refer [with-instrumentation
