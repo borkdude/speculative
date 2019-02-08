@@ -1,7 +1,8 @@
 (ns speculative.instrument
-  "Loads all relevant speculative specs. Provides functions to only
-  instrument and unstruments specs provided by speculative. Alpha,
-  subject to change."
+  "Loads all relevant speculative specs. Undefines specs that are not
+  suited or useful to instrument and therefore makes it safe to
+  call `(stest/instrument)`. Provides functions to only instrument and
+  unstruments specs provided by speculative."
   (:require
    [clojure.set :as set]
    [clojure.string :as str]
@@ -25,7 +26,7 @@
    []
    #?(:clj (= "true" (System/getenv "SPECULATIVE_NO_UNLOAD_BLACKLIST"))
       :cljs (or (= "true" (cond (exists? js/process)
-                                (gobj/get js/process.env
+                                (gobj/get (gobj/get js/process "env")
                                           "SPECULATIVE_NO_UNLOAD_BLACKLIST")
                                 (exists? js/PLANCK_GETENV)
                                 (gobj/get (js/PLANCK_GETENV)
@@ -35,7 +36,7 @@
 
 (impl/deftime
   (defmacro unload-blacklist
-    "Make it safe to call (stest/instrument) by unloading blacklisted
+    "Make it safe to call `(stest/instrument)` by unloading blacklisted
   specs. Respects environment variable
   `SPECULATIVE_NO_UNLOAD_BLACKLIST` or `goog-define`
   `no-unload-blacklist?`, unless `force?` is true. To undo unloading
@@ -74,7 +75,7 @@
       (unstrument))))
 
 (impl/usetime
-  (unload-blacklist))
+ (unload-blacklist))
 
 ;;;; Scratch
 

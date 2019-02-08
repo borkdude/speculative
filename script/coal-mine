@@ -13,14 +13,10 @@ if [ -n "$COAL_MINE_TIMEOUT" ]; then
     fi
 fi
 
-from=$1
-to=$2
-
 echo -e "=== Generating coal-mine-runner"
 
 rm -rf out
-clojure -A:test:coal-mine:coal-mine-generator out/out.cljc \
-        ${from:+"$from"} ${to:+"$to"}
+clojure -A:test:coal-mine:coal-mine-generator "$@"
 
 if [ "$SKIP_CLJ" != true ]; then
     echo -e "\n=== Running clj coal-mine tests"

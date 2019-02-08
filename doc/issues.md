@@ -4,16 +4,17 @@ Issues are sorted by date from newest to oldest.
 
 ## Unfixed or unreleased
 
+- [Add support for undefining a spec (port of CLJ-2060)](https://dev.clojure.org/jira/browse/CLJS-3049) (CLJS)
 - [Unify behavior of shuffle in CLJ and CLJS](https://dev.clojure.org/jira/browse/CLJ-2470) (CLJ)
-- [Instrumenting next gives maximum call stack size exceeded](https://dev.clojure.org/jira/browse/CLJS-3023) (CLJS)
 - [Spec'ed fn doesn't throw when called lazily](https://dev.clojure.org/jira/browse/CLJ-2443) (CLJ)
-- [Requiring clojure.spec.test.alpha loads clojure.test.check](https://dev.clojure.org/jira/browse/CLJS-2964) (CLJS)
-- [Unify namespace for interacting with clojure.test.check](https://dev.clojure.org/jira/browse/CLJS-2952) (CLJS)
 - [stest/unstrument is called at unexpected time when used in finally block](https://dev.clojure.org/jira/browse/CLJS-2949) (CLJS)
 - [Remove useless call to merge](https://github.com/juxt/yada/pull/246) (juxt/yada)
 
 ## Fixed and released
 
+- [Instrumenting next gives maximum call stack size exceeded](https://dev.clojure.org/jira/browse/CLJS-3023) (CLJS)
+- [Requiring clojure.spec.test.alpha loads clojure.test.check](https://dev.clojure.org/jira/browse/CLJS-2964) (CLJS)
+- [Unify namespace for interacting with clojure.test.check](https://dev.clojure.org/jira/browse/CLJS-2952) (CLJS)
 - [+ can't be instrumented in Planck REPL](https://github.com/borkdude/speculative/issues/214) (Planck)
 - [Instrumented self-calling multi-arity fn throws maximum call stack exceeded with optimizations advanced](https://dev.clojure.org/jira/browse/CLJS-2995) (CLJS)
 - [re-seq is relying on undefined behavior of subs](https://dev.clojure.org/jira/browse/CLJS-2979) (CLJS)

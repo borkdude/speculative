@@ -56,7 +56,9 @@
   :coal-mine
   {:extra-deps {github-mfikes/coal-mine
                 {:git/url "https://github.com/mfikes/coal-mine"
-                 :sha "a8bf06e4ba7fc37222c8255d80a8c08f2e099247"}}}
+                 :sha "42867c122db6aa8e027015eefb49ca6682dd3d73"}
+                orchestra
+                {:mvn/version "2019.02.06-1"}}}
   :coal-mine-clj
   {:jvm-opts ["-XX:CompressedClassSpaceSize=2g"]
    :main-opts ["-e" "(require,'[patch.clj-2443])"
@@ -85,5 +87,6 @@
                "-e" "(instrument)"
                "-m" "speculative.coal-mine-runner"]}
   :coal-mine-generator
-  {:main-opts ["-m" "speculative.coal-mine-generator"]}
+  {:extra-deps {org.clojure/tools.cli {:mvn/version "0.4.1"}}
+   :main-opts ["-m" "speculative.coal-mine-generator"]}
   }}
