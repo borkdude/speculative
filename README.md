@@ -1,4 +1,6 @@
-<img src="./logo/logo-w320.png">
+<img src="./logo/favicon-160.png">
+
+# speculative
 
 [![CircleCI](https://circleci.com/gh/borkdude/speculative/tree/master.svg?style=svg)](https://circleci.com/gh/borkdude/speculative/tree/master)
 [![Clojars Project](https://img.shields.io/clojars/v/speculative.svg)](https://clojars.org/speculative)
