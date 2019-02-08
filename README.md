@@ -4,7 +4,7 @@
 [![Clojars Project](https://img.shields.io/clojars/v/speculative.svg)](https://clojars.org/speculative)
 [![cljdoc badge](https://cljdoc.org/badge/speculative/speculative)](https://cljdoc.org/d/speculative/speculative/CURRENT)
 
-A collection of specs for the functions in `clojure.core`.
+Unofficial community-driven specs for `clojure.core`.
 
 ## Quickstart
 
