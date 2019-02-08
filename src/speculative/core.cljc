@@ -70,7 +70,7 @@
   :ret ::ss/vector)
 
 ;; 379
-#_(s/fdef clojure.core/hash-map
+(s/fdef clojure.core/hash-map
   :args (s/cat :pairs (s/* (s/cat :k ::ss/any :v ::ss/any)))
   :ret ::ss/map)
 
@@ -220,11 +220,6 @@
 (s/def :atom/validator ifn?)
 (s/def :atom/meta map?)
 (s/fdef clojure.core/atom
-  :args (s/cat :x any? :options (s/keys* :opt-un [:atom/validator :atom/meta]))
-  :ret #(instance? clojure.lang.IAtom %))
-
-;; FIXME: spec-alpha2
-#_(s/fdef clojure.core/atom
   :args (s/cat :x ::ss/any :options (s/keys* :opt-un [:atom/validator :atom/meta]))
   :ret ::ss/atom)
 
@@ -273,24 +268,15 @@
   :ret ::ss/boolean)
 
 ;; 2727
-;; FIXME: spec-alpha2
-#_(s/fdef clojure.core/map
+(s/fdef clojure.core/map
   :args (s/alt :transducer (s/cat :f ::ss/ifn)
                :seqable (s/cat :f ::ss/ifn :colls (s/+ ::ss/seqable)))
   :ret ::ss/seqable-or-transducer
   :fn (fn [{:keys [args ret]}]
         (= (key args) (key ret))))
 
-#_(s/fdef clojure.core/map
-  :args (s/alt :transducer (s/cat :f ifn?)
-               :seqable (s/cat :f ifn? :colls (s/+ seqable?)))
-  :ret (s/or :transducer ifn? :seqable? ifn?)
-  :fn (fn [{:keys [args ret]}]
-        (= (key args) (key ret))))
-
 ;; 2793
-;; FIXME: spec-alpha2
-#_(s/fdef clojure.core/filter
+(s/fdef clojure.core/filter
   :args (s/alt :transducer (s/cat :f ::ss/ifn)
                :seqable (s/cat :f ::ss/ifn :coll ::ss/seqable))
   :ret ::ss/seqable-or-transducer
@@ -298,8 +284,7 @@
         (= (key args) (key ret))))
 
 ;; 2826
-;; FIXME: spec-alpha2
-#_(s/fdef clojure.core/remove
+(s/fdef clojure.core/remove
   :args (s/alt :transducer (s/cat :f ::ss/ifn)
                :seqable (s/cat :f ::ss/ifn :coll ::ss/seqable))
   :ret ::ss/seqable-or-transducer
@@ -398,8 +383,7 @@
   :ret ::ss/any)
 
 ;; 5029
-;; FIXME: spec-alpha2
-#_(s/fdef clojure.core/distinct
+(s/fdef clojure.core/distinct
   :args (s/alt :transducer (s/cat)
                :seqable (s/cat :coll ::ss/reducible-coll))
   :ret ::ss/seqable-or-transducer
@@ -407,8 +391,7 @@
         (= (key args) (key ret))))
 
 ;; 5206
-;; FIXME: spec-alpha2
-#_(s/fdef clojure.core/interpose
+(s/fdef clojure.core/interpose
   :args (s/alt :transducer (s/cat :sep ::ss/any)
                :seqable (s/cat :sep ::ss/any :coll ::ss/seqable))
   :ret ::ss/seqable-or-transducer
@@ -478,8 +461,7 @@
   :ret ::ss/sequential-of-non-sequential)
 
 ;; 7146
-;; FIXME: spec-alpha-2
-#_(s/fdef clojure.core/group-by
+(s/fdef clojure.core/group-by
   :args (s/cat :f ::ss/ifn :coll ::ss/reducible-coll)
   :ret map?
   :fn (fn [{:keys [args ret]}]
@@ -516,8 +498,7 @@
   :ret ::ss/coll)
 
 ;; 7313
-;; FIXME: spec-alpha2
-#_(s/fdef clojure.core/keep
+(s/fdef clojure.core/keep
   :args (s/alt :transducer (s/cat :f ::ss/ifn)
                :seqable (s/cat :f ::ss/ifn :coll ::ss/seqable))
   :ret ::ss/seqable-or-transducer
@@ -535,8 +516,7 @@
   :ret ::ss/ifn)
 
 ;; 7655
-;; FIXME: spec-alpha2
-#_(s/fdef clojure.core/dedupe
+(s/fdef clojure.core/dedupe
   :args (s/alt :transducer (s/cat)
                :seqable (s/cat :coll ::ss/reducible-coll))
   :ret ::ss/seqable-or-transducer
