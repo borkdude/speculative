@@ -219,7 +219,7 @@
 (s/def :atom/meta ::ss/map)
 (s/def :atom/validator ifn?)
 (s/def :atom/meta map?)
-#_(s/fdef clojure.core/atom
+(s/fdef clojure.core/atom
   :args (s/cat :x any? :options (s/keys* :opt-un [:atom/validator :atom/meta]))
   :ret #(instance? clojure.lang.IAtom %))
 
