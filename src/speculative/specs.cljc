@@ -139,9 +139,7 @@
   (s/or :seqable ::seqable
         :transducer ::transducer))
 
-;; FIXME: spec-alpha2
-(s/def ::atom ::any)
-#_(s/def ::atom
+(s/def ::atom
   (fn [a]
     #?(:clj (instance? clojure.lang.IAtom a)
        :cljs (satisfies? IAtom a))))
@@ -158,9 +156,8 @@
       (gen/fmap re-pattern
                 (s/gen ::string)))))
 
-;; FIXME: spec-alpha2
 (s/def ::matcher ::any)
-#_#?(:clj
+#?(:clj
    (s/def ::matcher
      #(instance? java.util.regex.Matcher %)))
 
@@ -181,10 +178,8 @@
 (s/def ::indexed
   indexed?)
 
-;; FIXME: spec-alpha2
-(s/def ::nthable ::any)
-#_(s/def ::nthable
-  (s/with-gen (s/nilable (s/or :index ::indexed
+(s/def ::nthable
+  (s/with-gen (s/nilable ::any #_(s/or :index ::indexed
                                :str #?(:clj ::char-sequence
                                        :cljs ::string)
                                :array ::array
@@ -199,9 +194,7 @@
                                  (s/gen ::map-entry)
                                  (s/gen ::sequential)]))))
 
-;; FIXME: spec-alpha2
-(s/def ::stack ::any)
-#_(s/def ::stack
+(s/def ::stack
   (s/with-gen
     #?(:cljs #(satisfies? IStack %)
        :clj #(instance? clojure.lang.IPersistentStack %))
