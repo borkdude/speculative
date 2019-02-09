@@ -108,7 +108,7 @@
   (is (check-call `assoc [[] 0 'lol]))
   (check `assoc {:gen {::c/assoc-args
                        #(gen/one-of
-                         [(gen/tuple (s/gen map?) (gen/any) (gen/any))
+                         [(gen/tuple (s/gen (s/spec map?)) (gen/any) (gen/any))
                           (gen/bind (gen/vector (gen/int))
                                     (fn [v]
                                       (gen/tuple (gen/return v)

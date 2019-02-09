@@ -25,7 +25,7 @@
 
 (s/def ::seqable
   (s/with-gen seqable?
-    (fn [] (s/gen clojure.core/seqable?))))
+    (fn [] (s/gen (s/spec clojure.core/seqable?)))))
 
 (defn reducible? [x]
   #?(:clj
@@ -42,7 +42,7 @@
 (s/def ::any
   (s/with-gen
     (s/conformer #(if (s/invalid? %) ::invalid %))
-    #(s/gen any?)))
+    #(s/gen (s/spec any?))))
 
 (s/def ::boolean boolean?)
 (s/def ::counted counted?)
@@ -88,7 +88,7 @@
                                 #(java.nio.CharBuffer/wrap %)
                                 #(String. %)]))))))
 
-(defn seqable-of
+(defn ^:private seqable-of
   [spec]
   (s/spec*
    `(s/with-gen (s/and seqable?
@@ -97,36 +97,19 @@
                                          (s/every ~spec))))
       #(s/gen (s/nilable (s/every ~spec :kind coll?))))))
 
-#_(defn seqable-of
-  "every is not designed to deal with seqable?, this is a way around it"
-  [spec]
-  (s/with-gen (s/and seqable?
-                     (s/or :empty empty?
-                           :seq (s/and (s/conformer seq)
-                                       (s/every spec))))
-    #(s/gen (s/nilable (s/every spec :kind coll?)))))
-
 (s/def ::seqable-of-map-entry
-  ;; ERROR:
-  ;; (s/valid? ::ss/seqable-of-map-entry {:a 1})
-  ;; Execution error (IllegalStateException) at clojure.spec-alpha2/spec* (spec_alpha2.clj:195).
-  ;; Symbolic spec must be fully-qualified: spec
-  ;; TODO: probably using this blogpost I can fix it: https://github.com/clojure/spec-alpha2/wiki/Differences-from-spec.alpha
   (seqable-of ::map-entry))
 
+(s/def ::seqable-of-string (seqable-of ::string))
 
-(s/def ::seqable-of-string ::any #_(seqable-of ::string))
-
-(s/def ::seqable-of-nilable-string ::any #_(seqable-of (s/nilable ::string)))
+(s/def ::seqable-of-nilable-string (seqable-of `(s/nilable ::string)))
 
 (s/def ::regex-match (s/nilable
                       (s/or :string ::string
                             :seqable ::seqable-of-nilable-string)))
 
-(s/def ::regex-matches ::any #_(seqable-of ::regex-match))
+(s/def ::regex-matches (seqable-of ::regex-match))
 
-(s/def ::reducible-coll ::any)
-;; FIXME: spec-alpha2
 (s/def ::reducible-coll
   (s/with-gen
     (s/or
@@ -143,7 +126,7 @@
     #(instance? java.util.Collection %)
     (fn []
       (gen/fmap #(java.util.ArrayList. %)
-                (s/gen vector?)))))
+                (s/gen (s/spec vector?))))))
 
 (s/def ::predicate ::ifn)
 
