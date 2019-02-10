@@ -7,7 +7,9 @@
                :cljs [clojure.spec.test.alpha :as stest])
             #?(:clj [clojure.spec-alpha2.gen :as gen]
                :cljs [clojure.spec.gen.alpha :as gen])
-            #?(:cljs [goog.string])))
+            #?(:cljs [goog.string])
+            [speculative.impl :as impl])
+  #?(:cljs (:require-macros [speculative.specs :refer [seqable-of]])))
 
 #?(:cljs (def ^:private
            before-1_10_439?
@@ -88,7 +90,7 @@
                                 #(java.nio.CharBuffer/wrap %)
                                 #(String. %)]))))))
 
-(defn ^:private seqable-of
+#_(defn ^:private seqable-of
   [spec]
   (s/spec*
    `(s/with-gen (s/and seqable?
@@ -98,12 +100,21 @@
       ;; FIXME: spec-alpha2, cannot provide :kind coll?
       #(s/gen (s/nilable (s/every ~spec #_#_:kind coll?))))))
 
+(impl/deftime
+  (defmacro seqable-of [spec]
+    `(s/with-gen (s/and seqable?
+                        (s/or :empty empty?
+                              :seq (s/and (s/conformer seq)
+                                          (s/every ~spec))))
+       ;; FIXME: spec-alpha2, cannot provide :kind coll?
+       #(s/gen (s/nilable (s/every ~spec #_#_:kind coll?))))))
+
 (s/def ::seqable-of-map-entry
   (seqable-of ::map-entry))
 
 (s/def ::seqable-of-string (seqable-of ::string))
 
-(s/def ::seqable-of-nilable-string (seqable-of `(s/nilable ::string)))
+(s/def ::seqable-of-nilable-string (seqable-of (s/nilable ::string)))
 
 (s/def ::regex-match (s/nilable
                       (s/or :string ::string
@@ -163,8 +174,7 @@
      #(instance? java.util.regex.Matcher %)))
 
 (s/def ::sequential-of-non-sequential
-  (s/every #(not (sequential? %))
-           #_(complement sequential?) :kind sequential?))
+  (s/every #(not (sequential? %)) :kind sequential?))
 
 (s/def ::non-empty-seqable
   (s/and ::seqable not-empty))
