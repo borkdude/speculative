@@ -9,7 +9,8 @@
                :cljs [clojure.spec.gen.alpha :as gen])
             #?(:cljs [goog.string])
             [speculative.impl :as impl])
-  #?(:cljs (:require-macros [speculative.specs :refer [seqable-of]])))
+  ;; #?(:cljs (:require-macros [speculative.specs :refer [seqable-of]]))
+  )
 
 #?(:cljs (def ^:private
            before-1_10_439?
@@ -97,30 +98,43 @@
                        (s/or :empty empty?
                              :seq (s/and (s/conformer seq)
                                          (s/every ~spec))))
-      ;; FIXME: spec-alpha2, cannot provide :kind coll?
       #(s/gen (s/nilable (s/every ~spec #_#_:kind coll?))))))
 
-(impl/deftime
-  (defmacro seqable-of [spec]
-    `(s/with-gen (s/and seqable?
-                        (s/or :empty empty?
-                              :seq (s/and (s/conformer seq)
-                                          (s/every ~spec))))
-       ;; FIXME: spec-alpha2, cannot provide :kind coll?
-       #(s/gen (s/nilable (s/every ~spec #_#_:kind coll?))))))
+(defmacro spec2-seqable-of [spec]
+  `(s/with-gen (s/and seqable?
+                      (s/or :empty empty?
+                            :seq (s/and (s/conformer seq)
+                                        (s/every ~spec))))
+     ;; FIXME: spec-alpha2, cannot provide :kind coll?
+     #(s/gen (s/nilable (s/every ~spec #_#_:kind coll?)))))
+
+(defn spec1-seqable-of [spec]
+  (s/with-gen (s/and seqable?
+                     (s/or :empty empty?
+                           :seq (s/and (s/conformer seq)
+                                       (s/every spec))))
+    ;; FIXME: spec-alpha2, cannot provide :kind coll?
+    #(s/gen (s/nilable (s/every spec #_#_:kind coll?)))))
 
 (s/def ::seqable-of-map-entry
-  (seqable-of ::map-entry))
+  #?(:clj (spec2-seqable-of ::map-entry)
+     :cljs (spec1-seqable-of ::map-entry)))
 
-(s/def ::seqable-of-string (seqable-of ::string))
+(s/def ::seqable-of-string
+  #?(:clj (spec2-seqable-of ::string)
+     :cljs (spec1-seqable-of ::string)))
 
-(s/def ::seqable-of-nilable-string (seqable-of (s/nilable ::string)))
+(s/def ::seqable-of-nilable-string
+  #?(:clj (spec2-seqable-of (s/nilable ::string))
+     :cljs (spec1-seqable-of (s/nilable ::string))))
 
 (s/def ::regex-match (s/nilable
                       (s/or :string ::string
                             :seqable ::seqable-of-nilable-string)))
 
-(s/def ::regex-matches (seqable-of ::regex-match))
+(s/def ::regex-matches
+  #?(:clj (spec2-seqable-of ::regex-match)
+     :cljs (spec1-seqable-of ::regex-match)))
 
 (s/def ::reducible-coll
   (s/with-gen ;; FIXME: spec-alpha2
