@@ -465,7 +465,8 @@
   :args (s/cat :f ::ss/ifn :coll ::ss/reducible-coll)
   :ret map?
   :fn (fn [{:keys [args ret]}]
-        (let [[_ coll] (:coll args)]
+        ;; FIXME: revert when or-spec if fixed in spec-alpha2
+        (let [#_[_ coll] coll (:coll args)]
           (= (count coll)
              (reduce + (map count (vals ret)))))))
 

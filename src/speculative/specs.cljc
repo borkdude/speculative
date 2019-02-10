@@ -95,7 +95,8 @@
                        (s/or :empty empty?
                              :seq (s/and (s/conformer seq)
                                          (s/every ~spec))))
-      #(s/gen (s/nilable (s/every ~spec :kind coll?))))))
+      ;; FIXME: spec-alpha2, cannot provide :kind coll?
+      #(s/gen (s/nilable (s/every ~spec #_#_:kind coll?))))))
 
 (s/def ::seqable-of-map-entry
   (seqable-of ::map-entry))
@@ -111,8 +112,8 @@
 (s/def ::regex-matches (seqable-of ::regex-match))
 
 (s/def ::reducible-coll
-  (s/with-gen
-    (s/or
+  (s/with-gen ;; FIXME: spec-alpha2
+    ::seqable #_(s/or
      :seqable    ::seqable
      :reducible  (s/nilable ::reducible)
      :iterable   (s/nilable ::iterable))
@@ -162,7 +163,8 @@
      #(instance? java.util.regex.Matcher %)))
 
 (s/def ::sequential-of-non-sequential
-  (s/every (complement sequential?) :kind sequential?))
+  (s/every #(not (sequential? %))
+           #_(complement sequential?) :kind sequential?))
 
 (s/def ::non-empty-seqable
   (s/and ::seqable not-empty))
@@ -179,7 +181,7 @@
   indexed?)
 
 (s/def ::nthable
-  (s/with-gen (s/nilable ::any #_(s/or :index ::indexed
+  (s/with-gen (s/nilable (s/or :index ::indexed
                                :str #?(:clj ::char-sequence
                                        :cljs ::string)
                                :array ::array

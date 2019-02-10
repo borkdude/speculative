@@ -818,7 +818,7 @@
   (check `update
          {:gen {::c/update-args
                 #(gen/one-of
-                  [(gen/bind (gen/map (gen/any) (s/gen number?))
+                  [(gen/bind (gen/map (gen/any) (s/gen (s/spec number?)))
                              (fn [m]
                                (let [ks (keys m)]
                                  (gen/tuple (gen/return m)
