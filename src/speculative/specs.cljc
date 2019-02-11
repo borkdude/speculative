@@ -105,16 +105,14 @@
                       (s/or :empty empty?
                             :seq (s/and (s/conformer seq)
                                         (s/every ~spec))))
-     ;; FIXME: spec-alpha2, cannot provide :kind coll?
-     #(s/gen (s/nilable (s/every ~spec #_#_:kind coll?)))))
+     #(s/gen (s/nilable (s/every ~spec :kind coll?)))))
 
 (defn spec1-seqable-of [spec]
   (s/with-gen (s/and seqable?
                      (s/or :empty empty?
                            :seq (s/and (s/conformer seq)
                                        (s/every spec))))
-    ;; FIXME: spec-alpha2, cannot provide :kind coll?
-    #(s/gen (s/nilable (s/every spec #_#_:kind coll?)))))
+    #(s/gen (s/nilable (s/every spec :kind coll?)))))
 
 (s/def ::seqable-of-map-entry
   #?(:clj (spec2-seqable-of ::map-entry)
@@ -137,8 +135,8 @@
      :cljs (spec1-seqable-of ::regex-match)))
 
 (s/def ::reducible-coll
-  (s/with-gen ;; FIXME: spec-alpha2
-    ::seqable #_(s/or
+  (s/with-gen
+    (s/or
      :seqable    ::seqable
      :reducible  (s/nilable ::reducible)
      :iterable   (s/nilable ::iterable))
