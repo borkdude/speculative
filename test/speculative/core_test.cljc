@@ -931,6 +931,16 @@
   (with-instrumentation `shuffle
     (is (caught? `shuffle (shuffle 1)))))
 
+;; 7283
+(deftest map-indexed-test
+  (is (check-call `map-indexed [(fn [i e] [i e])]))
+  (is (check-call `map-indexed [(fn [i e] [i e]) nil]))
+  (is (check-call `map-indexed [(fn [i e] [i e]) [1 2 3]]))
+  (check `map-indexed {:gen {::ss/ifn #(gen/return (fn [i e] [i e]))}})
+  (with-instrumentation `map-indexed
+    (is (caught? `map-indexed (map-indexed 1)))
+    (is (caught? `map-indexed (map-indexed (fn [i e] [i e]) 1)))))
+
 ;; 7313
 (deftest keep-test
   (is (check-call `keep [seq]))
@@ -940,6 +950,16 @@
   (with-instrumentation `keep
     (is (caught? `keep (keep 1)))
     (is (caught? `keep (keep identity 1)))))
+
+;; 7346
+(deftest keep-indexed-test
+  (is (check-call `keep-indexed [(fn [i e] [i e])]))
+  (is (check-call `keep-indexed [(fn [i e] [i e]) nil]))
+  (is (= [0 2]) (check-call `keep-indexed [(fn [i e] (when e i)) [1 nil 3]]))
+  (check `keep-indexed {:gen {::ss/ifn #(gen/return (fn [i e] [i e]))}})
+  (with-instrumentation `keep-indexed
+    (is (caught? `keep-indexed (keep-indexed 1)))
+    (is (caught? `keep-indexed (keep-indexed (fn [i e] [i e]) 1)))))
 
 ;; 7396
 (deftest every-pred-test

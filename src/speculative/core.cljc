@@ -495,8 +495,25 @@
                                :array ::ss/array))))
   :ret ::ss/coll)
 
+;; 7283
+(s/fdef clojure.core/map-indexed
+  :args (s/alt :transducer (s/cat :f ::ss/ifn)
+               :seqable (s/cat :f ::ss/ifn :coll ::ss/seqable))
+  :ret ::ss/seqable-or-transducer
+  :fn (fn [{:keys [args ret]}]
+        (= (key args) (key ret))))
+
+
 ;; 7313
 (s/fdef clojure.core/keep
+  :args (s/alt :transducer (s/cat :f ::ss/ifn)
+               :seqable (s/cat :f ::ss/ifn :coll ::ss/seqable))
+  :ret ::ss/seqable-or-transducer
+  :fn (fn [{:keys [args ret]}]
+        (= (key args) (key ret))))
+
+;; 7346
+(s/fdef clojure.core/keep-indexed
   :args (s/alt :transducer (s/cat :f ::ss/ifn)
                :seqable (s/cat :f ::ss/ifn :coll ::ss/seqable))
   :ret ::ss/seqable-or-transducer
