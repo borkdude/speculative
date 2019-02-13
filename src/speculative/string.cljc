@@ -12,14 +12,22 @@
 
 ;; 360
 (s/fdef str/starts-with?
-  :args (s/cat :cs #?(:clj  ::ss/char-sequence
+  :args (s/cat :cs #?(:clj ::ss/char-sequence
                       :cljs ::ss/string)
                :substr ::ss/string)
   :ret ::ss/boolean)
 
 ;; 366
 (s/fdef str/ends-with?
-  :args (s/cat :cs #?(:clj  ::ss/char-sequence
+  :args (s/cat :cs #?(:clj ::ss/char-sequence
                      :cljs ::ss/string)
                :substr ::ss/string)
+  :ret ::ss/boolean)
+
+;; 372
+(s/fdef str/includes?
+  :args (s/cat :cs #?(:clj ::ss/char-sequence
+                      :cljs ::ss/string)
+               :s #?(:clj ::ss/char-sequence
+                     :cljs ::ss/string))
   :ret ::ss/boolean)

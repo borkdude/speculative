@@ -45,6 +45,19 @@
                  (str/ends-with? "foo" #"bar"))))
   (check `str/ends-with?))
 
+;; 372
+(deftest includes?-test
+  (is (true? (check-call `str/includes? ["foo" "oo"])))
+  #?(:clj (is (true? (check-call `str/includes?
+                                 [(StringBuffer. "foo") "oo"]))))
+  (is (false? (check-call `str/includes? ["foo" "bb"])))
+  (with-instrumentation `str/includes?
+    (is (caught? `str/includes?
+                 (str/includes? #"foo" "bar")))
+    (is (caught? `str/includes?
+                 (str/includes? "foo" #"bar"))))
+  (check `str/includes?))
+
 ;;;; Scratch
 
 (comment
