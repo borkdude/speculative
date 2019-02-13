@@ -40,10 +40,12 @@
     clojure.core/into
     clojure.core/juxt
     clojure.core/keep
+    clojure.core/keep-indexed
     clojure.core/keys
     clojure.core/last
     clojure.core/list
     clojure.core/map
+    clojure.core/map-indexed
     clojure.core/max
     clojure.core/max-key
     clojure.core/merge
@@ -101,6 +103,7 @@
     clojure.set/superset?
     clojure.set/union
     clojure.string/ends-with?
+    clojure.string/includes?
     clojure.string/join
     clojure.string/starts-with?})
 (def
@@ -140,10 +143,12 @@
     cljs.core/into
     cljs.core/juxt
     cljs.core/keep
+    cljs.core/keep-indexed
     cljs.core/keys
     cljs.core/last
     cljs.core/list
     cljs.core/map
+    cljs.core/map-indexed
     cljs.core/max
     cljs.core/max-key
     cljs.core/merge
@@ -199,6 +204,7 @@
     clojure.set/superset?
     clojure.set/union
     clojure.string/ends-with?
+    clojure.string/includes?
     clojure.string/join
     clojure.string/starts-with?})
 (def
@@ -258,9 +264,11 @@
     clojure.core/into
     clojure.core/juxt
     clojure.core/keep
+    clojure.core/keep-indexed
     clojure.core/keys
     clojure.core/last
     clojure.core/map
+    clojure.core/map-indexed
     clojure.core/max
     clojure.core/max-key
     clojure.core/merge
@@ -313,6 +321,7 @@
     clojure.set/superset?
     clojure.set/union
     clojure.string/ends-with?
+    clojure.string/includes?
     clojure.string/join
     clojure.string/starts-with?})
 (def
@@ -349,9 +358,11 @@
     cljs.core/into
     cljs.core/juxt
     cljs.core/keep
+    cljs.core/keep-indexed
     cljs.core/keys
     cljs.core/last
     cljs.core/map
+    cljs.core/map-indexed
     cljs.core/max
     cljs.core/max-key
     cljs.core/merge
@@ -401,5 +412,6 @@
     clojure.set/superset?
     clojure.set/union
     clojure.string/ends-with?
+    clojure.string/includes?
     clojure.string/join
     clojure.string/starts-with?})
