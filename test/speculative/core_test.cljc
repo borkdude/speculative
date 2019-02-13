@@ -13,7 +13,8 @@
                                  check-call]]
    [speculative.core :as c]
    [speculative.specs :as ss]
-   [speculative.test-utils :refer [check planck-env?]]))
+   [speculative.test-utils :refer [check planck-env?]]
+   [clojure.string :as str]))
 
 ;; sorted in order of appearance in
 ;; https://github.com/clojure/clojure/blob/master/src/clj/clojure/core.clj
@@ -594,10 +595,10 @@
 #?(:clj
    (deftest re-matcher-test
      (is (check-call `re-matcher [#"s" "s"]))
+     (check `re-matcher)
      (with-instrumentation `re-matcher
        (is (caught? `re-matcher (re-matcher 1 "s")))
-       (is (caught? `re-matcher (re-matcher #"s" 1))))
-     (check `re-matcher)))
+       (is (caught? `re-matcher (re-matcher #"s" 1))))))
 
 ;; 4858
 #?(:clj
@@ -618,6 +619,11 @@
          (is (check-call `re-groups [groups-matching-matcher])))
        (testing "returning seqable of nilable strings"
          (is (check-call `re-groups [with-empty-group-matcher])))
+       #?(:clj (check `re-groups
+                      {:gen {::ss/matcher
+                             (fn [] (gen/fmap (fn [matcher]
+                                                (doto matcher (.find)))
+                                              ss/matching-matcher-gen))}}))
        (with-instrumentation `re-groups
          (is (caught? `re-groups (re-groups 1)))))))
 
@@ -629,10 +635,10 @@
     (is (check-call `re-seq [#"s" "s"])))
   (testing "returns seqable of matches"
     (is (check-call `re-seq [#"(a)?(b)" "b"])))
+  (check `re-seq)
   (with-instrumentation `re-seq
     (is (caught? `re-seq (re-seq 1 "s")))
-    (is (caught? `re-seq (re-seq #"s" 1))))
-  (check `re-seq))
+    (is (caught? `re-seq (re-seq #"s" 1)))))
 
 ;; 4886
 (deftest re-matches-test
@@ -643,10 +649,10 @@
   (testing "returning seqable of nilable strings"
     (is (check-call `re-matches [#"(hello.*)" "hello there"]))
     (is (= ["b" nil "b"] (check-call `re-matches [#"(a)?(b)" "b"]))))
+  (check `re-matches)
   (with-instrumentation `re-matches
     (is (caught? `re-matches (re-matches 1 "s")))
-    (is (caught? `re-matches (re-matches #"s" 1))))
-  (check `re-matches))
+    (is (caught? `re-matches (re-matches #"s" 1)))))
 
 ;; 4898
 (deftest re-find-test
@@ -659,6 +665,7 @@
   (testing "returning seqable of nilable strings"
     (is (check-call `re-find [#"(hello.*)" "hello there"]))
     (is (= ["b" nil "b"] (check-call `re-find [#"(a)?(b)" "b"]))))
+  (check `re-find)
   (with-instrumentation `re-find
     #?(:clj (caught? `re-find (re-find 1)))
     (is (caught? `re-find (re-find 1 "s")))
