@@ -334,7 +334,7 @@
 ;; 4849
 #?(:clj
    (s/fdef clojure.core/re-matcher
-     :args (s/cat :re ::ss/regex :s ::ss/string)
+     :args ::ss/regex+string-args
      :ret ::ss/matcher))
 
 ;; 4858
@@ -345,19 +345,19 @@
 
 ;; 4874
 (s/fdef clojure.core/re-seq
-  :args (s/cat :re ::ss/regex :s ::ss/string)
+  :args ::ss/regex+string-args
   :ret ::ss/regex-matches)
 
 ;; 4886
 (s/fdef clojure.core/re-matches
-  :args (s/cat :re ::ss/regex :s ::ss/string)
+  :args ::ss/regex+string-args
   :ret ::ss/regex-match)
 
 ;; 4898
 (s/fdef clojure.core/re-find
   :args #?(:clj (s/alt :matcher (s/cat :m ::ss/matcher)
-                       :re-s (s/cat :re ::ss/regex :s ::ss/string))
-           :cljs (s/cat :re ::ss/regex :s ::ss/string))
+                       :re-s ::ss/regex+string-args)
+           :cljs ::ss/regex+string-args)
   :ret ::ss/regex-match)
 
 ;; 4981

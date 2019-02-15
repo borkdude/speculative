@@ -4,6 +4,8 @@
   (:require
    [clojure.spec.alpha :as s]
    [clojure.spec.gen.alpha :as gen]
+   [clojure.string :as str]
+   [com.gfredericks.test.chuck.generators :as gen']
    #?(:cljs [goog.string])))
 
 #?(:cljs (def ^:private
@@ -80,6 +82,7 @@
                                 #(StringBuilder. %)
                                 #(java.nio.CharBuffer/wrap %)
                                 #(String. %)]))))))
+(s/def ::string+ #?(:cljs ::string :clj ::char-sequence))
 
 (defn seqable-of
   "every is not designed to deal with seqable?, this is a way around it"
@@ -93,12 +96,6 @@
 (s/def ::seqable-of-map-entry (seqable-of ::map-entry))
 
 (s/def ::seqable-of-nilable-string (seqable-of (s/nilable ::string)))
-
-(s/def ::regex-match (s/nilable
-                      (s/or :string ::string
-                            :seqable ::seqable-of-nilable-string)))
-
-(s/def ::regex-matches (seqable-of ::regex-match))
 
 (s/def ::reducible-coll
   (s/with-gen
@@ -134,21 +131,88 @@
     #?(:clj (instance? clojure.lang.IAtom a)
        :cljs (satisfies? IAtom a))))
 
+;;;; Regex stuff
+
 #?(:clj
    (defn regex? [r]
      (instance? java.util.regex.Pattern r))
    :cljs (def regex? cljs.core/regexp?))
 
+(s/def ::regex.gen.sub-pattern
+  (s/cat :pattern
+         (s/alt :chars (s/+ #{\a \b})
+                :group (s/cat :open-paren #{\(}
+                              :inner-pattern ::regex.gen.sub-pattern
+                              :closing-paren #{\)}))
+         :maybe (s/? #{\?})))
+
+(s/def ::regex.gen.pattern (s/coll-of ::regex.gen.sub-pattern :gen-max 10))
+
+(def regex-gen
+  (gen/fmap
+   (fn [patterns]
+     (let [s (reduce #(str %1 (str/join %2)) "" patterns)]
+       (re-pattern s)))
+   (s/gen ::regex.gen.pattern)))
+
+(def regex-with-string-gen
+  "Returns generator that generates a regex and a string that will match
+  90% of the time on CLJ and will maybe match 10% of the time on
+  CLJ. On CLJS it will maybe match 100% of the time, since the string
+  from regex generator isn't used there."
+  (gen/bind
+   regex-gen
+   (fn [re]
+     (gen/tuple
+      (gen/return re)
+      (gen/frequency
+       [#?(:clj [9
+                 (gen'/string-from-regex re)])
+        [#?(:clj 1 :cljs 10)
+         (gen/fmap str/join (s/gen (s/* #{\a \b})))]])))))
+
+#?(:clj
+   (do
+     (def regex-with-matching-string-gen
+       (gen/bind regex-gen 
+        (fn [re]
+          (gen/tuple (gen/return re)
+                     (gen'/string-from-regex re)))))
+
+     (def matching-matcher-gen
+       (gen/fmap (fn [[r s]]
+                   (re-matcher r s))
+                 regex-with-matching-string-gen))
+
+     (def matcher-gen
+       (gen/fmap (fn [[r strs]]
+                   (re-matcher r (str/join strs)))
+                 regex-with-string-gen))
+
+     (s/def ::matcher
+       (s/with-gen #(instance? java.util.regex.Matcher %)
+         (fn [] matcher-gen)))
+
+     ;; test matcher-gen:
+     (comment
+       (re-find (gen/generate matcher-gen)))))
+
+(s/def ::regex+string-args
+  (s/with-gen (s/cat :re ::regex :s ::string+)
+    (fn [] regex-with-string-gen)))
+
 (s/def ::regex
   (s/with-gen
     regex?
-    (fn []
-      (gen/fmap re-pattern
-                (s/gen ::string)))))
+    (fn [] regex-gen)))
 
-#?(:clj
-   (s/def ::matcher
-     #(instance? java.util.regex.Matcher %)))
+(s/def ::regex-match (s/nilable
+                      (s/or :string ::string
+                            :seqable ::seqable-of-nilable-string)))
+
+(s/def ::regex-matches (seqable-of ::regex-match))
+
+;;;; End regex stuff
 
 (s/def ::sequential-of-non-sequential
   (s/every (complement sequential?) :kind sequential?))
