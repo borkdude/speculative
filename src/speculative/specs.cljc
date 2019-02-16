@@ -44,8 +44,14 @@
     #(s/gen any?)))
 
 (s/def ::boolean boolean?)
-(s/def ::counted counted?)
+(s/def ::counted (s/with-gen counted?
+                   #(s/gen (s/spec seqable?))))
 (s/def ::ifn ifn?)
+(s/def ::predicate
+  (s/with-gen ::ifn
+    (fn [] (gen/bind (s/gen ::boolean)
+                     (fn [b] (gen/return (fn [x] b)))))))
+
 (s/def ::int int?)
 (s/def ::nat-int nat-int?)
 (s/def ::pos-int pos-int?)
@@ -72,6 +78,8 @@
 (s/def ::sequential sequential?)
 (s/def ::some some?)
 (s/def ::string string?)
+(s/def ::keyword keyword?)
+
 #?(:clj (s/def ::char-sequence
           (s/with-gen
             #(instance? java.lang.CharSequence %)
@@ -91,7 +99,8 @@
                      (s/or :empty empty?
                            :seq (s/and (s/conformer seq)
                                        (s/every spec))))
-    #(s/gen (s/nilable (s/every spec :kind coll?)))))
+    ;; avoid generation of strings and vectors (those are interpreted as pairs when using conj with maps
+    #(s/gen (s/nilable (s/every spec :kind seq?)))))
 
 (s/def ::seqable-of-map-entry (seqable-of ::map-entry))
 
@@ -115,8 +124,6 @@
       (gen/fmap #(java.util.ArrayList. %)
                 (s/gen vector?)))))
 
-(s/def ::predicate ::ifn)
-
 (s/def ::transducer (s/with-gen
                       ::ifn
                       (fn []
@@ -126,10 +133,26 @@
   (s/or :seqable ::seqable
         :transducer ::transducer))
 
+;;;; Atoms
+
 (s/def ::atom
-  (fn [a]
-    #?(:clj (instance? clojure.lang.IAtom a)
-       :cljs (satisfies? IAtom a))))
+  (s/with-gen
+    (fn [a]
+      #?(:clj (instance? clojure.lang.IAtom a)
+         :cljs (satisfies? IAtom a)))
+    #(gen/fmap (fn [any]
+                 (atom any))
+               (s/gen ::any))))
+
+(s/def :speculative.atom.options/validator
+  (s/with-gen ::predicate
+    (fn [] (gen/return (fn [_] true)))))
+(s/def :speculative.atom.options/meta ::map)
+(s/def ::atom.options
+  (s/keys* :opt-un [:speculative.atom.options/validator
+                    :speculative.atom.options/meta]))
+
+;;;; End Atoms
 
 ;;;; Regex stuff
 

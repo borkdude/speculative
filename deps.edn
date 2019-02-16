@@ -4,7 +4,10 @@
  {:test {:extra-paths ["test"]
          :extra-deps {org.clojure/clojure {:mvn/version "1.10.0"}
                       org.clojure/clojurescript {:mvn/version "1.10.520"}
-                      org.clojure/test.check {:mvn/version "RELEASE"}
+                      org.clojure/test.check
+                      {:git/url "https://github.com/borkdude/test.check"
+                       :sha "649ba2784bbc9f0b481a992a26de9de358f6ea33"}
+                      #_{:mvn/version "RELEASE"}
                       respeced {:git/url "https://github.com/borkdude/respeced"
                                 :sha "f5ff67aa78f588e7bad2a1b86dd1a646d3fdab3d"}
                       com.gfredericks/test.chuck {:mvn/version "0.2.9"}}}
@@ -33,7 +36,7 @@
                 {:git/url "https://github.com/mfikes/coal-mine"
                  :sha "42867c122db6aa8e027015eefb49ca6682dd3d73"}
                 orchestra
-                {:mvn/version "2019.02.06-1"}}}
+                {:mvn/version "2019.02.17-SNAPSHOT"}}}
   :coal-mine-clj
   {:jvm-opts ["-XX:CompressedClassSpaceSize=2g"]
    :main-opts ["-e" "(require,'[patch.clj-2443])"

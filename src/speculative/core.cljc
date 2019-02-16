@@ -215,10 +215,11 @@
   :ret ::ss/seqable)
 
 ;; 2327
-(s/def :atom/validator ::ss/ifn)
-(s/def :atom/meta ::ss/map)
+
 (s/fdef clojure.core/atom
-  :args (s/cat :x ::ss/any :options (s/keys* :opt-un [:atom/validator :atom/meta]))
+  :args (s/cat :x ::ss/any
+               :options
+               ::ss/atom.options)
   :ret ::ss/atom)
 
 ;; 2345
@@ -300,7 +301,7 @@
 ;; 3041
 (s/fdef clojure.core/merge
   :args (s/cat :maps (s/? (s/cat
-                           :init-map (s/nilable map?)
+                           :init-map (s/nilable ::ss/map)
                            :rest-maps (s/* ::ss/seqable-of-map-entry))))
   :ret (s/nilable map?))
 
@@ -361,13 +362,16 @@
   :ret ::ss/regex-match)
 
 ;; 4981
+(s/def ::subs-args
+  (s/and (s/cat :s ::ss/string
+                :start ::ss/nat-int
+                :end (s/? ::ss/nat-int))
+         (fn start-idx [{:keys [s start end]}]
+           (let [end (or end (count s))]
+             (<= start end (count s))))))
+
 (s/fdef clojure.core/subs
-  :args (s/and (s/cat :s ::ss/string
-                      :start ::ss/nat-int
-                      :end (s/? ::ss/nat-int))
-               (fn start-idx [{:keys [s start end]}]
-                 (let [end (or end (count s))]
-                   (<= start end (count s)))))
+  :args ::subs-args
   :ret ::ss/string)
 
 ;; 4989
@@ -438,7 +442,7 @@
 
 ;; 6536
 (s/fdef clojure.core/fnil
-  :args (s/cat :f ::ss/ifn :xs (s/+ ::ss/any))
+  :args (s/cat :f ::ss/ifn :x ::ss/any :y (s/? ::ss/any) :z (s/? ::ss/any))
   :ret ::ss/ifn)
 
 ;; 6790
@@ -522,7 +526,7 @@
 
 ;; 7396
 (s/fdef clojure.core/every-pred
-  :args (s/cat :pred (s/+ ::ss/ifn))
+  :args (s/cat :pred (s/+ ::ss/predicate))
   :ret ::ss/ifn)
 
 ;; 7436
