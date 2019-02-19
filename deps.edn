@@ -3,54 +3,31 @@
  :aliases
  {:test {:extra-paths ["test"]
          :extra-deps {org.clojure/clojure {:mvn/version "1.10.0"}
-                      org.clojure/clojurescript {:mvn/version "1.10.516"}
+                      org.clojure/clojurescript {:mvn/version "1.10.520"}
                       org.clojure/test.check {:mvn/version "RELEASE"}
                       respeced {:git/url "https://github.com/borkdude/respeced"
-                                :sha "e7fb5e776f576f640a8676d3be0ff4ed45233ec2"}
+                                :sha "f5ff67aa78f588e7bad2a1b86dd1a646d3fdab3d"}
                       com.gfredericks/test.chuck {:mvn/version "0.2.9"}}}
-  :repl ;; works for clj and planck, use :cljs-repl for normal cljs
-  {:main-opts
-   ["-e" "(require,'[speculative.core])"
-    "-e" "(require,'[respeced.test,:refer,[with-instrumentation,with-unstrumentation,check]])"
-    "-e" "(require,'[clojure.spec.alpha,:as,s])"
-    "-e" "(require,'[clojure.spec.test.alpha,:as,stest])"
-    "-e" "(require,'[clojure.spec.gen.alpha,:as,gen])"
-    "-r"]}
-  :clj-tests ;; we use a script, because then we can call shutdown-agents, which
-  ;; brings down the process faster after running generative tests
-  {:main-opts ["-m" "speculative.test-runner"]}
+
+  ;; ==== Test runners, see README.md section Tests ====
   :clj-test-runner
   {:extra-deps {com.cognitect/test-runner
-                {:git/url "https://github.com/borkdude/test-runner"
-                 :sha "fe83104e9feb48e43673b31f23f131b3849a3776"}}
+                {:git/url "https://github.com/cognitect-labs/test-runner"
+                 :sha "cb96e80f6f3d3b307c59cbeb49bb0dcb3a2a780b"}}
    :main-opts ["-m" "cognitect.test-runner"
                "-d" "test"]}
-  :cljs-repl {:main-opts ["-m" "cljs.main" "-re" "node"
-                          "-e" "(require,'[speculative.core])"
-                          "-e" "(require,'[respeced.test,:refer,[with-instrumentation,with-unstrumentation,check]])"
-                          "-e" "(require,'[clojure.spec.alpha,:as,s])"
-                          "-e" "(require,'[clojure.spec.test.alpha,:as,stest])"
-                          "-e" "(require,'[clojure.spec.gen.alpha,:as,gen])"
-                          "-r"]}
-  :cljs-tests
-  {:main-opts ["-m" "cljs.main" "-re" "node" "-m" "speculative.test-runner"]}
-  :compile-node-tests
-  {:main-opts ["-m" "cljs.main" "-t" "node" "-c" "speculative.test-runner"]}
-  :cljs-tests-nashorn
-  {:main-opts ["-m" "cljs.main" "-re" "nashorn" "-m" "speculative.test-runner"]}
-  ;; we use the test runner because vanilla cljs.main + node doesn't exit
-  ;; properly
   :cljs-test-runner
-  {:extra-deps {olical/cljs-test-runner {:git/url "https://github.com/borkdude/cljs-test-runner"
-                                         :sha "6627c970315ca5cbb836221f6d0d400afbc87290"}}
+  {:extra-deps {olical/cljs-test-runner {:mvn/version "3.5.0"}}
    :extra-paths ["test" "cljs-test-runner-out/gen"]
    :main-opts ["-m" "cljs-test-runner.main"]}
-  :plk-tests
-  {:main-opts ["-m" "speculative.test-runner"]}
+
+  ;; ==== Cost ====
   :cost
   {:main-opts ["-m" "speculative.cost"]}
   :cljs-cost
   {:main-opts ["-m" "cljs.main" "-re" "node" "-m" "speculative.cost"]}
+
+  ;; ==== Coal mine ===
   :coal-mine
   {:extra-deps {github-mfikes/coal-mine
                 {:git/url "https://github.com/mfikes/coal-mine"

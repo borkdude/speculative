@@ -2,7 +2,7 @@
   (:require
    [clojure.test :as t :refer [is deftest testing]]
    [clojure.string :as str]
-   [speculative.instrument] ;; loads all specs
+   [speculative.string]
    [respeced.test :refer [with-instrumentation
                           with-unstrumentation
                           caught?
