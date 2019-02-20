@@ -20,7 +20,7 @@
 ;; 366
 (s/fdef str/ends-with?
   :args (s/cat :cs #?(:clj ::ss/char-sequence
-                     :cljs ::ss/string)
+                      :cljs ::ss/string)
                :substr ::ss/string)
   :ret ::ss/boolean)
 

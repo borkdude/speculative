@@ -26,7 +26,6 @@
   (check `list)
   (is (with-instrumentation `list "NOTE: no failure possible")))
 
-
 ;; 22
 (deftest cons-test
   (is (check-call `cons [:x nil]))

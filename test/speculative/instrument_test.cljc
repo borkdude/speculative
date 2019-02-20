@@ -1,30 +1,30 @@
 (ns speculative.instrument-test
   (:require
+   [clojure.spec.alpha :as s]
    [clojure.spec.test.alpha :as stest]
    [clojure.test :as t :refer [deftest is testing]]
    [respeced.test :refer [caught?]]
-   [speculative.instrument :as instrument]))
+   [speculative.instrument :as i]))
 
 (deftest instrument-test
   (testing "speculative specs should be instrumentable and unstrumentable"
-    (let [instrumented (instrument/instrument)
-          unstrumented (instrument/unstrument)]
-      (println "instrumented:" (count instrumented))
-      (println "unstrumented:" (count unstrumented)))))
-
-(deftest fixture-test
-  (testing "without instrumentation"
-    (is (some? (fnil 1 1))))
-
-  (testing "with instrumentation"
-    (is (caught? `fnil
-                 (instrument/fixture
-                  #(fnil 1 1))))))
-
-(deftest unload-test
-  (testing "it should be safe to call (stest/instrument) after calling
+    (is (let [instrumented (i/instrument)
+              unstrumented (i/unstrument)]
+          (println "instrumented:" (count instrumented))
+          (println "unstrumented:" (count unstrumented))
+          true)))
+  (testing "it should be safe to call (stest/instrument) after requiring
   speculative instrument"
-    (instrument/unload-blacklist true)
-    (let [stest-instrumented (stest/instrument)]
-      (println "stest-instrumented:" (count stest-instrumented)))
-    (instrument/unstrument)))
+    (is
+     (let [stest-instrumented (stest/instrument)]
+       (println "stest-instrumented:" (count stest-instrumented))
+       (stest/unstrument)
+       true)))
+  (testing "environment specific tests"
+    (i/instrument)
+    #?(:clj
+       (testing "next is not blacklisted on clj"
+         (is (caught? `next (apply next [1])))))
+    #?(:cljs
+       (testing "hash-map is not blacklisted on cljs"
+         (is (caught? `hash-map (apply hash-map [1])))))))
