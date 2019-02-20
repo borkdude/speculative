@@ -461,7 +461,7 @@
 ;; 7146
 (s/fdef clojure.core/group-by
   :args (s/cat :f ::ss/ifn :coll ::ss/reducible-coll)
-  :ret map?
+  :ret ::ss/map
   :fn (fn [{:keys [args ret]}]
         (let [[_ coll] (:coll args)]
           (= (count coll)
