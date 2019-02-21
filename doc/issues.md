@@ -4,6 +4,8 @@ Issues are sorted by date from newest to oldest.
 
 ## Unfixed or unreleased
 
+- [Align behavior of set/union and into with Clojure](https://dev.clojure.org/jira/browse/CLJS-3054) (CLJS)
+- [let macro doesn't work in CLJS](https://dev.clojure.org/jira/browse/TCHECK-154) (TCHECK)
 - [Generator in keys* spec not overridable](https://dev.clojure.org/jira/browse/CLJ-2483) (CLJ)
 - [Undefined fdef is still present in result of (stest/checkable-syms)](https://dev.clojure.org/jira/browse/CLJS-3049) (CLJS)
 - [Unify behavior of shuffle in CLJ and CLJS](https://dev.clojure.org/jira/browse/CLJ-2470) (CLJ)
