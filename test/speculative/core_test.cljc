@@ -640,7 +640,7 @@
                       {:gen {::ss/matcher
                              (fn [] (gen/fmap (fn [matcher]
                                                 (doto matcher (.find)))
-                                              ss/matching-matcher-gen))}}))
+                                              (ss/matching-matcher-gen)))}}))
        (with-instrumentation `re-groups
          (is (caught? `re-groups (re-groups 1)))))))
 
