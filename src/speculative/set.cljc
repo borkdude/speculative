@@ -9,16 +9,16 @@
 (s/def ::nilable-map
   (s/nilable ::ss/map))
 
-(s/def ::rel
-  (s/nilable (s/coll-of ::nilable-map)))
+(s/def ::nilable-map+
+  (s/nilable ::ss/map+))
 
-(s/def ::rel*
-  (s/nilable (s/coll-of ::ss/seqable-of-map-entry)))
+(s/def ::rel (ss/seqable-of ::nilable-map))
+
+(s/def ::rel* (ss/seqable-of ::nilable-map+))
 
 (s/def ::seqable-of-pairs
-  (s/coll-of (s/or :map-entry ::ss/map-entry
-                   :pair (s/coll-of ::ss/any :count 2))
-             :kind seqable?))
+  (ss/seqable-of (s/or :map-entry ::ss/map-entry
+                       :pair (s/coll-of ::ss/any :count 2))))
 
 (s/def ::nullary
   (s/cat))
@@ -80,14 +80,14 @@
   :ret ::ss/map)
 
 (s/fdef set/map-invert
-  :args (s/cat :m (s/nilable ::seqable-of-pairs))
+  :args (s/cat :m ::seqable-of-pairs)
   :ret ::ss/map)
 
 (s/fdef set/join
   :args (s/alt :binary (s/cat :xrel ::rel
-                              :yrel ::rel*)
+                              :yrel ::rel)
                :ternary (s/cat :xrel ::rel
-                               :yrel ::rel*
+                               :yrel ::rel
                                :km ::nilable-map))
   :ret ::ss/set)
 

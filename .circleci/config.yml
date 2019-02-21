@@ -56,7 +56,7 @@ jobs:
       # run tests!
       - run: script/clean
       - run: script/test
-      - run: COAL_MINE_TIMEOUT=80 script/coal-mine
+      - run: COAL_MINE_TIMEOUT=80 script/coal-mine --ret-spec true
 
       - save_cache:
           paths:
