@@ -11,8 +11,7 @@
    [speculative.string]
    [speculative.impl :as impl]
    [speculative.impl.syms :as syms]
-   [clojure.spec.test.alpha]
-   #?(:cljs [goog.object :as gobj]))
+   [clojure.spec.test.alpha])
   #?(:cljs
      (:require-macros
       [speculative.instrument :refer [instrument

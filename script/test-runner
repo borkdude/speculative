@@ -35,4 +35,19 @@ clojure "-A:test:$test_runner"  \
         -n speculative.test-prelude \
         -n speculative.instrument-test
 
+echo -e "\n==== Verifying that instrumentation does not require test dependencies ===="
+
+case "$TEST_ENV" in
+    "clj") clojure -e "(require '[speculative.instrument :as i])" -e "(i/instrument)" ;;
+    "cljs")
+        case "$CLJS_ENV" in
+            "node") clojure -Sdeps '{:deps {org.clojure/clojurescript {:mvn/version "RELEASE"}}}' \
+                            -m cljs.main -re node \
+                            -e "(require '[speculative.instrument :as i])" \
+                            -e "(i/instrument)" ;;
+            "planck") plk -e "(require '[speculative.instrument :as i])" \
+                          -e "(i/instrument)" ;;
+        esac ;;
+esac
+
 exit "$err"
