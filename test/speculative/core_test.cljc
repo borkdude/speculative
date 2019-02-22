@@ -6,7 +6,7 @@
    [clojure.spec.test.alpha :as stest]
    [clojure.test :as t :refer [is deftest testing]]
    [clojure.test.check]
-   [clojure.test.check.generators :as g]
+   [clojure.test.check.generators :as g :include-macros true]
    [respeced.test :as rt :refer [with-instrumentation
                                  with-unstrumentation
                                  caught?
