@@ -4,10 +4,7 @@
  {:test {:extra-paths ["test"]
          :extra-deps {org.clojure/clojure {:mvn/version "1.10.0"}
                       org.clojure/clojurescript {:mvn/version "1.10.520"}
-                      org.clojure/test.check
-                      {:git/url "https://github.com/borkdude/test.check"
-                       :sha "649ba2784bbc9f0b481a992a26de9de358f6ea33"}
-                      #_{:mvn/version "RELEASE"}
+                      org.clojure/test.check {:mvn/version "RELEASE"}
                       respeced {:git/url "https://github.com/borkdude/respeced"
                                 :sha "f5ff67aa78f588e7bad2a1b86dd1a646d3fdab3d"}
                       com.gfredericks/test.chuck {:mvn/version "0.2.9"}}}
