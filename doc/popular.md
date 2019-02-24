@@ -91,7 +91,7 @@ reify,3212
 mapv,3190
 doall,3168
 contains,2978
-pos?,2948
+# pos?,2948
 aset,2946
 gensym,2798
 # partition,2788
@@ -134,7 +134,7 @@ ref,1476
 sort-by,1465
 complement,1463
 false?,1354
-neg?,1329
+# neg?,1329
 prn,1323
 max,1316
 mod,1306
