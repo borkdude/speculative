@@ -5,6 +5,7 @@
 [![CircleCI](https://circleci.com/gh/borkdude/speculative/tree/master.svg?style=svg)](https://circleci.com/gh/borkdude/speculative/tree/master)
 [![Clojars Project](https://img.shields.io/clojars/v/speculative.svg)](https://clojars.org/speculative)
 [![cljdoc badge](https://cljdoc.org/badge/speculative/speculative)](https://cljdoc.org/d/speculative/speculative/CURRENT)
+[![Downloads](https://versions.deps.co/borkdude/speculative/downloads.svg)](https://versions.deps.co/borkdude/speculative)
 
 Unofficial community-driven specs for `clojure.core`.
 
