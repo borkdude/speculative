@@ -15,6 +15,7 @@
     clojure.core/assoc-in
     clojure.core/atom
     clojure.core/comp
+    clojure.core/concat
     clojure.core/conj
     clojure.core/cons
     clojure.core/count
@@ -118,6 +119,7 @@
     cljs.core/assoc-in
     cljs.core/atom
     cljs.core/comp
+    cljs.core/concat
     cljs.core/conj
     cljs.core/cons
     cljs.core/count
@@ -241,6 +243,7 @@
     clojure.core/assoc-in
     clojure.core/atom
     clojure.core/comp
+    clojure.core/concat
     clojure.core/conj
     clojure.core/cons
     clojure.core/count
@@ -334,6 +337,7 @@
     cljs.core/assoc-in
     cljs.core/atom
     cljs.core/comp
+    cljs.core/concat
     cljs.core/conj
     cljs.core/cons
     cljs.core/count

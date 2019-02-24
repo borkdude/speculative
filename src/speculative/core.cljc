@@ -105,6 +105,11 @@
                :intervening (s/* ::ss/any)
                :args ::ss/seqable))
 
+;; 718
+(s/fdef clojure.core/concat
+  :args (s/* ::ss/seqable)
+  :ret ::ss/seqable)
+
 ;; 783
 (s/fdef clojure.core/=
   :args (s/+ ::ss/any)
