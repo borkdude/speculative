@@ -207,6 +207,15 @@
             (is (caught? `apply (apply + 1 2 3 4))))
      :cljs nil)) ;; maximum call stack exceeded
 
+;; 718
+(deftest concat-test
+  (is (check-call `concat []))
+  (is (check-call `concat [nil nil nil]))
+  (is (check-call `concat [[1 2 3] [4 5 6]]))
+  (is (check-call `concat ["foo" "bar"]))
+  (check `concat)
+  (with-instrumentation `concat
+    (is (caught? `concat (concat 1 2 3)))))
 
 ;; 783
 (deftest =-test
