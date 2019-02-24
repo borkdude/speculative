@@ -136,7 +136,7 @@ complement,1463
 false?,1354
 # neg?,1329
 prn,1323
-max,1316
+# max,1316
 mod,1306
 resolve,1264
 # update,1258
