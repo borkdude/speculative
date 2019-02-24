@@ -171,6 +171,16 @@
   :args (s/+ ::ss/number)
   :ret ::ss/number)
 
+;; 1247
+(s/fdef clojure.core/pos?
+  :args (s/cat :num ::ss/number)
+  :ret ::ss/boolean)
+
+;; 1254
+(s/fdef clojure.core/neg?
+  :args (s/cat :num ::ss/number)
+  :ret ::ss/boolean)
+
 ;; 1459
 (s/fdef clojure.core/peek
   :args (s/cat :coll (s/nilable ::ss/stack))

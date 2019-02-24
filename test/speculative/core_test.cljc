@@ -326,6 +326,17 @@
   (with-instrumentation `max
     (is (caught? `max (apply max ["0" "1"])))))
 
+;; 1247
+(deftest pos?-neg?-test
+  (is (true? (check-call `pos? [1])))
+  (is (false? (check-call `neg? [1])))
+  (check `pos?)
+  (check `neg?)
+  (with-instrumentation `pos?
+    (is (caught? `pos? (apply pos? ["1"]))))
+  (with-instrumentation `neg?
+    (is (caught? `neg? (apply neg? ["1"])))))
+
 ;; 1459
 (deftest peek-test
   (is (nil? (check-call `peek [nil])))
