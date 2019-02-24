@@ -53,6 +53,7 @@
     clojure.core/merge-with
     clojure.core/min
     clojure.core/min-key
+    clojure.core/neg?
     clojure.core/next
     clojure.core/nil?
     clojure.core/not
@@ -65,6 +66,7 @@
     clojure.core/partition-by
     clojure.core/peek
     clojure.core/pop
+    clojure.core/pos?
     clojure.core/range
     clojure.core/re-find
     clojure.core/re-groups
@@ -157,6 +159,7 @@
     cljs.core/merge-with
     cljs.core/min
     cljs.core/min-key
+    cljs.core/neg?
     cljs.core/next
     cljs.core/nil?
     cljs.core/not
@@ -169,6 +172,7 @@
     cljs.core/partition-by
     cljs.core/peek
     cljs.core/pop
+    cljs.core/pos?
     cljs.core/range
     cljs.core/re-find
     cljs.core/re-matches
@@ -278,6 +282,7 @@
     clojure.core/merge-with
     clojure.core/min
     clojure.core/min-key
+    clojure.core/neg?
     clojure.core/next
     clojure.core/not-any?
     clojure.core/not-every?
@@ -287,6 +292,7 @@
     clojure.core/partition-by
     clojure.core/peek
     clojure.core/pop
+    clojure.core/pos?
     clojure.core/range
     clojure.core/re-find
     clojure.core/re-groups
@@ -373,6 +379,7 @@
     cljs.core/merge-with
     cljs.core/min
     cljs.core/min-key
+    cljs.core/neg?
     cljs.core/not-any?
     cljs.core/not-every?
     cljs.core/nth
@@ -382,6 +389,7 @@
     cljs.core/partition-by
     cljs.core/peek
     cljs.core/pop
+    cljs.core/pos?
     cljs.core/range
     cljs.core/re-find
     cljs.core/re-matches
