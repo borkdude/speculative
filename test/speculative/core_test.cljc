@@ -425,6 +425,15 @@
   (with-instrumentation `vals
     (is (caught? `vals (vals 1)))))
 
+;; 1589
+(deftest name-test
+  (is (name "foo"))
+  (is (name 'foo/bar))
+  (is (name :foo/bar))
+  (check `name)
+  (with-instrumentation `name
+    (is (caught? `name (name 1)))))
+
 ;; 2327
 (deftest atom-test
   (is (check-call `atom [(atom :val)]))

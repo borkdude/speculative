@@ -229,8 +229,13 @@
   :args (s/cat :map ::ss/seqable-of-map-entry)
   :ret ::ss/seqable)
 
-;; 2327
+;; 1589
+(s/fdef clojure.core/name
+  :args (s/cat :x (s/or :string ::ss/string
+                        :named ::ss/named))
+  :ret ::ss/string)
 
+;; 2327
 (s/fdef clojure.core/atom
   :args (s/cat :x ::ss/any
                :options
