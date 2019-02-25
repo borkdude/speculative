@@ -53,6 +53,7 @@
     clojure.core/merge-with
     clojure.core/min
     clojure.core/min-key
+    clojure.core/name
     clojure.core/neg?
     clojure.core/next
     clojure.core/nil?
@@ -159,6 +160,7 @@
     cljs.core/merge-with
     cljs.core/min
     cljs.core/min-key
+    cljs.core/name
     cljs.core/neg?
     cljs.core/next
     cljs.core/nil?
@@ -282,6 +284,7 @@
     clojure.core/merge-with
     clojure.core/min
     clojure.core/min-key
+    clojure.core/name
     clojure.core/neg?
     clojure.core/next
     clojure.core/not-any?
@@ -379,6 +382,7 @@
     cljs.core/merge-with
     cljs.core/min
     cljs.core/min-key
+    cljs.core/name
     cljs.core/neg?
     cljs.core/not-any?
     cljs.core/not-every?

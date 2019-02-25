@@ -22,7 +22,7 @@ symbol,count
 # atom,14024
 # reduce,13785
 # -,13236
-name,12880
+# name,12880
 instance?,12674
 # conj,12548
 # inc,12482

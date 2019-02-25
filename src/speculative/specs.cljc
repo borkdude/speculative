@@ -286,6 +286,17 @@
 
 (s/def ::list list?)
 
+(defn named? [x]
+  #?(:clj (instance? clojure.lang.Named x)
+     :cljs (satisfies? INamed x)))
+
+(s/def ::symbol symbol?)
+
+(s/def ::named (s/with-gen named?
+                 (fn []
+                   (s/gen (s/or :symbol ::symbol
+                                :keyword ::keyword)))))
+
 ;;;; Scratch
 
 (comment
