@@ -45,6 +45,7 @@
     clojure.core/keys
     clojure.core/last
     clojure.core/list
+    clojure.core/list*
     clojure.core/map
     clojure.core/map-indexed
     clojure.core/max
@@ -152,6 +153,7 @@
     cljs.core/keys
     cljs.core/last
     cljs.core/list
+    cljs.core/list*
     cljs.core/map
     cljs.core/map-indexed
     cljs.core/max
@@ -276,6 +278,7 @@
     clojure.core/keep-indexed
     clojure.core/keys
     clojure.core/last
+    clojure.core/list*
     clojure.core/map
     clojure.core/map-indexed
     clojure.core/max
@@ -374,6 +377,7 @@
     cljs.core/keep-indexed
     cljs.core/keys
     cljs.core/last
+    cljs.core/list*
     cljs.core/map
     cljs.core/map-indexed
     cljs.core/max

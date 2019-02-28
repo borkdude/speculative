@@ -199,10 +199,19 @@
   ;; there's really no way to make str crash, is there?
   (with-instrumentation `str))
 
+;; 648
+(deftest list*-test
+  (is (= [1 2 3 4 5 6] (check-call `list* [1 2 3 [4 5 6]])))
+  (is (= (nil? (check-call `list* [nil]))))
+  (check `list*)
+  (with-instrumentation `list*
+    (is (caught? `list* (list* 1 2 3 4)))))
+
 ;; 660
 (deftest apply-test
   (is (= 21 (check-call `apply [+ 1 2 3 [4 5 6]])))
   (is (= 0 (check-call `apply [+ nil])))
+  (check `apply {:gen {::ss/ifn (fn [] (gen/return list))}})
   #?(:clj (with-instrumentation `apply
             (is (caught? `apply (apply + 1 2 3 4))))
      :cljs nil)) ;; maximum call stack exceeded

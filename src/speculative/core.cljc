@@ -99,11 +99,18 @@
   :args (s/* ::ss/any)
   :ret ::ss/string)
 
+;; 648
+(s/fdef clojure.core/list*
+  :args (s/cat :intervening (s/* ::ss/any)
+               :args ::ss/seqable)
+  :ret ::ss/seqable)
+
 ;; 660
 (s/fdef clojure.core/apply
   :args (s/cat :f ::ss/ifn
                :intervening (s/* ::ss/any)
-               :args ::ss/seqable))
+               :args ::ss/seqable)
+  :ret ::ss/any)
 
 ;; 718
 (s/fdef clojure.core/concat
