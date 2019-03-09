@@ -8,7 +8,14 @@
                       respeced {:git/url "https://github.com/borkdude/respeced"
                                 :sha "f5ff67aa78f588e7bad2a1b86dd1a646d3fdab3d"}
                       com.gfredericks/test.chuck {:mvn/version "0.2.9"}}}
-
+  :clojuredocs {:jvm-opts ["-Djava.security.policy=test/speculative/java.policy"]
+                :extra-deps {org.clojure/data.csv {:mvn/version "RELEASE"}
+                             cheshire {:mvn/version "5.8.1"}
+                             org.clojure/math.numeric-tower {:mvn/version "0.0.4"}
+                             clojail {:git/url "https://github.com/borkdude/clojail"
+                                      :sha "13129f658b87dcf37a774130e4c0f1e9d11aefbc"}
+                             finitize {:git/url "https://github.com/borkdude/finitize"
+                                       :sha "62840885886354a5a95b7404f04fe4596c58e75e"}}}
   ;; ==== Test runners, see README.md section Tests ====
   :clj-test-runner
   {:extra-deps {com.cognitect/test-runner
