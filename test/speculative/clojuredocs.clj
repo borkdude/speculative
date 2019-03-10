@@ -255,18 +255,12 @@
     (str/split with-divider #"#_DIVIDER")))
 
 (defn process-example
-  [examples n]
-  (let [raw-example (nth examples n)
-        {:keys [:ns :name]} (cheshire.core/parse-string (second raw-example) true)
-        var (symbol ns name)
-        ns (symbol ns)
-        ns (symbol ns)
-        code (when-not (or
+  [{:keys [:ns :var :body :n] :as raw-example}]
+  (let [code (when-not (or
                         (contains? ns-blacklist ns)
                         (contains? var-blacklist var)
                         (contains? examples-blacklist n))
-               (-> raw-example
-                   first
+               (-> body
                    (str/replace "<pre>" "")
                    (str/replace "</pre>" "")
                    (str/replace "user=&gt;" "user=>")
@@ -289,12 +283,9 @@
                                   (first %)))
                  exprs)]
           [(get g true) (get g false)])]
-    {:n n
-     :var var
-     :ns ns
-     :example n
-     :toplevel toplevel-exprs
-     :sandboxed in-fn-exprs}))
+    (merge raw-example
+           {:toplevel toplevel-exprs
+            :sandboxed in-fn-exprs})))
 
 (def speculative-tester
   [(ct/blacklist-objects [clojure.lang.Compiler clojure.lang.Ref clojure.lang.Reflector
@@ -355,10 +346,19 @@
          results)))))
 
 (defn load-raw-examples [csv-file]
-  (rest
-   (doall
-    (csv/read-csv
-     (slurp csv-file)))))
+  (map-indexed (fn [n [body var]]
+                 (let [{:keys [:ns :name]} (cheshire.core/parse-string var true)
+                       var (symbol ns name)
+                       ns (symbol ns)]
+                   {:n n
+                    :ns ns
+                    :name name
+                    :body body
+                    :var var}))
+               (rest
+                (doall
+                 (csv/read-csv
+                  (slurp csv-file))))))
 
 (def cli-options
   [["-c" "--csv CSV" "CSV export from ClojureDocs"
@@ -370,17 +370,24 @@
     :default 800
     :parse-fn #(Integer/parseInt %)]
    ["-r" "--random RANDOM" "Run n random examples"
-    :parse-fn #(Integer/parseInt %)]])
+    :parse-fn #(Integer/parseInt %)]
+   ["-v" "--var VAR" "Run examples by var"
+    :parse-fn (fn [v]
+                (let [[ns name] (str/split v #"/")]
+                  (symbol ns name)))]])
 
 (defn -main [& args]
   (i/instrument)
-  (let [{:keys [:start :end :csv :random]} (:options (parse-opts args cli-options))
-        raw-examples (load-raw-examples csv)
+  (let [{:keys [:start :end :csv :random :var]} (:options (parse-opts args cli-options))
+        raw-examples (vec (load-raw-examples csv))
         selection (cond
                     random (take random (shuffle (range 0 800)))
+                    var (keep #(when (= var (:var %))
+                                 (:n %)) raw-examples)
                     (and start end)
                     (range start end))
-        examples (map #(process-example raw-examples %) selection)]
+        raw-examples (map #(nth raw-examples %) selection)
+        examples (map process-example raw-examples)]
     (doseq [e examples]
       (println "==== executing example" (:n e) "====")
       (execute-example e))))
@@ -392,5 +399,5 @@
   (i/instrument)
   (def raw-examples
     (load-raw-examples "https://michielborkent.nl/speculative/clojuredocs-20180120.csv"))
-  (process-example raw-examples 414)
+  (process-example (nth raw-examples 414))
   )
