@@ -57,6 +57,7 @@ jobs:
       - run: script/clean
       - run: script/test
       - run: COAL_MINE_TIMEOUT=80 script/coal-mine --ret-spec true
+      - run: clojure -A:test:clojuredocs -r 25
 
       - save_cache:
           paths:

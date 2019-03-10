@@ -1,32 +1,23 @@
 (ns speculative.clojuredocs
-  (:require [clojure.data.csv :as csv]
-            [clojure.java.io :as io]
-            [clojure.string :as str]
-            [cheshire.core]
-            [clojail.core :as clojail]
-            [clojail.jvm :refer [permissions domain context jvm-sandbox]]
-            [clojail.testers :as ct]
-            [finitize.core :refer [finitize]]
-            [speculative.instrument :as i])
+  (:require
+   [cheshire.core]
+   [clojail.core :as clojail]
+   [clojail.jvm :refer [permissions domain context jvm-sandbox]]
+   [clojail.testers :as ct]
+   [clojure.data.csv :as csv]
+   [clojure.java.io :as io]
+   [clojure.string :as str]
+   [clojure.tools.cli :refer [parse-opts]]
+   [finitize.core :refer [finitize]]
+   [speculative.instrument :as i])
   (:import [java.io StringReader]))
 
-;; installation:
+;; to reproduce the CSV file:
 ;; download https://cl.ly/0R1M0Z0n1F3Y/clojuredocs-clean-db-backup-20180120.tar.gz and unzip
 ;; cd clojuredocs
 ;; install mongodb and run: mongod --dbpath .
 ;; run: mongorestore -d clojuredocs --drop .
 ;; run: mongoexport --db clojuredocs --collection examples --type csv --fields body,var --out examples.csv
-;; change the value of csv-file below
- 
-;; then run this code with:
-;; clj -A:test:clojuredocs
-;; and call the function run-examples from the REPL.
-;; Also see the comment section at the end of this file.
-
-(def csv-file "/Users/Borkdude/Downloads/clojuredocs/examples.csv")
-
-(def examples
-  (with-open [reader (io/reader csv-file)] (doall (csv/read-csv reader))))
 
 (def ns-blacklist
   '#{clojure.java.io
@@ -70,7 +61,8 @@
      clojure.core/import
      clojure.core/io!
      clojure.core/load-reader
-     clojure.core/await})
+     clojure.core/await
+     clojure.core/agent})
 
 (def expression-blacklist
   '#{(keyword? x)
@@ -117,35 +109,6 @@
     730 ;; somehow this examples take long in the sandbox,
     ;; but completes subsecond outside of it
     734 748 763 771 786})
-
-(defn example
-  "Returns example code as string."
-  [n]
-  (let [e (nth examples (inc n))
-        {:keys [:ns :name]} (cheshire.core/parse-string (second e) true)
-        var-symbol (symbol ns name)
-        ns (symbol ns)]
-    {:var var-symbol
-     :ns (symbol ns)
-     :name name
-     :code
-     (when-not (or
-                (contains? ns-blacklist ns)
-                (contains? var-blacklist var-symbol)
-                (contains? examples-blacklist n))
-       (-> e
-           first
-           (str/replace "<pre>" "")
-           (str/replace "</pre>" "")
-           (str/replace "user=&gt;" "user=>")
-           (str/replace "clojure.contrib.math" "clojure.math.numeric-tower")
-           (str/replace "account-level" "identity")
-           (str/replace "(java.io.File. \"tryout.mp3\")" "(clojure.java.io/reader \"http://www.largesound.com/ashborytour/sound/brobob.mp3\")")
-           (str/replace #"(?m)^->" "#_")
-           (str/replace "(Thread/sleep 10000)" "(Thread/sleep 100)")
-           (str/replace "(Thread/sleep 5000)" "(Thread/sleep 100)")
-           (str/replace "(Thread/sleep 400)" "(Thread/sleep 100)")
-           (str/replace "(Thread/sleep 3000)" "(Thread/sleep 100)")))}))
 
 (def catch
   '#{(tos ll)
@@ -291,9 +254,30 @@
                                     (str "\n\n#_DIVIDER " non-whitespace)))]
     (str/split with-divider #"#_DIVIDER")))
 
-(defn emit-example
-  [n]
-  (let [{:keys [:code :var :ns]} (example n)
+(defn process-example
+  [examples n]
+  (let [raw-example (nth examples n)
+        {:keys [:ns :name]} (cheshire.core/parse-string (second raw-example) true)
+        var (symbol ns name)
+        ns (symbol ns)
+        ns (symbol ns)
+        code (when-not (or
+                        (contains? ns-blacklist ns)
+                        (contains? var-blacklist var)
+                        (contains? examples-blacklist n))
+               (-> raw-example
+                   first
+                   (str/replace "<pre>" "")
+                   (str/replace "</pre>" "")
+                   (str/replace "user=&gt;" "user=>")
+                   (str/replace "clojure.contrib.math" "clojure.math.numeric-tower")
+                   (str/replace "account-level" "identity")
+                   (str/replace "(java.io.File. \"tryout.mp3\")" "(clojure.java.io/reader \"http://www.largesound.com/ashborytour/sound/brobob.mp3\")")
+                   (str/replace #"(?m)^->" "#_")
+                   (str/replace "(Thread/sleep 10000)" "(Thread/sleep 100)")
+                   (str/replace "(Thread/sleep 5000)" "(Thread/sleep 100)")
+                   (str/replace "(Thread/sleep 400)" "(Thread/sleep 100)")
+                   (str/replace "(Thread/sleep 3000)" "(Thread/sleep 100)")))
         splitted-code (when code (split-sessions code))
         exprs (mapcat read-expressions splitted-code)
         [toplevel-exprs in-fn-exprs]
@@ -305,7 +289,8 @@
                                   (first %)))
                  exprs)]
           [(get g true) (get g false)])]
-    {:var var
+    {:n n
+     :var var
      :ns ns
      :example n
      :toplevel toplevel-exprs
@@ -326,9 +311,9 @@
    (ct/blacklist-nses '[clojure.main])
    (ct/blanket "clojail")])
 
-(defn execute-example [n]
+(defn execute-example [example]
   (let [{:keys [:toplevel :var :sandboxed :ns]}
-        (emit-example n)
+        example
         _ (prn "VAR" var)
         init `(do (require 'clojure.math.numeric-tower)
                   (import 'java.util.Date)
@@ -357,10 +342,10 @@
                      (sb expr {#'*1 repl-1})
                      (catch SecurityException e
                        (prn "could not execute expression" expr (type e))
-                            (throw e))
+                       (throw e))
                      (catch java.util.concurrent.ExecutionException e
                        (prn "could not execute expression" expr (type e))
-                            (throw e))
+                       (throw e))
                      (catch clojure.lang.ExceptionInfo e
                        (try (throw (.getCause e))
                             (catch clojure.lang.Compiler$CompilerException e nil))))]
@@ -369,19 +354,43 @@
                   (conj results res)))
          results)))))
 
-(defn run-examples
-  "Runs examples with instrumentation"
-  []
+(defn load-raw-examples [csv-file]
+  (rest
+   (doall
+    (csv/read-csv
+     (slurp csv-file)))))
+
+(def cli-options
+  [["-c" "--csv CSV" "CSV export from ClojureDocs"
+    :default "https://michielborkent.nl/speculative/clojuredocs-20180120.csv"]
+   ["-s" "--start START" "Start of example range"
+    :default 0
+    :parse-fn #(Integer/parseInt %)]
+   ["-e" "--end END" "End of example range"
+    :default 800
+    :parse-fn #(Integer/parseInt %)]
+   ["-r" "--random RANDOM" "Run n random examples"
+    :parse-fn #(Integer/parseInt %)]])
+
+(defn -main [& args]
   (i/instrument)
-  (doseq [n (range 411 800)]
-    (println "executing example" n)
-    (execute-example n)))
+  (let [{:keys [:start :end :csv :random]} (:options (parse-opts args cli-options))
+        raw-examples (load-raw-examples csv)
+        selection (cond
+                    random (take random (shuffle (range 0 800)))
+                    (and start end)
+                    (range start end))
+        examples (map #(process-example raw-examples %) selection)]
+    (doseq [e examples]
+      (println "==== executing example" (:n e) "====")
+      (execute-example e))))
 
 ;;;; Scratch
 
 (comment
-  (run-examples)
-  (execute-example 206)
-  (example 206)
-  (emit-example 206)
+  (-main "-r" "2")
+  (i/instrument)
+  (def raw-examples
+    (load-raw-examples "https://michielborkent.nl/speculative/clojuredocs-20180120.csv"))
+  (process-example raw-examples 414)
   )
