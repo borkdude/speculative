@@ -196,6 +196,13 @@ To skip an environment (CLJ or CLJS):
 
     SKIP_CLJS=true script/coal-mine
 
+### ClojureDocs
+
+To verify a spec against examples from [ClojureDocs](https://clojuredocs.org),
+run (for e.g. `update-in`):
+
+    clj -A:test:clojuredocs -v clojure.core/update-in
+
 ## Try online
 
 [KLIPSE REPL](https://re-find.it/speculative-repl) with speculative and
