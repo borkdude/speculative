@@ -62,7 +62,8 @@
      clojure.core/io!
      clojure.core/load-reader
      clojure.core/await
-     clojure.core/agent})
+     clojure.core/agent
+     clojure.core/send})
 
 (def expression-blacklist
   '#{(keyword? x)
@@ -99,7 +100,11 @@
      (because they are happening in different threads)
      (format "%5d" 12345678901234567890)
      (format "%.3f" 2)
-     (nth (sieve (iterate inc 2)) 10000)})
+     (nth (sieve (iterate inc 2)) 10000)
+     (update-in {} [] (constantly {:k :v}))
+     (update-in [1 {:a 2 :b 3 :c 4}] [:b :c] (fnil inc 5))
+     (assoc-in {} [] {:k :v})
+     (assoc-in [{:person {:name ["Mike"]}}] [0 :person :name 2] "Smith")})
 
 (def examples-blacklist
   #{97 99 118 120 134 188 209 213 221 309 315 347 355 372
@@ -255,18 +260,12 @@
     (str/split with-divider #"#_DIVIDER")))
 
 (defn process-example
-  [examples n]
-  (let [raw-example (nth examples n)
-        {:keys [:ns :name]} (cheshire.core/parse-string (second raw-example) true)
-        var (symbol ns name)
-        ns (symbol ns)
-        ns (symbol ns)
-        code (when-not (or
+  [{:keys [:ns :var :body :n] :as raw-example}]
+  (let [code (when-not (or
                         (contains? ns-blacklist ns)
                         (contains? var-blacklist var)
                         (contains? examples-blacklist n))
-               (-> raw-example
-                   first
+               (-> body
                    (str/replace "<pre>" "")
                    (str/replace "</pre>" "")
                    (str/replace "user=&gt;" "user=>")
@@ -289,12 +288,9 @@
                                   (first %)))
                  exprs)]
           [(get g true) (get g false)])]
-    {:n n
-     :var var
-     :ns ns
-     :example n
-     :toplevel toplevel-exprs
-     :sandboxed in-fn-exprs}))
+    (merge raw-example
+           {:toplevel toplevel-exprs
+            :sandboxed in-fn-exprs})))
 
 (def speculative-tester
   [(ct/blacklist-objects [clojure.lang.Compiler clojure.lang.Ref clojure.lang.Reflector
@@ -355,10 +351,22 @@
          results)))))
 
 (defn load-raw-examples [csv-file]
-  (rest
-   (doall
-    (csv/read-csv
-     (slurp csv-file)))))
+  (map-indexed (fn [n [body var]]
+                 (let [{:keys [:ns :name]} (cheshire.core/parse-string var true)
+                       var (symbol ns name)
+                       ns (symbol ns)]
+                   {:n n
+                    :ns ns
+                    :name name
+                    :body body
+                    :var var}))
+               (rest
+                (doall
+                 (csv/read-csv
+                  (slurp csv-file))))))
+
+(defn- accumulate [m k v]
+  (update-in m [k] (fnil conj []) v))
 
 (def cli-options
   [["-c" "--csv CSV" "CSV export from ClojureDocs"
@@ -370,17 +378,28 @@
     :default 800
     :parse-fn #(Integer/parseInt %)]
    ["-r" "--random RANDOM" "Run n random examples"
-    :parse-fn #(Integer/parseInt %)]])
+    :parse-fn #(Integer/parseInt %)]
+   ["-v" "--var VAR" "Run examples by var"
+    :parse-fn (fn [v]
+                (let [[ns name] (str/split v #"/")]
+                  (symbol ns name)))]
+   ["-n" "--num NUMBER" "Run example number"
+    :parse-fn #(Integer/parseInt %)
+    :assoc-fn accumulate]])
 
 (defn -main [& args]
   (i/instrument)
-  (let [{:keys [:start :end :csv :random]} (:options (parse-opts args cli-options))
-        raw-examples (load-raw-examples csv)
+  (let [{:keys [:start :end :csv :random :var :num]} (:options (parse-opts args cli-options))
+        raw-examples (vec (load-raw-examples csv))
         selection (cond
+                    num num
                     random (take random (shuffle (range 0 800)))
+                    var (keep #(when (= var (:var %))
+                                 (:n %)) raw-examples)
                     (and start end)
                     (range start end))
-        examples (map #(process-example raw-examples %) selection)]
+        raw-examples (map #(nth raw-examples %) selection)
+        examples (map process-example raw-examples)]
     (doseq [e examples]
       (println "==== executing example" (:n e) "====")
       (execute-example e))))
@@ -392,5 +411,6 @@
   (i/instrument)
   (def raw-examples
     (load-raw-examples "https://michielborkent.nl/speculative/clojuredocs-20180120.csv"))
-  (process-example raw-examples 414)
+  (process-example (nth raw-examples 414))
+
   )
