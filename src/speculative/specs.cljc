@@ -7,7 +7,8 @@
                :cljs [clojure.spec.test.alpha :as stest])
             #?(:clj [clojure.spec-alpha2.gen :as gen]
                :cljs [clojure.spec.gen.alpha :as gen])
-            #?(:cljs [goog.string]))
+            #?(:cljs [goog.string])
+            [clojure.string :as str])
   ;; #?(:cljs (:require-macros [speculative.specs :refer [seqable-of]]))
   )
 
@@ -196,80 +197,82 @@
      (instance? java.util.regex.Pattern r))
    :cljs (def regex? cljs.core/regexp?))
 
-(s/def ::regex.gen.sub-pattern
-  (s/cat :pattern
-         (s/alt :chars (s/+ #{\a \b})
-                :group (s/cat :open-paren #{\(}
-                              :inner-pattern ::regex.gen.sub-pattern
-                              :closing-paren #{\)}))
-         :maybe (s/? #{\?})))
+(comment
+  ;; doesn't work with spec-alpha2
+  (s/def ::regex.gen.sub-pattern
+    (s/cat :pattern
+           (s/alt :chars (s/+ #{\a \b})
+                  :group (s/cat :open-paren #{\(}
+                                :inner-pattern ::regex.gen.sub-pattern
+                                :closing-paren #{\)}))
+           :maybe (s/? #{\?})))
 
-(s/def ::regex.gen.pattern (s/coll-of ::regex.gen.sub-pattern :gen-max 10))
+  (s/def ::regex.gen.pattern (s/coll-of ::regex.gen.sub-pattern :gen-max 10))
 
-(defn regex-gen []
-  (gen/fmap
-   (fn [patterns]
-     (let [s (reduce #(str %1 (str/join %2)) "" patterns)]
-       (re-pattern s)))
-   (s/gen ::regex.gen.pattern)))
+  (defn regex-gen []
+    (gen/fmap
+     (fn [patterns]
+       (let [s (reduce #(str %1 (str/join %2)) "" patterns)]
+         (re-pattern s)))
+     (s/gen ::regex.gen.pattern)))
 
-#?(:clj
-   (defn lazy-string-from-regex
-     "Defers loading test.check"
-     [re]
-     (require '[com.gfredericks.test.chuck.generators])
-     ((resolve 'com.gfredericks.test.chuck.generators/string-from-regex) re)))
+  #?(:clj
+     (defn lazy-string-from-regex
+       "Defers loading test.check"
+       [re]
+       (require '[com.gfredericks.test.chuck.generators])
+       ((resolve 'com.gfredericks.test.chuck.generators/string-from-regex) re)))
 
-(defn regex-with-string-gen []
-  "Returns generator that generates a regex and a string that will match
+  (defn regex-with-string-gen []
+    "Returns generator that generates a regex and a string that will match
   90% of the time on CLJ and will maybe match 10% of the time on
   CLJ. On CLJS it will maybe match 100% of the time, since the string
   from regex generator isn't used there."
-  (gen/bind
-   (regex-gen)
-    (fn [re]
-      (gen/tuple
-       (gen/return re)
-       (gen/frequency
-        [#?(:clj [9
-                  (lazy-string-from-regex re)])
-         [#?(:clj 1 :cljs 10)
-          (gen/fmap str/join (s/gen (s/* #{\a \b})))]])))))
+    (gen/bind
+     (regex-gen)
+     (fn [re]
+       (gen/tuple
+        (gen/return re)
+        (gen/frequency
+         [#?(:clj [9
+                   (lazy-string-from-regex re)])
+          [#?(:clj 1 :cljs 10)
+           (gen/fmap str/join (s/gen (s/* #{\a \b})))]])))))
 
-#?(:clj
-   (do
-     (defn regex-with-matching-string-gen []
-       (gen/bind (regex-gen) 
-        (fn [re]
-          (gen/tuple (gen/return re)
-                     (lazy-string-from-regex re)))))
+  #?(:clj
+     (do
+       (defn regex-with-matching-string-gen []
+         (gen/bind (regex-gen) 
+                   (fn [re]
+                     (gen/tuple (gen/return re)
+                                (lazy-string-from-regex re)))))
 
-     (defn matching-matcher-gen []
-       (gen/fmap (fn [[r s]]
-                   (re-matcher r s))
-                 (regex-with-matching-string-gen)))
+       (defn matching-matcher-gen []
+         (gen/fmap (fn [[r s]]
+                     (re-matcher r s))
+                   (regex-with-matching-string-gen)))
 
-     (defn matcher-gen []
-       (gen/fmap (fn [[r strs]]
-                   (re-matcher r (str/join strs)))
-                 (regex-with-string-gen)))
+       (defn matcher-gen []
+         (gen/fmap (fn [[r strs]]
+                     (re-matcher r (str/join strs)))
+                   (regex-with-string-gen)))
 
-     (s/def ::matcher
-       (s/with-gen #(instance? java.util.regex.Matcher %)
-         (fn [] (matcher-gen))))
+       (s/def ::matcher
+         (s/with-gen #(instance? java.util.regex.Matcher %)
+           (fn [] (matcher-gen))))
 
-     ;; test matcher-gen:
-     (comment
-       (re-find (gen/generate matcher-gen)))))
-
-(s/def ::regex+string-args
-  (s/with-gen (s/cat :re ::regex :s ::string+)
-    regex-with-string-gen))
+       ;; test matcher-gen:
+       (comment
+         (re-find (gen/generate matcher-gen))))))
 
 (s/def ::regex
   (s/with-gen
     regex?
-    (fn [] (regex-gen))))
+    nil #_(fn [] (regex-gen))))
+
+(s/def ::regex+string-args
+  (s/with-gen (s/cat :re ::regex :s ::string+)
+    nil #_regex-with-string-gen))
 
 #?(:clj
    (s/def ::matcher
@@ -279,7 +282,8 @@
                       (s/or :string ::string
                             :seqable ::seqable-of-nilable-string)))
 
-(s/def ::regex-matches (seqable-of ::regex-match))
+(s/def ::regex-matches #?(:clj (spec2-seqable-of ::regex-match)
+                          :cljs (spec1-seqable-of ::regex-match)))
 
 ;;;; End regex stuff
 
