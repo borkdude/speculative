@@ -72,3 +72,4 @@ flycheck_*.el
 /issues/nashorn_code_cache
 /out
 .DS_Store
+.rebel_readline_history

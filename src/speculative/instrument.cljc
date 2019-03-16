@@ -43,6 +43,34 @@
                          :clj 'speculative.impl.syms/instrumentable-syms-clj
                          :cljs 'speculative.impl.syms/instrumentable-syms-cljs))))
 
+(impl/deftime
+  (defmacro unload-ns
+    "Unloads speculative specs in namespace except those listed as
+  unqualified argument symbols."
+    [ns & syms]
+    (let [selected (set (map #(symbol (str ns) (str %)) syms))
+          all-syms (impl/?
+                    :clj speculative.impl.syms/all-syms-clj
+                    :cljs speculative.impl.syms/all-syms-cljs)
+          all-syms (set (filter #(= (str ns) (namespace %)) all-syms))
+          unselected (set/difference all-syms selected)
+          defs (for [sym unselected]
+                 (impl/?
+                  :clj `(clojure.spec.alpha/def ~sym nil)
+                  :cljs `(cljs.spec.alpha/def ~sym nil)))]
+      `(do ~@defs
+           '~selected)))
+
+  (defmacro instrument []
+    `(impl/instrument* ~(impl/?
+                         :clj 'speculative.impl.syms/instrumentable-syms-clj
+                         :cljs 'speculative.impl.syms/instrumentable-syms-cljs)))
+
+  (defmacro unstrument []
+    `(impl/unstrument* ~(impl/?
+                         :clj 'speculative.impl.syms/instrumentable-syms-clj
+                         :cljs 'speculative.impl.syms/instrumentable-syms-cljs))))
+
 (defn fixture
   "Fixture that can be used with clojure.test"
   [test]
