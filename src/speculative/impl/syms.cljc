@@ -15,6 +15,7 @@
     clojure.core/assoc-in
     clojure.core/atom
     clojure.core/comp
+    clojure.core/concat
     clojure.core/conj
     clojure.core/cons
     clojure.core/count
@@ -40,16 +41,21 @@
     clojure.core/into
     clojure.core/juxt
     clojure.core/keep
+    clojure.core/keep-indexed
     clojure.core/keys
     clojure.core/last
     clojure.core/list
+    clojure.core/list*
     clojure.core/map
+    clojure.core/map-indexed
     clojure.core/max
     clojure.core/max-key
     clojure.core/merge
     clojure.core/merge-with
     clojure.core/min
     clojure.core/min-key
+    clojure.core/name
+    clojure.core/neg?
     clojure.core/next
     clojure.core/nil?
     clojure.core/not
@@ -62,6 +68,7 @@
     clojure.core/partition-by
     clojure.core/peek
     clojure.core/pop
+    clojure.core/pos?
     clojure.core/range
     clojure.core/re-find
     clojure.core/re-groups
@@ -101,6 +108,7 @@
     clojure.set/superset?
     clojure.set/union
     clojure.string/ends-with?
+    clojure.string/includes?
     clojure.string/join
     clojure.string/starts-with?})
 (def
@@ -115,6 +123,7 @@
     cljs.core/assoc-in
     cljs.core/atom
     cljs.core/comp
+    cljs.core/concat
     cljs.core/conj
     cljs.core/cons
     cljs.core/count
@@ -140,16 +149,21 @@
     cljs.core/into
     cljs.core/juxt
     cljs.core/keep
+    cljs.core/keep-indexed
     cljs.core/keys
     cljs.core/last
     cljs.core/list
+    cljs.core/list*
     cljs.core/map
+    cljs.core/map-indexed
     cljs.core/max
     cljs.core/max-key
     cljs.core/merge
     cljs.core/merge-with
     cljs.core/min
     cljs.core/min-key
+    cljs.core/name
+    cljs.core/neg?
     cljs.core/next
     cljs.core/nil?
     cljs.core/not
@@ -162,6 +176,7 @@
     cljs.core/partition-by
     cljs.core/peek
     cljs.core/pop
+    cljs.core/pos?
     cljs.core/range
     cljs.core/re-find
     cljs.core/re-matches
@@ -199,6 +214,7 @@
     clojure.set/superset?
     clojure.set/union
     clojure.string/ends-with?
+    clojure.string/includes?
     clojure.string/join
     clojure.string/starts-with?})
 (def
@@ -235,6 +251,7 @@
     clojure.core/assoc-in
     clojure.core/atom
     clojure.core/comp
+    clojure.core/concat
     clojure.core/conj
     clojure.core/cons
     clojure.core/count
@@ -258,15 +275,20 @@
     clojure.core/into
     clojure.core/juxt
     clojure.core/keep
+    clojure.core/keep-indexed
     clojure.core/keys
     clojure.core/last
+    clojure.core/list*
     clojure.core/map
+    clojure.core/map-indexed
     clojure.core/max
     clojure.core/max-key
     clojure.core/merge
     clojure.core/merge-with
     clojure.core/min
     clojure.core/min-key
+    clojure.core/name
+    clojure.core/neg?
     clojure.core/next
     clojure.core/not-any?
     clojure.core/not-every?
@@ -276,6 +298,7 @@
     clojure.core/partition-by
     clojure.core/peek
     clojure.core/pop
+    clojure.core/pos?
     clojure.core/range
     clojure.core/re-find
     clojure.core/re-groups
@@ -313,6 +336,7 @@
     clojure.set/superset?
     clojure.set/union
     clojure.string/ends-with?
+    clojure.string/includes?
     clojure.string/join
     clojure.string/starts-with?})
 (def
@@ -325,6 +349,7 @@
     cljs.core/assoc-in
     cljs.core/atom
     cljs.core/comp
+    cljs.core/concat
     cljs.core/conj
     cljs.core/cons
     cljs.core/count
@@ -349,15 +374,20 @@
     cljs.core/into
     cljs.core/juxt
     cljs.core/keep
+    cljs.core/keep-indexed
     cljs.core/keys
     cljs.core/last
+    cljs.core/list*
     cljs.core/map
+    cljs.core/map-indexed
     cljs.core/max
     cljs.core/max-key
     cljs.core/merge
     cljs.core/merge-with
     cljs.core/min
     cljs.core/min-key
+    cljs.core/name
+    cljs.core/neg?
     cljs.core/not-any?
     cljs.core/not-every?
     cljs.core/nth
@@ -367,6 +397,7 @@
     cljs.core/partition-by
     cljs.core/peek
     cljs.core/pop
+    cljs.core/pos?
     cljs.core/range
     cljs.core/re-find
     cljs.core/re-matches
@@ -401,5 +432,6 @@
     clojure.set/superset?
     clojure.set/union
     clojure.string/ends-with?
+    clojure.string/includes?
     clojure.string/join
     clojure.string/starts-with?})

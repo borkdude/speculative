@@ -1,24 +1,13 @@
 #!/bin/bash
 
+err=0
+trap '(( err |= $? ))' ERR
+trap 'exit $err' SIGINT SIGTERM
+
 script/clean
-export SPECULATIVE_NO_UNLOAD_BLACKLIST=true
 
-exit_code=0
+TEST_ENV=clj script/test-runner
+TEST_ENV=cljs CLJS_ENV=node script/test-runner
+TEST_ENV=cljs CLJS_ENV=planck script/test-runner
 
-echo "=== Running clj-tests"
-
-if ! clojure -A:test:clj-tests; then
-    exit_code=1
-fi
-
-if ! script/cljs-tests; then
-    exit_code=1
-fi
-
-echo -e "\n=== Running plk-tests"
-
-if ! plk -A:test:plk-tests; then
-    exit_code=1
-fi
-
-exit $exit_code
+exit "$err"

@@ -7,8 +7,7 @@
                :cljs [clojure.spec.test.alpha :as stest])
             #?(:clj [clojure.spec-alpha2.gen :as gen]
                :cljs [clojure.spec.gen.alpha :as gen])
-            #?(:cljs [goog.string])
-            [speculative.impl :as impl])
+            #?(:cljs [goog.string]))
   ;; #?(:cljs (:require-macros [speculative.specs :refer [seqable-of]]))
   )
 
@@ -48,8 +47,14 @@
     #(s/gen (s/spec any?))))
 
 (s/def ::boolean boolean?)
-(s/def ::counted counted?)
+(s/def ::counted (s/with-gen counted?
+                   #(s/gen (s/spec seqable?))))
 (s/def ::ifn ifn?)
+(s/def ::predicate
+  (s/with-gen ::ifn
+    (fn [] (gen/bind (s/gen ::boolean)
+                     (fn [b] (gen/return (fn [x] b)))))))
+
 (s/def ::int int?)
 (s/def ::nat-int nat-int?)
 (s/def ::pos-int pos-int?)
@@ -78,7 +83,7 @@
 (s/def ::sequential sequential?)
 (s/def ::some some?)
 (s/def ::string string?)
-(s/def ::char-sequence ::any)
+(s/def ::keyword keyword?)
 
 #?(:clj (s/def ::char-sequence
           (s/with-gen
@@ -90,6 +95,7 @@
                                 #(StringBuilder. %)
                                 #(java.nio.CharBuffer/wrap %)
                                 #(String. %)]))))))
+(s/def ::string+ #?(:cljs ::string :clj ::char-sequence))
 
 #_(defn ^:private seqable-of
   [spec]
@@ -112,7 +118,8 @@
                      (s/or :empty empty?
                            :seq (s/and (s/conformer seq)
                                        (s/every spec))))
-    #(s/gen (s/nilable (s/every spec :kind coll?)))))
+    ;; avoid generation of strings and vectors (those are interpreted as pairs when using conj with maps
+    #(s/gen (s/nilable (s/every spec :kind seq?)))))
 
 (s/def ::seqable-of-map-entry
   #?(:clj (spec2-seqable-of ::map-entry)
@@ -152,8 +159,6 @@
       (gen/fmap #(java.util.ArrayList. %)
                 (s/gen (s/spec vector?))))))
 
-(s/def ::predicate ::ifn)
-
 (s/def ::transducer (s/with-gen
                       ::ifn
                       (fn []
@@ -163,27 +168,120 @@
   (s/or :seqable ::seqable
         :transducer ::transducer))
 
+;;;; Atoms
+
 (s/def ::atom
-  (fn [a]
-    #?(:clj (instance? clojure.lang.IAtom a)
-       :cljs (satisfies? IAtom a))))
+  (s/with-gen
+    (fn [a]
+      #?(:clj (instance? clojure.lang.IAtom a)
+         :cljs (satisfies? IAtom a)))
+    #(gen/fmap (fn [any]
+                 (atom any))
+               (s/gen ::any))))
+
+(s/def :speculative.atom.options/validator
+  (s/with-gen ::predicate
+    (fn [] (gen/return (fn [_] true)))))
+(s/def :speculative.atom.options/meta ::map)
+(s/def ::atom.options
+  (s/keys* :opt-un [:speculative.atom.options/validator
+                    :speculative.atom.options/meta]))
+
+;;;; End Atoms
+
+;;;; Regex stuff
 
 #?(:clj
    (defn regex? [r]
      (instance? java.util.regex.Pattern r))
    :cljs (def regex? cljs.core/regexp?))
 
+(s/def ::regex.gen.sub-pattern
+  (s/cat :pattern
+         (s/alt :chars (s/+ #{\a \b})
+                :group (s/cat :open-paren #{\(}
+                              :inner-pattern ::regex.gen.sub-pattern
+                              :closing-paren #{\)}))
+         :maybe (s/? #{\?})))
+
+(s/def ::regex.gen.pattern (s/coll-of ::regex.gen.sub-pattern :gen-max 10))
+
+(defn regex-gen []
+  (gen/fmap
+   (fn [patterns]
+     (let [s (reduce #(str %1 (str/join %2)) "" patterns)]
+       (re-pattern s)))
+   (s/gen ::regex.gen.pattern)))
+
+#?(:clj
+   (defn lazy-string-from-regex
+     "Defers loading test.check"
+     [re]
+     (require '[com.gfredericks.test.chuck.generators])
+     ((resolve 'com.gfredericks.test.chuck.generators/string-from-regex) re)))
+
+(defn regex-with-string-gen []
+  "Returns generator that generates a regex and a string that will match
+  90% of the time on CLJ and will maybe match 10% of the time on
+  CLJ. On CLJS it will maybe match 100% of the time, since the string
+  from regex generator isn't used there."
+  (gen/bind
+   (regex-gen)
+    (fn [re]
+      (gen/tuple
+       (gen/return re)
+       (gen/frequency
+        [#?(:clj [9
+                  (lazy-string-from-regex re)])
+         [#?(:clj 1 :cljs 10)
+          (gen/fmap str/join (s/gen (s/* #{\a \b})))]])))))
+
+#?(:clj
+   (do
+     (defn regex-with-matching-string-gen []
+       (gen/bind (regex-gen) 
+        (fn [re]
+          (gen/tuple (gen/return re)
+                     (lazy-string-from-regex re)))))
+
+     (defn matching-matcher-gen []
+       (gen/fmap (fn [[r s]]
+                   (re-matcher r s))
+                 (regex-with-matching-string-gen)))
+
+     (defn matcher-gen []
+       (gen/fmap (fn [[r strs]]
+                   (re-matcher r (str/join strs)))
+                 (regex-with-string-gen)))
+
+     (s/def ::matcher
+       (s/with-gen #(instance? java.util.regex.Matcher %)
+         (fn [] (matcher-gen))))
+
+     ;; test matcher-gen:
+     (comment
+       (re-find (gen/generate matcher-gen)))))
+
+(s/def ::regex+string-args
+  (s/with-gen (s/cat :re ::regex :s ::string+)
+    regex-with-string-gen))
+
 (s/def ::regex
   (s/with-gen
     regex?
-    (fn []
-      (gen/fmap re-pattern
-                (s/gen ::string)))))
+    (fn [] (regex-gen))))
 
-(s/def ::matcher ::any)
 #?(:clj
    (s/def ::matcher
      #(instance? java.util.regex.Matcher %)))
+
+(s/def ::regex-match (s/nilable
+                      (s/or :string ::string
+                            :seqable ::seqable-of-nilable-string)))
+
+(s/def ::regex-matches (seqable-of ::regex-match))
+
+;;;; End regex stuff
 
 (s/def ::sequential-of-non-sequential
   (s/every #(not (sequential? %)) :kind sequential?))
@@ -227,6 +325,17 @@
                    :list list?)))))
 
 (s/def ::list list?)
+
+(defn named? [x]
+  #?(:clj (instance? clojure.lang.Named x)
+     :cljs (satisfies? INamed x)))
+
+(s/def ::symbol symbol?)
+
+(s/def ::named (s/with-gen named?
+                 (fn []
+                   (s/gen (s/or :symbol ::symbol
+                                :keyword ::keyword)))))
 
 ;;;; Scratch
 

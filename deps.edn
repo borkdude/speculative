@@ -6,59 +6,46 @@
          ;; why is this again?
          :jvm-opts ["-Dclojure.spec.skip-macros"]
          :extra-deps {org.clojure/clojure {:mvn/version "1.10.0"}
-                      org.clojure/clojurescript {:mvn/version "1.10.516"}
+                      org.clojure/clojurescript {:mvn/version "1.10.520"}
                       org.clojure/test.check {:mvn/version "RELEASE"}
                       respeced {:git/url "https://github.com/borkdude/respeced"
-                                :sha "8c80a93a4a233ca3710f6d3ab6e7962afd11fff7"}}}
-  :repl ;; works for clj and planck, use :cljs-repl for normal cljs
-  {:main-opts
-   ["-e" "(require,'[speculative.core])"
-    "-e" "(require,'[respeced.test,:refer,[with-instrumentation,with-unstrumentation,check]])"
-    "-e" "(require,'[clojure.spec-alpha2,:as,s])"
-    "-e" "(require,'[clojure.spec-alpha.test,:as,stest])"
-    "-e" "(require,'[clojure.spec-alpha.gen,:as,gen])"
-    "-r"]}
-  :clj-tests ;; we use a script, because then we can call shutdown-agents, which
-  ;; brings down the process faster after running generative tests
-  {:main-opts ["-m" "speculative.test-runner"]}
+                                :sha "f5ff67aa78f588e7bad2a1b86dd1a646d3fdab3d"}
+                      com.gfredericks/test.chuck {:mvn/version "0.2.9"}}}
+  :clojuredocs {:jvm-opts ["-Djava.security.policy=test/speculative/java.policy"]
+                :extra-deps {org.clojure/data.csv {:mvn/version "RELEASE"}
+                             cheshire {:mvn/version "5.8.1"}
+                             org.clojure/math.numeric-tower {:mvn/version "0.0.4"}
+                             clojail {:git/url "https://github.com/borkdude/clojail"
+                                      :sha "13129f658b87dcf37a774130e4c0f1e9d11aefbc"}
+                             finitize {:git/url "https://github.com/borkdude/finitize"
+                                       :sha "62840885886354a5a95b7404f04fe4596c58e75e"}
+                             org.clojure/tools.cli {:mvn/version "0.4.1"}}
+                :main-opts ["-m" "speculative.clojuredocs"]}
+  ;; ==== Test runners, see README.md section Tests ====
   :clj-test-runner
   {:extra-deps {com.cognitect/test-runner
-                {:git/url "https://github.com/borkdude/test-runner"
-                 :sha "fe83104e9feb48e43673b31f23f131b3849a3776"}}
+                {:git/url "https://github.com/cognitect-labs/test-runner"
+                 :sha "cb96e80f6f3d3b307c59cbeb49bb0dcb3a2a780b"}}
    :main-opts ["-m" "cognitect.test-runner"
                "-d" "test"]}
-  :cljs-repl {:main-opts ["-m" "cljs.main" "-re" "node"
-                          "-e" "(require,'[speculative.core])"
-                          "-e" "(require,'[respeced.test,:refer,[with-instrumentation,with-unstrumentation,check]])"
-                          "-e" "(require,'[clojure.spec.alpha,:as,s])"
-                          "-e" "(require,'[clojure.spec.test.alpha,:as,stest])"
-                          "-e" "(require,'[clojure.spec.gen.alpha,:as,gen])"
-                          "-r"]}
-  :cljs-tests
-  {:main-opts ["-m" "cljs.main" "-re" "node" "-m" "speculative.test-runner"]}
-  :compile-node-tests
-  {:main-opts ["-m" "cljs.main" "-t" "node" "-c" "speculative.test-runner"]}
-  :cljs-tests-nashorn
-  {:main-opts ["-m" "cljs.main" "-re" "nashorn" "-m" "speculative.test-runner"]}
-  ;; we use the test runner because vanilla cljs.main + node doesn't exit
-  ;; properly
   :cljs-test-runner
-  {:extra-deps {olical/cljs-test-runner {:git/url "https://github.com/borkdude/cljs-test-runner"
-                                         :sha "6627c970315ca5cbb836221f6d0d400afbc87290"}}
+  {:extra-deps {olical/cljs-test-runner {:mvn/version "3.5.0"}}
    :extra-paths ["test" "cljs-test-runner-out/gen"]
    :main-opts ["-m" "cljs-test-runner.main"]}
-  :plk-tests
-  {:main-opts ["-m" "speculative.test-runner"]}
+
+  ;; ==== Cost ====
   :cost
   {:main-opts ["-m" "speculative.cost"]}
   :cljs-cost
   {:main-opts ["-m" "cljs.main" "-re" "node" "-m" "speculative.cost"]}
+
+  ;; ==== Coal mine ===
   :coal-mine
   {:extra-deps {github-mfikes/coal-mine
                 {:git/url "https://github.com/mfikes/coal-mine"
                  :sha "42867c122db6aa8e027015eefb49ca6682dd3d73"}
                 orchestra
-                {:mvn/version "2019.02.06-1"}}}
+                {:mvn/version "2019.02.17-SNAPSHOT"}}}
   :coal-mine-clj
   {:jvm-opts ["-XX:CompressedClassSpaceSize=2g"]
    :main-opts ["-e" "(require,'[patch.clj-2443])"

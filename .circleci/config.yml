@@ -40,8 +40,8 @@ jobs:
           name: Install Planck
           command: |
             sudo apt-get install javascriptcoregtk-4.0 libzip4
-            curl -O http://planck-repl.org/releases/2.20.0-debian-9.0/planck
-            curl -O http://planck-repl.org/releases/2.20.0-debian-9.0/plk
+            curl -O http://planck-repl.org/releases/2.21.0-debian-9.0/planck
+            curl -O http://planck-repl.org/releases/2.21.0-debian-9.0/plk
             chmod +x planck
             chmod +x plk
             sudo mv planck /usr/bin
@@ -56,7 +56,8 @@ jobs:
       # run tests!
       - run: script/clean
       - run: script/test
-      - run: COAL_MINE_TIMEOUT=80 script/coal-mine
+      - run: COAL_MINE_TIMEOUT=80 script/coal-mine --ret-spec true
+      - run: clojure -A:test:clojuredocs -r 25
 
       - save_cache:
           paths:

@@ -54,6 +54,7 @@
 (defn -main [& args]
   (run-tests 'speculative.specs-test
              'speculative.core-test
+             'speculative.set-test
              'speculative.string-test
              'speculative.instrument-test))
 

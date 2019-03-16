@@ -5,6 +5,7 @@
 [![CircleCI](https://circleci.com/gh/borkdude/speculative/tree/master.svg?style=svg)](https://circleci.com/gh/borkdude/speculative/tree/master)
 [![Clojars Project](https://img.shields.io/clojars/v/speculative.svg)](https://clojars.org/speculative)
 [![cljdoc badge](https://cljdoc.org/badge/speculative/speculative)](https://cljdoc.org/d/speculative/speculative/CURRENT)
+[![Downloads](https://versions.deps.co/borkdude/speculative/downloads.svg)](https://versions.deps.co/borkdude/speculative)
 
 Unofficial community-driven specs for `clojure.core`.
 
@@ -71,16 +72,16 @@ provides functions to only instrument speculative specs.
 ``` clojure
 $ clj
 Clojure 1.10.0
-user=> (require '[speculative.instrument :refer [instrument unstrument]])
+user=> (require '[speculative.instrument :as i])
 nil
-user=> (instrument)
+user=> (i/instrument)
 [clojure.core/every-pred clojure.core/max clojure.string/join ...]
 
 user=> (merge-with 1 {:a 2} {:a 3})
 Execution error - invalid arguments to clojure.core/merge-with at (REPL:1).
 1 - failed: ifn? at: [:f] spec: :speculative.specs/ifn
 
-user=> (unstrument)
+user=> (i/unstrument)
 ...
 user=> (merge-with 1 {:a 2} {:a 3})
 Execution error (ClassCastException) at user$eval344/invokeStatic (REPL:1).
@@ -119,9 +120,9 @@ $ clj
 Clojure 1.10.0
 user=> (require '[respeced.test :refer [with-unstrumentation]])
 nil
-user=> (require '[speculative.instrument :refer [instrument]])
+user=> (require '[speculative.instrument :as i])
 nil
-user=> (instrument)
+user=> (i/instrument)
 [clojure.core/first clojure.core/apply clojure.core/assoc ...]
 user=> (merge #{1 2 3} 4)
 Execution error - invalid arguments to clojure.core/merge at (REPL:1).
@@ -131,29 +132,27 @@ user=> (respeced.test/with-unstrumentation `merge (merge #{1 2 3} 4))
 #{1 4 3 2}
 ```
 
-If you believe the spec was wrong, please create an
+If you believe the spec was insuffient, please create an
 [issue](https://github.com/borkdude/speculative/issues).
 
 ## Tests
 
-### Clojure
+To execute all tests, simply run `script/test`. Running `script/clean` before
+running tests is recommended, especially for ClojureScript on Node. The script
+`script/test` automatically calls `script/clean` for you.
 
-    clj -A:test:clj-tests
-     
-### ClojureScript (Node)
+To specify environments:
 
-    script/cljs-tests
-    
-### Self-hosted ClojureScript (Planck)
-   
-    plk -A:test:plk-tests
+    TEST_ENV=clj script/test-runner
+    TEST_ENV=cljs CLJS_ENV=node script/test-runner
+    TEST_ENV=cljs CLJS_ENV=planck script/test-runner
 
 ### Number of generative tests
 
 By default the number of generative tests is set to `50`, but this can be
 overriden by setting the environment variable `NUM_TESTS`:
 
-    NUM_TESTS=1001 clj -A:test:clj-tests
+    NUM_TESTS=1001 script/test
 
 ### Run a single test
 
@@ -168,10 +167,6 @@ overriden by setting the environment variable `NUM_TESTS`:
 #### Self-hosted ClojureScript (Planck)
 
     clojure -A:test:cljs-test-runner -x planck -v speculative.core-test/assoc-in-test
-
-Running `script/clean` before running tests is recommended, especially for
-ClojureScript on Node. The script `script/test` automatically calls
-`script/clean` and runs all tests for all environments.
 
 ### Coal-mine
 
@@ -200,6 +195,13 @@ Run with additional checks on `ret` and `fn` specs via
 To skip an environment (CLJ or CLJS):
 
     SKIP_CLJS=true script/coal-mine
+
+### ClojureDocs
+
+To verify a spec against examples from [ClojureDocs](https://clojuredocs.org),
+run (for e.g. `update-in`):
+
+    clj -A:test:clojuredocs -v clojure.core/update-in
 
 ## Try online
 

@@ -99,11 +99,23 @@
   :args (s/* ::ss/any)
   :ret ::ss/string)
 
+;; 648
+(s/fdef clojure.core/list*
+  :args (s/cat :intervening (s/* ::ss/any)
+               :args ::ss/seqable)
+  :ret ::ss/seqable)
+
 ;; 660
 (s/fdef clojure.core/apply
   :args (s/cat :f ::ss/ifn
                :intervening (s/* ::ss/any)
-               :args ::ss/seqable))
+               :args ::ss/seqable)
+  :ret ::ss/any)
+
+;; 718
+(s/fdef clojure.core/concat
+  :args (s/* ::ss/seqable)
+  :ret ::ss/seqable)
 
 ;; 783
 (s/fdef clojure.core/=
@@ -166,6 +178,16 @@
   :args (s/+ ::ss/number)
   :ret ::ss/number)
 
+;; 1247
+(s/fdef clojure.core/pos?
+  :args (s/cat :num ::ss/number)
+  :ret ::ss/boolean)
+
+;; 1254
+(s/fdef clojure.core/neg?
+  :args (s/cat :num ::ss/number)
+  :ret ::ss/boolean)
+
 ;; 1459
 (s/fdef clojure.core/peek
   :args (s/cat :coll (s/nilable ::ss/stack))
@@ -214,13 +236,17 @@
   :args (s/cat :map ::ss/seqable-of-map-entry)
   :ret ::ss/seqable)
 
+;; 1589
+(s/fdef clojure.core/name
+  :args (s/cat :x (s/or :string ::ss/string
+                        :named ::ss/named))
+  :ret ::ss/string)
+
 ;; 2327
-(s/def :atom/validator ::ss/ifn)
-(s/def :atom/meta ::ss/map)
-(s/def :atom/validator ifn?)
-(s/def :atom/meta map?)
 (s/fdef clojure.core/atom
-  :args (s/cat :x ::ss/any :options (s/keys* :opt-un [:atom/validator :atom/meta]))
+  :args (s/cat :x ::ss/any
+               :options
+               ::ss/atom.options)
   :ret ::ss/atom)
 
 ;; 2345
@@ -302,7 +328,7 @@
 ;; 3041
 (s/fdef clojure.core/merge
   :args (s/cat :maps (s/? (s/cat
-                           :init-map (s/nilable map?)
+                           :init-map (s/nilable ::ss/map)
                            :rest-maps (s/* ::ss/seqable-of-map-entry))))
   :ret (s/nilable map?))
 
@@ -336,7 +362,7 @@
 ;; 4849
 #?(:clj
    (s/fdef clojure.core/re-matcher
-     :args (s/cat :re ::ss/regex :s ::ss/string)
+     :args ::ss/regex+string-args
      :ret ::ss/matcher))
 
 ;; 4858
@@ -347,29 +373,32 @@
 
 ;; 4874
 (s/fdef clojure.core/re-seq
-  :args (s/cat :re ::ss/regex :s ::ss/string)
+  :args ::ss/regex+string-args
   :ret ::ss/regex-matches)
 
 ;; 4886
 (s/fdef clojure.core/re-matches
-  :args (s/cat :re ::ss/regex :s ::ss/string)
+  :args ::ss/regex+string-args
   :ret ::ss/regex-match)
 
 ;; 4898
 (s/fdef clojure.core/re-find
   :args #?(:clj (s/alt :matcher (s/cat :m ::ss/matcher)
-                       :re-s (s/cat :re ::ss/regex :s ::ss/string))
-           :cljs (s/cat :re ::ss/regex :s ::ss/string))
+                       :re-s ::ss/regex+string-args)
+           :cljs ::ss/regex+string-args)
   :ret ::ss/regex-match)
 
 ;; 4981
+(s/def ::subs-args
+  (s/and (s/cat :s ::ss/string
+                :start ::ss/nat-int
+                :end (s/? ::ss/nat-int))
+         (fn start-idx [{:keys [s start end]}]
+           (let [end (or end (count s))]
+             (<= start end (count s))))))
+
 (s/fdef clojure.core/subs
-  :args (s/and (s/cat :s ::ss/string
-                      :start ::ss/nat-int
-                      :end (s/? ::ss/nat-int))
-               (fn start-idx [{:keys [s start end]}]
-                 (let [end (or end (count s))]
-                   (<= start end (count s)))))
+  :args ::subs-args
   :ret ::ss/string)
 
 ;; 4989
@@ -440,7 +469,7 @@
 
 ;; 6536
 (s/fdef clojure.core/fnil
-  :args (s/cat :f ::ss/ifn :xs (s/+ ::ss/any))
+  :args (s/cat :f ::ss/ifn :x ::ss/any :y (s/? ::ss/any) :z (s/? ::ss/any))
   :ret ::ss/ifn)
 
 ;; 6790
@@ -463,7 +492,7 @@
 ;; 7146
 (s/fdef clojure.core/group-by
   :args (s/cat :f ::ss/ifn :coll ::ss/reducible-coll)
-  :ret map?
+  :ret ::ss/map
   :fn (fn [{:keys [args ret]}]
         (let [[_ coll] (:coll args)]
           (= (count coll)
@@ -497,6 +526,15 @@
                                :array ::ss/array))))
   :ret ::ss/coll)
 
+;; 7283
+(s/fdef clojure.core/map-indexed
+  :args (s/alt :transducer (s/cat :f ::ss/ifn)
+               :seqable (s/cat :f ::ss/ifn :coll ::ss/seqable))
+  :ret ::ss/seqable-or-transducer
+  :fn (fn [{:keys [args ret]}]
+        (= (key args) (key ret))))
+
+
 ;; 7313
 (s/fdef clojure.core/keep
   :args (s/alt :transducer (s/cat :f ::ss/ifn)
@@ -505,9 +543,17 @@
   :fn (fn [{:keys [args ret]}]
         (= (key args) (key ret))))
 
+;; 7346
+(s/fdef clojure.core/keep-indexed
+  :args (s/alt :transducer (s/cat :f ::ss/ifn)
+               :seqable (s/cat :f ::ss/ifn :coll ::ss/seqable))
+  :ret ::ss/seqable-or-transducer
+  :fn (fn [{:keys [args ret]}]
+        (= (key args) (key ret))))
+
 ;; 7396
 (s/fdef clojure.core/every-pred
-  :args (s/cat :pred (s/+ ::ss/ifn))
+  :args (s/cat :pred (s/+ ::ss/predicate))
   :ret ::ss/ifn)
 
 ;; 7436

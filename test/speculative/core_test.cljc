@@ -9,14 +9,15 @@
       :cljs [clojure.spec.gen.alpha :as gen])
    [clojure.test :as t :refer [is deftest testing]]
    [clojure.test.check]
-   [clojure.test.check.generators :as g]
+   [clojure.test.check.generators :as g :include-macros true]
    [respeced.test :as rt :refer [with-instrumentation
                                  with-unstrumentation
                                  caught?
                                  check-call]]
    [speculative.core :as c]
    [speculative.specs :as ss]
-   [speculative.test-utils :refer [check planck-env?]]))
+   [speculative.test-utils :refer [check planck-env?]]
+   [clojure.string :as str]))
 
 ;; sorted in order of appearance in
 ;; https://github.com/clojure/clojure/blob/master/src/clj/clojure/core.clj
@@ -27,7 +28,6 @@
   (is (check-call `list [1 2 3]))
   (check `list)
   (is (with-instrumentation `list "NOTE: no failure possible")))
-
 
 ;; 22
 (deftest cons-test
@@ -44,6 +44,7 @@
 (deftest first-test
   (is (nil? (check-call `first [nil])))
   (is (= 1 (check-call `first ['(1 2 3)])))
+  (check `first)
   (with-instrumentation `first
     (is (caught? `first (first 1)))))
 
@@ -201,14 +202,32 @@
   ;; there's really no way to make str crash, is there?
   (with-instrumentation `str))
 
+;; 648
+(deftest list*-test
+  (is (= [1 2 3 4 5 6] (check-call `list* [1 2 3 [4 5 6]])))
+  (is (= (nil? (check-call `list* [nil]))))
+  (check `list*)
+  (with-instrumentation `list*
+    (is (caught? `list* (list* 1 2 3 4)))))
+
 ;; 660
 (deftest apply-test
   (is (= 21 (check-call `apply [+ 1 2 3 [4 5 6]])))
   (is (= 0 (check-call `apply [+ nil])))
+  (check `apply {:gen {::ss/ifn (fn [] (gen/return list))}})
   #?(:clj (with-instrumentation `apply
             (is (caught? `apply (apply + 1 2 3 4))))
      :cljs nil)) ;; maximum call stack exceeded
 
+;; 718
+(deftest concat-test
+  (is (check-call `concat []))
+  (is (check-call `concat [nil nil nil]))
+  (is (check-call `concat [[1 2 3] [4 5 6]]))
+  (is (check-call `concat ["foo" "bar"]))
+  (check `concat)
+  (with-instrumentation `concat
+    (is (caught? `concat (concat 1 2 3)))))
 
 ;; 783
 (deftest =-test
@@ -225,6 +244,7 @@
   (is (check-call `count [{:a 1}]))
   (is (check-call `count [(into-array [1 2])]))
   (is (check-call `count ["abc"]))
+  (check `count)
   (with-instrumentation `count
     (is (caught? `count (apply count [1])))))
 
@@ -292,6 +312,10 @@
   (is (check-call `/ [1]))
   (is (check-call `/ [1 2]))
   (is (check-call `/ [1 2 3]))
+  (check `/ {:gen {::ss/number
+                   (fn [] (gen/such-that (fn [n]
+                                           (not (zero? n)))
+                                         (s/gen ::ss/number)))}})
   (with-instrumentation `/
     (testing "Divide by zero, no spec error"
       #?(:cljs (is (= ##Inf (/ 0)))
@@ -313,6 +337,17 @@
     (is (caught? `min (apply min ["0" "1"]))))
   (with-instrumentation `max
     (is (caught? `max (apply max ["0" "1"])))))
+
+;; 1247
+(deftest pos?-neg?-test
+  (is (true? (check-call `pos? [1])))
+  (is (false? (check-call `neg? [1])))
+  (check `pos?)
+  (check `neg?)
+  (with-instrumentation `pos?
+    (is (caught? `pos? (apply pos? ["1"]))))
+  (with-instrumentation `neg?
+    (is (caught? `neg? (apply neg? ["1"])))))
 
 ;; 1459
 (deftest peek-test
@@ -342,6 +377,7 @@
 (deftest get-test
   (is (= 'foo (check-call `get [#{'foo} 'foo 'bar])))
   (is (nil? (check-call `get [1 1])))
+  (check `get)
   (with-instrumentation `get
     (is (caught? `get (get)))))
 
@@ -401,12 +437,21 @@
   (with-instrumentation `vals
     (is (caught? `vals (vals 1)))))
 
+;; 1589
+(deftest name-test
+  (is (name "foo"))
+  (is (name 'foo/bar))
+  (is (name :foo/bar))
+  (check `name)
+  (with-instrumentation `name
+    (is (caught? `name (name 1)))))
+
 ;; 2327
 (deftest atom-test
   (is (check-call `atom [(atom :val)]))
   (is (check-call `atom [(atom 5 :validator int?)]))
   (is (check-call `atom [(atom 5 :meta {:this-is :meta-data})]))
-  ;; gentest omitted
+  (check `atom)
   (with-instrumentation
     `atom
     (testing "wrong arity"
@@ -420,6 +465,7 @@
 (deftest swap!-test
   (is (nil? (check-call `swap! [(atom nil) identity])))
   (is (nil? (check-call `swap! [(atom nil) (fn [x y]) 1])))
+  (check `swap! {:gen {::ss/ifn (fn [] (gen/return (constantly 1)))}})
   (with-instrumentation `swap!
     (is (caught? `swap! (swap! 1 identity)))
     (is (caught? `swap! (swap! (atom nil) 1) (+ 1 2 3)))))
@@ -427,6 +473,7 @@
 ;; 2376
 (deftest reset!-test
   (is (check-call `reset! [(atom nil) 1]))
+  (check `reset!)
   (with-instrumentation `reset!
     (is (caught? `reset! (reset! 1 (atom nil))))))
 
@@ -440,8 +487,9 @@
     (is (caught? `comp (comp 1 2 3)))))
 
 ;; 2576
-(deftest juxt-text
+(deftest juxt-test
   (is (= [1 2] ((check-call `juxt [:a :b]) {:a 1 :b 2})))
+  (check `juxt {:gen {::ss/ifn #(s/gen ::ss/keyword)}})
   (with-instrumentation `juxt
     (is (caught? `juxt (juxt 1 2 3)))))
 
@@ -449,6 +497,7 @@
 (deftest every?-test
   (is (check-call `every? [pos? nil]))
   (is (check-call `every? [identity nil]))
+  (check `every?)
   (with-instrumentation `every?
     (is (caught? `every? (every? 1 [])))))
 
@@ -456,6 +505,7 @@
 (deftest not-every?-test
   (is (false? (check-call `not-every? [pos? nil])))
   (is (check-call `not-every? [pos? [-1 1]]))
+  (check `not-every?)
   (with-instrumentation `not-every?
     (is (caught? `not-every? (not-every? 1 [])))))
 
@@ -463,6 +513,7 @@
 (deftest partial-test
   (is (check-call `partial [identity]))
   (is (check-call `partial [+ 1 2 3]))
+  (check `partial {:gen {::ss/ifn #(gen/return (constantly 1))}})
   (with-instrumentation `partial
     (is (caught? `partial (partial 1)))))
 
@@ -470,6 +521,7 @@
 (deftest some-test
   (is (not (check-call `some [pos? nil])))
   (is (nil? (check-call `some [identity nil])))
+  (check `some)
   (with-instrumentation `some
     (is (caught? `some (some 1 [])))))
 
@@ -477,6 +529,7 @@
 (deftest not-any?-test
   (is (check-call `not-any? [pos? nil]))
   (is (= true (check-call `not-any? [identity nil])))
+  (check `not-any?)
   (with-instrumentation `not-any?
     (is (caught? `not-any? (not-any? 1 [])))))
 
@@ -491,6 +544,7 @@
                              [1 2 3] [4 5 6]]))))
   (testing "nil collection"
     (is (= '() (check-call `map [identity nil]))))
+  (check `map {:gen {::ss/ifn #(gen/return identity)}})
   (with-instrumentation `map
     (is (caught? `map (map 1)))))
 
@@ -521,6 +575,7 @@
   (is (check-call `range [1 10]))
   (is (check-call `range [10 0 -1]))
   (is (check-call `range [1.1 2.2 3.3]))
+  (check `range)
   (with-instrumentation `range
     ;; (is (range)) ;; doesn't work with advanced: CLJS-2995
     (is (caught? `range (range 'lol)))
@@ -534,6 +589,7 @@
   (is (nil? (check-call `merge [nil])))
   #?(:clj (is (= {:a 1 :b 2}
                  (merge {:a 1} (java.util.HashMap. {:a 1 :b 2})))))
+  (check `merge)
   (with-instrumentation `merge
     (is (caught? `merge (merge 1)))))
 
@@ -549,7 +605,7 @@
      (testing "second arg is java Map"
        (is (= {:a 2 :b 2})
            (merge-with + {:a 1} (java.util.HashMap. {:a 1 :b 2})))))
-  ;;(println "were instrumented:" (stest/unstrument))
+  (check `merge-with {:gen {::ss/ifn (fn [] (gen/return (fn [a b] b)))}})
   (with-instrumentation `merge-with
     (is (caught? `merge-with (merge-with 1)))
     ;; the following is no longer allowed in CLJS, see CLJS-2943
@@ -597,10 +653,10 @@
 #?(:clj
    (deftest re-matcher-test
      (is (check-call `re-matcher [#"s" "s"]))
+     (check `re-matcher)
      (with-instrumentation `re-matcher
        (is (caught? `re-matcher (re-matcher 1 "s")))
-       (is (caught? `re-matcher (re-matcher #"s" 1))))
-     (check `re-matcher)))
+       (is (caught? `re-matcher (re-matcher #"s" 1))))))
 
 ;; 4858
 #?(:clj
@@ -621,6 +677,11 @@
          (is (check-call `re-groups [groups-matching-matcher])))
        (testing "returning seqable of nilable strings"
          (is (check-call `re-groups [with-empty-group-matcher])))
+       #?(:clj (check `re-groups
+                      {:gen {::ss/matcher
+                             (fn [] (gen/fmap (fn [matcher]
+                                                (doto matcher (.find)))
+                                              (ss/matching-matcher-gen)))}}))
        (with-instrumentation `re-groups
          (is (caught? `re-groups (re-groups 1)))))))
 
@@ -632,10 +693,10 @@
     (is (check-call `re-seq [#"s" "s"])))
   (testing "returns seqable of matches"
     (is (check-call `re-seq [#"(a)?(b)" "b"])))
+  (check `re-seq)
   (with-instrumentation `re-seq
     (is (caught? `re-seq (re-seq 1 "s")))
-    (is (caught? `re-seq (re-seq #"s" 1))))
-  (check `re-seq))
+    (is (caught? `re-seq (re-seq #"s" 1)))))
 
 ;; 4886
 (deftest re-matches-test
@@ -646,10 +707,10 @@
   (testing "returning seqable of nilable strings"
     (is (check-call `re-matches [#"(hello.*)" "hello there"]))
     (is (= ["b" nil "b"] (check-call `re-matches [#"(a)?(b)" "b"]))))
+  (check `re-matches)
   (with-instrumentation `re-matches
     (is (caught? `re-matches (re-matches 1 "s")))
-    (is (caught? `re-matches (re-matches #"s" 1))))
-  (check `re-matches))
+    (is (caught? `re-matches (re-matches #"s" 1)))))
 
 ;; 4898
 (deftest re-find-test
@@ -662,16 +723,30 @@
   (testing "returning seqable of nilable strings"
     (is (check-call `re-find [#"(hello.*)" "hello there"]))
     (is (= ["b" nil "b"] (check-call `re-find [#"(a)?(b)" "b"]))))
+  (check `re-find)
   (with-instrumentation `re-find
     #?(:clj (caught? `re-find (re-find 1)))
     (is (caught? `re-find (re-find 1 "s")))
     (is (caught? `re-find (re-find #"s" 1)))))
 
 ;; 4981
+(def subs-args-gen
+  (g/let [s g/string
+          start (g/choose 0 (count s))
+          use-end? g/boolean]
+    (if use-end?
+      (g/let [end (g/choose start (count s))]
+        [s start end])
+      [s start])))
+
+(comment
+  (gen/sample subs-args-gen))
+
 (deftest subs-test
   (is (check-call `subs ["foo" 0 2]))
   (testing "start and end equal to count of s"
     (is (= "" (check-call `subs ["foo" 2 2]))))
+  (check `subs {:gen {::c/subs-args (fn [] subs-args-gen)}})
   (with-instrumentation `subs
     (testing "not a string"
       (is (caught? `subs (subs nil 10)))
@@ -841,6 +916,7 @@
 ;; 6536
 (deftest fnil-test
   (is (check-call `fnil [identity 'lol]))
+  (check `fnil {:gen {::ss/ifn (fn [] (gen/return vector))}})
   (with-instrumentation `fnil
     (is (caught? `fnil (fnil 1 1)))))
 
@@ -848,6 +924,7 @@
 (deftest reduce-test
   (is (check-call `reduce [+ [1 2]]))
   (is (check-call `reduce [+ 0 [1 2]]))
+  (check `reduce {:gen {::ss/ifn (fn [] (gen/return vector))}})
   (with-instrumentation `reduce
     (is (caught? `reduce (reduce 1 [1 2])))
     (is (caught? `reduce (reduce + 0 1)))))
@@ -886,6 +963,7 @@
 ;; 7146
 (deftest group-by-test
   (is (check-call `group-by [odd? (range 10)]))
+  (check `group-by {:gen {::ss/ifn #(s/gen ::ss/predicate)}})
   (with-instrumentation `group-by
     (is (caught? `group-by (group-by 1 (range 10))))
     (is (caught? `group-by (group-by odd? 1)))))
@@ -934,6 +1012,16 @@
   (with-instrumentation `shuffle
     (is (caught? `shuffle (shuffle 1)))))
 
+;; 7283
+(deftest map-indexed-test
+  (is (check-call `map-indexed [(fn [i e] [i e])]))
+  (is (check-call `map-indexed [(fn [i e] [i e]) nil]))
+  (is (check-call `map-indexed [(fn [i e] [i e]) [1 2 3]]))
+  (check `map-indexed {:gen {::ss/ifn #(gen/return (fn [i e] [i e]))}})
+  (with-instrumentation `map-indexed
+    (is (caught? `map-indexed (map-indexed 1)))
+    (is (caught? `map-indexed (map-indexed (fn [i e] [i e]) 1)))))
+
 ;; 7313
 (deftest keep-test
   (is (check-call `keep [seq]))
@@ -944,15 +1032,27 @@
     (is (caught? `keep (keep 1)))
     (is (caught? `keep (keep identity 1)))))
 
+;; 7346
+(deftest keep-indexed-test
+  (is (check-call `keep-indexed [(fn [i e] [i e])]))
+  (is (check-call `keep-indexed [(fn [i e] [i e]) nil]))
+  (is (= [0 2]) (check-call `keep-indexed [(fn [i e] (when e i)) [1 nil 3]]))
+  (check `keep-indexed {:gen {::ss/ifn #(gen/return (fn [i e] [i e]))}})
+  (with-instrumentation `keep-indexed
+    (is (caught? `keep-indexed (keep-indexed 1)))
+    (is (caught? `keep-indexed (keep-indexed (fn [i e] [i e]) 1)))))
+
 ;; 7396
 (deftest every-pred-test
   (is (check-call `every-pred [number? odd?]))
+  (check `every-pred)
   (with-instrumentation `every-pred
     (is (caught? `every-pred (every-pred 1)))))
 
 ;; 7436
 (deftest some-fn-test
   (is (check-call `some-fn [number? string?]))
+  (check `some-fn {:gen {::ss/ifn #(s/gen ::ss/predicate)}})
   (with-instrumentation `some-fn
     (is (caught? `some-fn (some-fn 1)))))
 

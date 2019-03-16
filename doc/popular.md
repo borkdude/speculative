@@ -22,7 +22,7 @@ symbol,count
 # atom,14024
 # reduce,13785
 # -,13236
-name,12880
+# name,12880
 instance?,12674
 # conj,12548
 # inc,12482
@@ -39,7 +39,7 @@ format,9508
 <,8618
 # vec,8601
 # partial,8595
-concat,8334
+# concat,8334
 # reset!,8122
 set,8071
 # /,8033
@@ -91,7 +91,7 @@ reify,3212
 mapv,3190
 doall,3168
 contains,2978
-pos?,2948
+# pos?,2948
 aset,2946
 gensym,2798
 # partition,2788
@@ -134,9 +134,9 @@ ref,1476
 sort-by,1465
 complement,1463
 false?,1354
-neg?,1329
+# neg?,1329
 prn,1323
-max,1316
+# max,1316
 mod,1306
 resolve,1264
 # update,1258
