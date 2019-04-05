@@ -92,7 +92,7 @@
 ;; 531
 (s/fdef clojure.core/some?
   :args (s/cat :x ::ss/any)
-  :ret ::ss/any)
+  :ret ::ss/boolean)
 
 ;; 544
 (s/fdef clojure.core/str
