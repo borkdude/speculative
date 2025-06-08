@@ -188,6 +188,10 @@
   :args (s/cat :num ::ss/number)
   :ret ::ss/boolean)
 
+(s/fdef clojure.core/even?
+  :args (s/cat :n int?)
+  :ret boolean?)
+
 ;; 1459
 (s/fdef clojure.core/peek
   :args (s/cat :coll (s/nilable ::ss/stack))
