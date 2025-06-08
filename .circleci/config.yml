@@ -58,7 +58,8 @@ jobs:
       - run: script/clean
       - run: script/test
       - run: COAL_MINE_TIMEOUT=80 script/coal-mine --ret-spec true
-      - run: clojure -A:test:clojuredocs -r 25
+      # - run: clojure -A:test:clojuredocs -r 25
+      # No longer works on newer JVM
 
       - save_cache:
           paths:
