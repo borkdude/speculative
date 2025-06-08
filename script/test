@@ -8,6 +8,8 @@ script/clean
 
 TEST_ENV=clj script/test-runner
 TEST_ENV=cljs CLJS_ENV=node script/test-runner
-TEST_ENV=cljs CLJS_ENV=planck script/test-runner
+
+# TEST_ENV=cljs CLJS_ENV=planck script/test-runner
+# Planck no longer runs on newest Ubuntu?
 
 exit "$err"
