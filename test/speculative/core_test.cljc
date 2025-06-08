@@ -346,6 +346,16 @@
   (with-instrumentation `neg?
     (is (caught? `neg? (apply neg? ["1"])))))
 
+;; 1400
+(deftest even?-test
+  (is (true? (check-call `even? [2])))
+  (is (false? (check-call `even? [3])))
+  (is (true? (check-call `even? [0])))
+  (check `even?)
+  (with-instrumentation `even?
+    (is (caught? `even? (even? [])))
+    (is (caught? `even? (even? (range))))))
+
 ;; 1459
 (deftest peek-test
   (is (nil? (check-call `peek [nil])))
