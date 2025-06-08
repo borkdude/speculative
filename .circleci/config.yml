@@ -39,9 +39,10 @@ jobs:
       - run:
           name: Install Planck
           command: |
+            sudo apt-get update
             sudo apt-get install javascriptcoregtk-4.0 libzip4
-            curl -O http://planck-repl.org/releases/2.22.0-debian-9.0/planck
-            curl -O http://planck-repl.org/releases/2.22.0-debian-9.0/plk
+            curl -O -L http://planck-repl.org/releases/2.22.0-debian-9.0/planck
+            curl -O -L http://planck-repl.org/releases/2.22.0-debian-9.0/plk
             chmod +x planck
             chmod +x plk
             sudo mv planck /usr/bin
