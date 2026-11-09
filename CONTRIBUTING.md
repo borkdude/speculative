@@ -1,5 +1,7 @@
 # Speculative contributor guidelines
 
+Read the [general contributing guidelines](https://github.com/borkdude/.github/blob/main/CONTRIBUTING.md) first.
+
 ## Thank you!
 
 Thanks for taking the effort to contribute to this project and thanks for taking
